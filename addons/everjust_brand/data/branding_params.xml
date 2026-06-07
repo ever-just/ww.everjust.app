@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+
+        <!-- Disable in-app-purchase / online upsell prompts -->
+        <record id="everjust_disable_iap" model="ir.config_parameter">
+            <field name="key">iap.endpoint</field>
+            <field name="value">https://everjust.app/iap-disabled</field>
+        </record>
+
+        <!-- Document title base used by the web client -->
+        <record id="everjust_doc_title" model="ir.config_parameter">
+            <field name="key">web.base.title</field>
+            <field name="value">EVERJUST.APP</field>
+        </record>
+
+        <!-- Apply branded company report footers on install -->
+        <function model="res.company" name="_everjust_apply_defaults"/>
+
+    </data>
+</odoo>

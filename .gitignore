@@ -13,9 +13,9 @@ __pycache__/
 .venv/
 venv/
 
-# Odoo runtime data
-data/
-filestore/
+# Odoo runtime data (root-level only, not module data/ folders)
+/data/
+/filestore/
 *.log
 
 # OS

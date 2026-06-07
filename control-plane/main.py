@@ -159,19 +159,98 @@ async def stripe_webhook(request: Request):
     return {"received": True}
 
 
+WELCOME_PAGE = """
+<!doctype html><html><head><meta charset="utf-8">
+<title>EVERJUST.APP — Setting up your workspace</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  body{{font-family:-apple-system,Segoe UI,Roboto,sans-serif;background:#fff;color:#000;
+       display:flex;min-height:100vh;align-items:center;justify-content:center;margin:0;text-align:center}}
+  .card{{width:420px;padding:40px 32px}}
+  h1{{font-weight:800;letter-spacing:1px;margin:0 0 32px}}
+  .url{{font-weight:700;font-size:15px;color:#000;word-break:break-all}}
+  .box{{border:1px solid #000;border-radius:12px;padding:24px;margin:24px 0}}
+  .spinner{{width:36px;height:36px;border:3px solid #eee;border-top-color:#000;
+            border-radius:50%;animation:spin 0.8s linear infinite;margin:0 auto 20px}}
+  @keyframes spin{{to{{transform:rotate(360deg)}}}}
+  .status-text{{font-size:15px;color:#555;margin:0 0 8px}}
+  .note{{font-size:13px;color:#888;margin:0}}
+  .login-btn{{display:block;padding:14px;background:#000;color:#fff;text-decoration:none;
+              border-radius:8px;font-weight:700;font-size:15px;margin-bottom:16px}}
+  #state-ready,#state-timeout{{display:none}}
+</style>
+</head><body>
+<div class="card">
+  <h1>EVERJUST.APP</h1>
+
+  <div id="state-loading">
+    <div class="box">
+      <div class="spinner"></div>
+      <p class="status-text">Setting up <span class="url">{subdomain}.{domain}</span>&hellip;</p>
+      <p class="note">This usually takes 1&ndash;2 minutes. Hold tight.</p>
+    </div>
+  </div>
+
+  <div id="state-ready">
+    <div class="box">
+      <p class="status-text" style="margin-bottom:20px">Your workspace is ready.</p>
+      <a class="login-btn" href="https://{subdomain}.{domain}">
+        Log in to {subdomain}.{domain} &rarr;
+      </a>
+      <p class="note">No email confirmation needed &mdash; sign in with the email and password you just created.</p>
+    </div>
+  </div>
+
+  <div id="state-timeout">
+    <div class="box">
+      <p class="status-text">Still setting up&hellip;</p>
+      <p class="note" style="margin-bottom:16px">
+        It&rsquo;s taking longer than usual. Try logging in at:<br>
+        <a href="https://{subdomain}.{domain}" class="url">https://{subdomain}.{domain}</a>
+      </p>
+    </div>
+  </div>
+</div>
+<script>
+  var subdomain = {subdomain_js!r};
+  var attempts = 0;
+  var MAX = 60;
+  function poll() {{
+    fetch('/status/' + subdomain)
+      .then(function(r) {{ return r.json(); }})
+      .then(function(d) {{
+        if (d.ready) {{
+          document.getElementById('state-loading').style.display = 'none';
+          document.getElementById('state-ready').style.display = 'block';
+        }} else if (attempts++ < MAX) {{
+          setTimeout(poll, 3000);
+        }} else {{
+          document.getElementById('state-loading').style.display = 'none';
+          document.getElementById('state-timeout').style.display = 'block';
+        }}
+      }})
+      .catch(function() {{
+        if (attempts++ < MAX) setTimeout(poll, 3000);
+      }});
+  }}
+  poll();
+</script>
+</body></html>
+"""
+
+
+@app.get("/status/{subdomain}")
+def tenant_status(subdomain: str):
+    return {"ready": provisioning.database_exists(subdomain)}
+
+
 @app.get("/welcome", response_class=HTMLResponse)
 def welcome(s: str = None, subdomain: str = None):
-    login_url = f"https://{subdomain}.{BASE_DOMAIN}" if subdomain else "your-workspace.everjust.app"
-    return (
-        "<body style='font-family:-apple-system,Segoe UI,Roboto,sans-serif;text-align:center;padding:80px;background:#fff'>"
-        "<h1 style='font-weight:800;letter-spacing:1px;margin:0 0 16px'>EVERJUST.APP</h1>"
-        "<p style='color:#555;margin:0 0 32px'>Your workspace is ready.</p>"
-        "<div style='max-width:400px;margin:0 auto;padding:24px;border:1px solid #000;border-radius:12px'>"
-        "<p style='margin:0 0 16px;font-size:15px'>Log in at:</p>"
-        f"<a href='{login_url}' style='display:block;padding:12px;background:#000;color:#fff;text-decoration:none;border-radius:8px;font-weight:700;margin-bottom:16px'>{login_url}</a>"
-        "<p style='font-size:13px;color:#555;margin:0'>No email confirmation required. Use the email and password you created during signup.</p>"
-        "</div>"
-        "</body>"
+    sub = subdomain or "your-workspace"
+    return WELCOME_PAGE.format(
+        subdomain=sub,
+        subdomain_js=sub,
+        domain=BASE_DOMAIN,
     )
 
 

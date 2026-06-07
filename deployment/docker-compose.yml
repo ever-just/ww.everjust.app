@@ -1,6 +1,8 @@
 services:
   db:
     image: postgres:16
+    env_file:
+      - .env
     environment:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
@@ -10,17 +12,21 @@ services:
     restart: unless-stopped
 
   odoo:
-    image: odoo:19
+    image: odoo:19.0
     depends_on:
       - db
+    env_file:
+      - .env
     volumes:
       - odoo-data:/var/lib/odoo
       - ../addons:/mnt/extra-addons
       - ./odoo.conf:/etc/odoo/odoo.conf:ro
     environment:
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      HOST: db
+      USER: ${POSTGRES_USER}
+      PASSWORD: ${POSTGRES_PASSWORD}
       ODOO_MASTER_PASSWORD: ${ODOO_MASTER_PASSWORD}
-    command: odoo -c /etc/odoo/odoo.conf
+    command: odoo -c /etc/odoo/odoo.conf --db_user=${POSTGRES_USER} --db_password=${POSTGRES_PASSWORD} --admin_passwd=${ODOO_MASTER_PASSWORD}
     restart: unless-stopped
 
   control-plane:

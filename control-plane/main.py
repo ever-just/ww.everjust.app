@@ -68,20 +68,28 @@ def signup(org_name: str = Form(...), subdomain: str = Form(...),
     if provisioning.database_exists(subdomain):
         raise HTTPException(400, "That workspace address is taken.")
 
+    tenant_meta = {
+        "org_name": org_name,
+        "subdomain": subdomain,
+        "admin_email": email,
+        # Password is passed through metadata only for the provisioning
+        # step; replace with a one-time token store in production.
+        "admin_password": password,
+    }
     session = stripe.checkout.Session.create(
         mode="subscription",
         line_items=[{"price": STRIPE_PRICE_ID, "quantity": 5}],
         customer_email=email,
+        # Let customers enter a promo code (e.g. 100%-off access codes).
+        allow_promotion_codes=True,
+        # If a coupon brings the total to $0, don't force card entry.
+        payment_method_collection="if_required",
         success_url=f"https://{BASE_DOMAIN}/welcome?s={{CHECKOUT_SESSION_ID}}",
         cancel_url=f"https://{BASE_DOMAIN}/",
-        metadata={
-            "org_name": org_name,
-            "subdomain": subdomain,
-            "admin_email": email,
-            # Password is passed through metadata only for the provisioning
-            # step; replace with a one-time token store in production.
-            "admin_password": password,
-        },
+        metadata=tenant_meta,
+        # Carry tenant metadata onto the subscription so lifecycle webhooks
+        # (payment_failed, subscription.deleted) can resolve the tenant.
+        subscription_data={"metadata": tenant_meta},
     )
     return RedirectResponse(session.url, status_code=303)
 

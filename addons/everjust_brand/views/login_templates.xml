@@ -3,13 +3,12 @@
 
     <!-- Replace the login page brand with EVERJUST.APP -->
     <template id="everjust_login_brand" inherit_id="web.login_layout">
-        <xpath expr="//div[hasclass('o_login_auth')]" position="before">
-            <div class="text-center mb-4 everjust-login-brand">
-                <h1 class="everjust-wordmark">EVERJUST.APP</h1>
-            </div>
+        <!-- Swap the upstream company logo for the EVERJUST.APP wordmark -->
+        <xpath expr="//img" position="replace">
+            <h1 class="everjust-wordmark">EVERJUST.APP</h1>
         </xpath>
-        <!-- Remove the upstream logo image if present -->
-        <xpath expr="//img[hasclass('o_login_logo')]" position="replace"/>
+        <!-- Remove the "Powered by Odoo" footer link -->
+        <xpath expr="//a[contains(@href, 'odoo.com')]" position="replace"/>
     </template>
 
 </odoo>

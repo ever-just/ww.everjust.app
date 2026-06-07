@@ -21,7 +21,6 @@ Replaces every upstream branding touchpoint with EVERJUST.APP:
     "data": [
         "data/branding_params.xml",
         "views/login_templates.xml",
-        "views/brand_templates.xml",
         "views/report_templates.xml",
     ],
     "assets": {

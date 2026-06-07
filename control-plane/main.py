@@ -26,31 +26,65 @@ SIGNUP_PAGE = """
 <style>
   body{{font-family:-apple-system,Segoe UI,Roboto,sans-serif;background:#fff;color:#000;
        display:flex;min-height:100vh;align-items:center;justify-content:center;margin:0}}
-  .card{{width:380px;border:1px solid #000;border-radius:12px;padding:32px}}
+  .card{{width:400px;border:1px solid #000;border-radius:12px;padding:32px}}
   h1{{font-weight:800;letter-spacing:1px;margin:0 0 4px}}
   p{{color:#555;margin:0 0 24px}}
-  label{{display:block;font-size:13px;margin:14px 0 4px;font-weight:600}}
-  input{{width:100%;padding:10px;border:1px solid #000;border-radius:8px;box-sizing:border-box}}
-  .suffix{{color:#555;font-size:12px;margin-top:4px}}
-  button{{width:100%;margin-top:24px;padding:12px;background:#000;color:#fff;border:0;
-          border-radius:8px;font-weight:700;cursor:pointer}}
-  .price{{text-align:center;margin-top:16px;font-size:13px;color:#555}}
+  label{{display:block;font-size:13px;margin:16px 0 4px;font-weight:600}}
+  input{{width:100%;padding:10px;border:1px solid #000;border-radius:8px;box-sizing:border-box;
+         font-size:14px}}
+  .preview{{margin-top:8px;padding:10px 12px;border:1px dashed #bbb;border-radius:8px;
+            background:#fafafa;font-size:14px;display:flex;align-items:center;gap:2px}}
+  .preview .host{{font-weight:800}}
+  .preview .suffix{{color:#888}}
+  .preview .placeholder{{color:#bbb;font-weight:800}}
+  button{{width:100%;margin-top:28px;padding:12px;background:#000;color:#fff;border:0;
+          border-radius:8px;font-weight:700;cursor:pointer;font-size:15px}}
 </style></head><body>
 <form class="card" method="post" action="/signup">
   <h1>EVERJUST.APP</h1>
   <p>Start your workspace</p>
   <label>Organization name</label>
-  <input name="org_name" required>
+  <input name="org_name" id="org_name" required>
   <label>Workspace address</label>
-  <input name="subdomain" pattern="[a-z0-9-]+" required>
-  <div class="suffix">your-org.{domain}</div>
+  <input name="subdomain" id="subdomain" pattern="[a-z0-9-]+" autocomplete="off"
+         autocapitalize="off" spellcheck="false" required>
+  <div class="preview" id="preview">
+    <span class="placeholder">your-org</span><span class="suffix">.{domain}</span>
+  </div>
   <label>Admin email</label>
   <input name="email" type="email" required>
   <label>Password</label>
   <input name="password" type="password" minlength="8" required>
-  <button type="submit">Continue to payment</button>
-  <div class="price">$100/mo · up to 5 users · +$15/user after</div>
-</form></body></html>
+  <button type="submit">Create workspace</button>
+</form>
+<script>
+  var sub = document.getElementById('subdomain');
+  var org = document.getElementById('org_name');
+  var preview = document.getElementById('preview');
+  var SUFFIX = '.{domain}';
+  function slug(v){{
+    return (v||'').toLowerCase().trim()
+      .replace(/[^a-z0-9-]+/g,'-').replace(/-+/g,'-').replace(/^-|-$/g,'');
+  }}
+  function render(){{
+    var v = slug(sub.value);
+    if(v){{
+      preview.innerHTML = '<span class="host">'+v+'</span><span class="suffix">'+SUFFIX+'</span>';
+    }} else {{
+      preview.innerHTML = '<span class="placeholder">your-org</span><span class="suffix">'+SUFFIX+'</span>';
+    }}
+  }}
+  sub.addEventListener('input', render);
+  // Suggest a workspace address from the org name until the user edits it.
+  var edited = false;
+  sub.addEventListener('input', function(){{ edited = true; }});
+  org.addEventListener('input', function(){{
+    if(!edited){{ sub.value = slug(org.value); render(); }}
+  }});
+  // Normalize on submit so what the user previewed is what gets sent.
+  sub.form.addEventListener('submit', function(){{ sub.value = slug(sub.value); }});
+</script>
+</body></html>
 """
 
 

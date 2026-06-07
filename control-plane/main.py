@@ -118,7 +118,7 @@ def signup(org_name: str = Form(...), subdomain: str = Form(...),
         allow_promotion_codes=True,
         # If a coupon brings the total to $0, don't force card entry.
         payment_method_collection="if_required",
-        success_url=f"https://{BASE_DOMAIN}/welcome?s={{CHECKOUT_SESSION_ID}}",
+        success_url=f"https://{BASE_DOMAIN}/welcome?s={{CHECKOUT_SESSION_ID}}&subdomain={subdomain}",
         cancel_url=f"https://{BASE_DOMAIN}/",
         metadata=tenant_meta,
         # Carry tenant metadata onto the subscription so lifecycle webhooks
@@ -160,11 +160,17 @@ async def stripe_webhook(request: Request):
 
 
 @app.get("/welcome", response_class=HTMLResponse)
-def welcome():
+def welcome(s: str = None, subdomain: str = None):
+    login_url = f"https://{subdomain}.{BASE_DOMAIN}" if subdomain else "your-workspace.everjust.app"
     return (
-        "<body style='font-family:sans-serif;text-align:center;padding:80px'>"
-        "<h1 style='font-weight:800'>EVERJUST.APP</h1>"
-        "<p>Your workspace is being created. Check your email for the login link.</p>"
+        "<body style='font-family:-apple-system,Segoe UI,Roboto,sans-serif;text-align:center;padding:80px;background:#fff'>"
+        "<h1 style='font-weight:800;letter-spacing:1px;margin:0 0 16px'>EVERJUST.APP</h1>"
+        "<p style='color:#555;margin:0 0 32px'>Your workspace is ready.</p>"
+        "<div style='max-width:400px;margin:0 auto;padding:24px;border:1px solid #000;border-radius:12px'>"
+        "<p style='margin:0 0 16px;font-size:15px'>Log in at:</p>"
+        f"<a href='{login_url}' style='display:block;padding:12px;background:#000;color:#fff;text-decoration:none;border-radius:8px;font-weight:700;margin-bottom:16px'>{login_url}</a>"
+        "<p style='font-size:13px;color:#555;margin:0'>No email confirmation required. Use the email and password you created during signup.</p>"
+        "</div>"
         "</body>"
     )
 

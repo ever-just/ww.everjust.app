@@ -36,6 +36,11 @@ services:
       - odoo
     env_file:
       - .env
+    environment:
+      ODOO_CONTAINER: deployment-odoo-1
+      DB_HOST: db
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
     restart: unless-stopped
 
   nginx:

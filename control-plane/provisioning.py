@@ -9,11 +9,24 @@ import os
 import re
 import subprocess
 import httpx
+import psycopg2
 
 ODOO_CONTAINER = os.environ.get("ODOO_CONTAINER", "deployment-odoo-1")
 BASE_DOMAIN = os.environ.get("BASE_DOMAIN", "everjust.app")
 GODADDY_KEY = os.environ.get("GODADDY_API_KEY", "")
 GODADDY_SECRET = os.environ.get("GODADDY_API_SECRET", "")
+
+DB_HOST = os.environ.get("DB_HOST", "db")
+DB_PORT = int(os.environ.get("DB_PORT", "5432"))
+DB_USER = os.environ.get("POSTGRES_USER", "everjust")
+DB_PASSWORD = os.environ.get("POSTGRES_PASSWORD", "")
+
+
+def _pg_connect(dbname: str = "postgres"):
+    return psycopg2.connect(
+        host=DB_HOST, port=DB_PORT, user=DB_USER,
+        password=DB_PASSWORD, dbname=dbname, connect_timeout=10,
+    )
 
 EVERJUST_MODULES = "base,everjust_brand,everjust_theme"
 
@@ -27,12 +40,14 @@ def validate_subdomain(sub: str) -> bool:
 
 
 def database_exists(name: str) -> bool:
-    result = subprocess.run(
-        ["docker", "exec", ODOO_CONTAINER, "psql", "-U", "everjust", "-tAc",
-         f"SELECT 1 FROM pg_database WHERE datname='{name}'"],
-        capture_output=True, text=True,
-    )
-    return result.stdout.strip() == "1"
+    conn = _pg_connect()
+    try:
+        conn.autocommit = True
+        with conn.cursor() as cur:
+            cur.execute("SELECT 1 FROM pg_database WHERE datname=%s", (name,))
+            return cur.fetchone() is not None
+    finally:
+        conn.close()
 
 
 def provision_tenant(subdomain: str, admin_login: str, admin_password: str) -> dict:
@@ -46,6 +61,8 @@ def provision_tenant(subdomain: str, admin_login: str, admin_password: str) -> d
     subprocess.run(
         ["docker", "exec", ODOO_CONTAINER, "odoo",
          "-d", subdomain,
+         "--db_user", DB_USER,
+         "--db_password", DB_PASSWORD,
          "-i", EVERJUST_MODULES,
          "--load-language=en_US",
          "--stop-after-init",
@@ -64,20 +81,18 @@ def provision_tenant(subdomain: str, admin_login: str, admin_password: str) -> d
 
 
 def _set_admin_credentials(db: str, login: str, password: str) -> None:
-    """Point the default admin user at the signup email + password."""
-    sql = (
-        f"UPDATE res_users SET login='{login}' WHERE id=2; "
-    )
-    subprocess.run(
-        ["docker", "exec", ODOO_CONTAINER, "psql", "-U", "everjust", "-d", db, "-c", sql],
-        check=True,
-    )
-    # Password is hashed by Odoo; set it through the ORM shell for safety.
+    """Point the default admin user at the signup email + password.
+
+    Login is set via SQL; the password is hashed by Odoo so it is written
+    through the ORM shell, which also resets the company/admin defaults.
+    """
     py = (
-        "env['res.users'].browse(2).write({'password': %r}); env.cr.commit()" % password
+        "env['res.users'].browse(2).write({'login': %r, 'password': %r}); "
+        "env.cr.commit()" % (login, password)
     )
     subprocess.run(
-        ["docker", "exec", ODOO_CONTAINER, "odoo", "shell", "-d", db, "--no-http"],
+        ["docker", "exec", "-i", ODOO_CONTAINER, "odoo", "shell",
+         "-d", db, "--db_user", DB_USER, "--db_password", DB_PASSWORD, "--no-http"],
         input=py, text=True, check=False,
     )
 
@@ -98,8 +113,12 @@ def ensure_dns(subdomain: str) -> None:
 
 def suspend_tenant(subdomain: str) -> None:
     """Stop serving a tenant (e.g. on failed payment) without deleting data."""
-    sql = "UPDATE res_users SET active=false WHERE id!=1;"
-    subprocess.run(
-        ["docker", "exec", ODOO_CONTAINER, "psql", "-U", "everjust", "-d", subdomain, "-c", sql],
-        check=False,
-    )
+    if not database_exists(subdomain):
+        return
+    conn = _pg_connect(subdomain)
+    try:
+        conn.autocommit = True
+        with conn.cursor() as cur:
+            cur.execute("UPDATE res_users SET active=false WHERE id NOT IN (1, 2)")
+    finally:
+        conn.close()

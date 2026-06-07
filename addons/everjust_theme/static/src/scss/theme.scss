@@ -1,0 +1,40 @@
+// EVERJUST.APP — backend theme polish (black & white)
+
+.o_main_navbar {
+    background-color: #000000 !important;
+    border-bottom: 1px solid #000000;
+
+    .o_menu_brand,
+    .o_nav_entry,
+    .dropdown-toggle {
+        color: #ffffff !important;
+    }
+    .o_menu_brand:hover,
+    .o_nav_entry:hover {
+        background-color: #1a1a1a !important;
+    }
+}
+
+.btn-primary {
+    background-color: #000000;
+    border-color: #000000;
+    &:hover, &:focus, &:active {
+        background-color: #1a1a1a;
+        border-color: #1a1a1a;
+    }
+}
+
+.btn-secondary {
+    background-color: #ffffff;
+    border-color: #000000;
+    color: #000000;
+    &:hover { background-color: #f0f0f0; }
+}
+
+a, .o_form_uri {
+    color: #000000;
+}
+
+.o_searchview .o_searchview_facet .o_searchview_facet_label {
+    background-color: #000000;
+}

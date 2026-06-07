@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Backend "Powered by" promotion message -> EVERJUST.APP -->
+    <template id="everjust_brand_promotion" inherit_id="web.brand_promotion_message" optional="enabled">
+        <xpath expr="." position="replace">
+            <t t-name="web.brand_promotion_message">
+                <span class="o_brand_promotion">
+                    <a href="https://everjust.app" target="_blank">EVERJUST.APP</a>
+                </span>
+            </t>
+        </xpath>
+    </template>
+
+    <!-- Portal footer "Powered by" -> EVERJUST.APP -->
+    <template id="everjust_portal_promotion" inherit_id="portal.portal_record_layout" optional="enabled">
+        <xpath expr="//div[hasclass('o_portal_promotion')]" position="replace"/>
+    </template>
+
+</odoo>

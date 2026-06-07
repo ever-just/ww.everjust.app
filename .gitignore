@@ -1,0 +1,22 @@
+# Odoo source (forked, cloned separately — not committed to keep repo lean)
+odoo/
+
+# Secrets
+.env
+*.pem
+*.key
+deployment/ssl/
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Odoo runtime data
+data/
+filestore/
+*.log
+
+# OS
+.DS_Store

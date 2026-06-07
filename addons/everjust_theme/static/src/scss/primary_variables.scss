@@ -1,0 +1,22 @@
+// EVERJUST.APP — default black & white palette
+// These override the upstream primary variables. Tenants can change colors
+// later via Settings > General Settings (or a theme picker).
+
+$o-brand-primary: #000000;
+$o-brand-secondary: #1a1a1a;
+$o-brand-odoo: #000000;
+$o-community-color: #000000;
+$o-enterprise-color: #000000;
+
+$o-main-text-color: #111111;
+$o-main-color-muted: #6b6b6b;
+$o-main-favorite-color: #000000;
+
+// Action / accent color used across buttons, links, highlights
+$o-action: #000000;
+
+// Backgrounds
+$o-view-background-color: #ffffff;
+$o-webclient-background-color: #ffffff;
+$o-gray-100: #f7f7f7;
+$o-gray-200: #ededed;

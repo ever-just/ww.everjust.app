@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Remove "Powered by" from PDF report footers -->
+    <template id="everjust_report_footer" inherit_id="web.external_layout_standard" optional="enabled">
+        <xpath expr="//div[hasclass('o_company_tagline')]" position="replace"/>
+    </template>
+
+</odoo>

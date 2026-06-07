@@ -11,4 +11,11 @@
         <xpath expr="//a[contains(@href, 'odoo.com')]" position="replace"/>
     </template>
 
+    <!-- Default page title 'Odoo' -> 'EVERJUST.APP' (login, error, install pages) -->
+    <template id="everjust_default_title" inherit_id="web.layout">
+        <xpath expr="//title" position="replace">
+            <title t-esc="title or 'EVERJUST.APP'"/>
+        </xpath>
+    </template>
+
 </odoo>

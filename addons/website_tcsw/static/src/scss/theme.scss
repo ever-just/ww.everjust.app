@@ -43,13 +43,15 @@ h1,.h1{font-size:clamp(2.2rem,5vw,3.5rem);}h2,.h2{font-size:clamp(1.7rem,3.5vw,2
 .tcsw-reveal{opacity:0;transform:translateY(24px);transition:opacity .5s ease,transform .5s ease;
   &.tcsw-visible{opacity:1;transform:none;}}
 
-// Navbar — transparent over hero (overlay header), solid teal on scroll
+// Navbar — transparent over hero (overlay header), solid teal on scroll.
+// Note: Odoo puts .o_header_overlay on #wrapwrap; affix classes go on #top.
 #top .navbar{transition:background-color .3s ease,box-shadow .3s ease;}
 .navbar .nav-link{font-weight:500;letter-spacing:.01em;transition:color .15s ease;}
-.navbar .nav-link:hover{color:$tcsw-yellow;}
-#top.o_header_overlay .navbar{background:transparent !important;box-shadow:none !important;}
-#top.o_header_overlay:not(.o_header_affixed):not(.o_top_fixed_element) .navbar .nav-link,
-#top.o_header_overlay:not(.o_header_affixed):not(.o_top_fixed_element) .navbar-brand{color:#fff;}
+.navbar .nav-link:hover{color:$tcsw-yellow !important;}
+// Transparent over hero, white links
+.o_header_overlay #top .navbar{background:transparent !important;box-shadow:none !important;}
+.o_header_overlay #top:not(.o_header_affixed):not(.o_top_fixed_element) .navbar .nav-link,
+.o_header_overlay #top:not(.o_header_affixed):not(.o_top_fixed_element) .navbar-toggler{color:#fff !important;}
+// Solid teal once scrolled/affixed (affix class is on #top)
 #top.o_header_affixed .navbar,#top.o_top_fixed_element .navbar{background:rgba(17,50,74,.97) !important;backdrop-filter:blur(12px);box-shadow:0 1px 16px rgba(0,0,0,.18) !important;}
-#top.o_header_affixed .navbar .nav-link,#top.o_top_fixed_element .navbar .nav-link{color:rgba(255,255,255,.92);}
-#top.o_header_affixed .navbar .nav-link:hover,#top.o_top_fixed_element .navbar .nav-link:hover{color:$tcsw-yellow;}
+#top.o_header_affixed .navbar .nav-link,#top.o_top_fixed_element .navbar .nav-link{color:rgba(255,255,255,.92) !important;}

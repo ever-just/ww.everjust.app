@@ -33,9 +33,6 @@ h1,.h1{font-size:clamp(2.2rem,5vw,3.5rem);}h2,.h2{font-size:clamp(1.7rem,3.5vw,2
   .tcsw-pillar__icon{width:48px;height:48px;border-radius:12px;background:$tcsw-slate-lt;display:flex;align-items:center;justify-content:center;margin-bottom:1.25rem;}
   h3,h4{font-size:1.125rem;margin-bottom:.5rem;}p{font-size:.9375rem;color:$tcsw-slate;margin-bottom:0;}}
 
-.tcsw-sponsor-logo{display:flex;align-items:center;justify-content:center;padding:1rem 1.5rem;border-radius:10px;border:1px solid rgba($tcsw-teal,.08);background:#fff;transition:box-shadow .18s ease;filter:grayscale(.6) opacity(.75);
-  &:hover{filter:none;box-shadow:0 4px 16px rgba($tcsw-teal,.1);}img{max-height:40px;width:auto;}}
-
 .o_wevent_event_list_item,.o_wevent_booth_list_item{border-radius:12px;border:1px solid rgba($tcsw-teal,.08);background:#fff;padding:1.25rem 1.5rem;margin-bottom:.75rem;transition:box-shadow .2s ease,transform .2s ease;
   &:hover{box-shadow:0 6px 20px rgba($tcsw-teal,.1);transform:translateX(3px);}}
 .o_wevent_badge{font-size:.72rem;font-weight:600;letter-spacing:.07em;text-transform:uppercase;padding:.25rem .65rem;border-radius:50rem;background:$tcsw-slate-lt;color:$tcsw-teal;}
@@ -45,3 +42,14 @@ h1,.h1{font-size:clamp(2.2rem,5vw,3.5rem);}h2,.h2{font-size:clamp(1.7rem,3.5vw,2
 
 .tcsw-reveal{opacity:0;transform:translateY(24px);transition:opacity .5s ease,transform .5s ease;
   &.tcsw-visible{opacity:1;transform:none;}}
+
+// Navbar — transparent over hero (overlay header), solid teal on scroll
+#top .navbar{transition:background-color .3s ease,box-shadow .3s ease;}
+.navbar .nav-link{font-weight:500;letter-spacing:.01em;transition:color .15s ease;}
+.navbar .nav-link:hover{color:$tcsw-yellow;}
+#top.o_header_overlay .navbar{background:transparent !important;box-shadow:none !important;}
+#top.o_header_overlay:not(.o_header_affixed):not(.o_top_fixed_element) .navbar .nav-link,
+#top.o_header_overlay:not(.o_header_affixed):not(.o_top_fixed_element) .navbar-brand{color:#fff;}
+#top.o_header_affixed .navbar,#top.o_top_fixed_element .navbar{background:rgba(17,50,74,.97) !important;backdrop-filter:blur(12px);box-shadow:0 1px 16px rgba(0,0,0,.18) !important;}
+#top.o_header_affixed .navbar .nav-link,#top.o_top_fixed_element .navbar .nav-link{color:rgba(255,255,255,.92);}
+#top.o_header_affixed .navbar .nav-link:hover,#top.o_top_fixed_element .navbar .nav-link:hover{color:$tcsw-yellow;}

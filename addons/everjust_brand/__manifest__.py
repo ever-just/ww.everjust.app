@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     "name": "EVERJUST.APP Branding",
-    "version": "19.0.1.0.0",
+    "version": "19.0.1.1.0",
     "summary": "Full white-label rebrand to EVERJUST.APP. Removes all upstream branding.",
     "description": """
 EVERJUST.APP Branding
@@ -21,6 +21,7 @@ Replaces every upstream branding touchpoint with EVERJUST.APP:
     "data": [
         "data/branding_params.xml",
         "views/login_templates.xml",
+        "views/brand_templates.xml",
         "views/report_templates.xml",
     ],
     "assets": {

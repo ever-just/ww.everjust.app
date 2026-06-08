@@ -16,7 +16,7 @@ This module injects styles only. It does not replace the active website theme.
 """,
     "author": "EVERJUST",
     "website": "https://everjust.app",
-    "category": "Theme",
+    "category": "Website",
     "depends": ["website", "website_event"],
     "data": [
         "views/fonts.xml",

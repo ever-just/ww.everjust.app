@@ -71,6 +71,7 @@ def provision_tenant(subdomain: str, admin_login: str, admin_password: str) -> d
     )
 
     _set_admin_credentials(subdomain, admin_login, admin_password)
+    _configure_mail(subdomain)
     ensure_dns(subdomain)
 
     return {
@@ -94,6 +95,55 @@ def _set_admin_credentials(db: str, login: str, password: str) -> None:
         ["docker", "exec", "-i", ODOO_CONTAINER, "odoo", "shell",
          "-d", db, "--db_user", DB_USER, "--db_password", DB_PASSWORD, "--no-http"],
         input=py, text=True, check=False,
+    )
+
+
+MAIL_DOMAIN = os.environ.get("MAIL_DOMAIN", "everjust.co")
+
+# Configures outgoing mail for a freshly provisioned tenant so every instance
+# sends through Resend and every message comes from the verified domain.
+# Runs inside the Odoo container, which already has RESEND_API_KEY in its env
+# (via env_file), so the secret is never interpolated into the command string.
+_MAIL_SETUP_PY = """
+import os
+key = os.environ.get('RESEND_API_KEY')
+domain = os.environ.get('MAIL_DOMAIN', 'everjust.co')
+Server = env['ir.mail_server']
+if key and not Server.search([]):
+    Server.create({
+        'name': 'Resend (EVERJUST.APP)',
+        'smtp_host': 'smtp.resend.com',
+        'smtp_port': 465,
+        'smtp_encryption': 'ssl',
+        'smtp_authentication': 'login',
+        'smtp_user': 'resend',
+        'smtp_pass': key,
+        'from_filter': domain,
+        'sequence': 5,
+    })
+Dom = env['mail.alias.domain']
+dom = Dom.search([('name', '=', domain)], limit=1)
+if not dom:
+    dom = Dom.create({
+        'name': domain,
+        'bounce_alias': 'bounce',
+        'catchall_alias': 'catchall',
+        'default_from': 'noreply',
+    })
+for company in env['res.company'].search([]):
+    company.alias_domain_id = dom.id
+env['ir.config_parameter'].sudo().set_param('mail.catchall.domain', domain)
+env['ir.config_parameter'].sudo().set_param('mail.default.from', 'noreply')
+env.cr.commit()
+"""
+
+
+def _configure_mail(db: str) -> None:
+    """Wire the tenant to Resend + the verified everjust.co sending domain."""
+    subprocess.run(
+        ["docker", "exec", "-i", ODOO_CONTAINER, "odoo", "shell",
+         "-d", db, "--db_user", DB_USER, "--db_password", DB_PASSWORD, "--no-http"],
+        input=_MAIL_SETUP_PY, text=True, check=False,
     )
 
 

@@ -14,6 +14,12 @@
             <field name="value">EVERJUST.APP</field>
         </record>
 
+        <!-- PWA desktop app name (shown when installing / in the title bar) -->
+        <record id="everjust_web_app_name" model="ir.config_parameter">
+            <field name="key">web.web_app_name</field>
+            <field name="value">EVERJUST.APP</field>
+        </record>
+
         <!-- Apply branded company report footers on install -->
         <function model="res.company" name="_everjust_apply_defaults"/>
 

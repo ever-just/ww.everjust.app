@@ -1,20 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <!-- Replace the login page brand with EVERJUST.APP -->
+    <!-- Replace the login page brand with EVERJUST.APP logo -->
     <template id="everjust_login_brand" inherit_id="web.login_layout">
-        <!-- Swap the upstream company logo for the EVERJUST.APP wordmark -->
+        <!-- Swap the upstream company logo for the EVERJUST.APP logo image -->
         <xpath expr="//img" position="replace">
-            <h1 class="everjust-wordmark">EVERJUST.APP</h1>
+            <img src="/everjust_brand/static/img/logo.png"
+                 alt="EVERJUST.APP"
+                 class="everjust-login-logo"/>
         </xpath>
         <!-- Remove the "Powered by Odoo" footer link -->
         <xpath expr="//a[contains(@href, 'odoo.com')]" position="replace"/>
     </template>
 
-    <!-- Default page title 'Odoo' -> 'EVERJUST.APP' (login, error, install pages) -->
+    <!-- Default page title + favicon (login, error, install pages) -->
     <template id="everjust_default_title" inherit_id="web.layout">
         <xpath expr="//title" position="replace">
             <title t-esc="title or 'EVERJUST.APP'"/>
+        </xpath>
+        <xpath expr="//link[@rel='shortcut icon']" position="replace">
+            <link type="image/x-icon" rel="shortcut icon" href="/everjust_brand/static/img/favicon.ico"/>
+            <link rel="icon" type="image/svg+xml" href="/everjust_brand/static/img/favicon.svg"/>
         </xpath>
     </template>
 

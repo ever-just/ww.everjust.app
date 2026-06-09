@@ -20,6 +20,7 @@ services:
     volumes:
       - odoo-data:/var/lib/odoo
       - ../addons:/mnt/extra-addons
+      - /opt/everjust/oca:/mnt/oca:ro
       - ./odoo.conf:/etc/odoo/odoo.conf:ro
     environment:
       HOST: db

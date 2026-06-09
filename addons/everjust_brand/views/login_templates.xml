@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+<data>
 
     <!-- Replace the login page brand with EVERJUST.APP logo -->
     <template id="everjust_login_brand" inherit_id="web.login_layout">
@@ -24,4 +25,5 @@
         </xpath>
     </template>
 
+</data>
 </odoo>

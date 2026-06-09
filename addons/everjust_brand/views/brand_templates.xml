@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+<data>
 
     <!-- Backend "Powered by" promotion message -> EVERJUST.APP -->
     <template id="everjust_brand_promotion" inherit_id="web.brand_promotion_message" optional="enabled">
@@ -19,4 +20,5 @@
         </xpath>
     </template>
 
+</data>
 </odoo>

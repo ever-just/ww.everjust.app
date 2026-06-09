@@ -1,20 +1,4 @@
-// EVERJUST.APP — hide all upstream branding and license-locked upsell elements
-
-// Enterprise upgrade ribbons / labels
-.o_enterprise_label,
-.oe_enterprise_label,
-.o_debug_manager .fa-bug ~ .badge,
-.o_upgrade_label,
-.o_enterprise_upgrade {
-    display: none !important;
-}
-
-// "Upgrade to Enterprise" CTAs and Odoo.com promo links
-a[href*="odoo.com"]:not(.everjust-keep),
-.o_browser_default_promotion,
-.o_settings_container .o_setting_box .badge.text-bg-warning {
-    display: none !important;
-}
+// EVERJUST.APP — branding overrides
 
 // Login logo image
 .everjust-login-logo {
@@ -22,10 +6,4 @@ a[href*="odoo.com"]:not(.everjust-keep),
     width: auto;
     display: block;
     margin: 0 auto;
-}
-
-// Apps store paid listings prompt
-.o_apps_store_banner,
-.o_module_upgrade_enterprise {
-    display: none !important;
 }

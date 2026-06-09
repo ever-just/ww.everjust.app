@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-<data>
 
     <!-- Backend "Powered by" promotion message -> EVERJUST.APP -->
-    <template id="everjust_brand_promotion" inherit_id="web.brand_promotion_message" optional="enabled">
+    <template id="everjust_brand_promotion" inherit_id="web.brand_promotion_message">
         <xpath expr="." position="replace">
             <t t-name="web.brand_promotion_message">
                 <span class="o_brand_promotion">
@@ -20,5 +19,4 @@
         </xpath>
     </template>
 
-</data>
 </odoo>

@@ -121,7 +121,9 @@ push to master → GitHub Actions → SSH into EC2 → git pull → rebuild cont
 |---|---|---|
 | `everjust_brand` | Yes | Full debranding — login page, tab title, favicon, footers, user menu, upgrade banners |
 | `everjust_home` | Yes | App grid home screen with search + navbar home button (replaces Discuss default) |
+| `everjust_sms_gateway` | Yes | Routes SMS through TextBee instead of Odoo IAP — all existing SMS features work |
 | `everjust_theme` | No | Black & white default color scheme |
+| `voip_oca` | No | SIP softphone widget — click-to-dial, call logging, transfer/hold/mute (OCA) |
 | `website_tcsw` | No | TCSW tenant-specific fonts/design (Space Grotesk + Inter) |
 
 ## Active tenants
@@ -134,7 +136,8 @@ push to master → GitHub Actions → SSH into EC2 → git pull → rebuild cont
 ## Known limitations (Community Edition)
 
 - **No one-click third-party app install.** The Odoo Apps marketplace downloads `.zip` files in Community. One-click install requires an Enterprise contract. To install third-party modules: extract the zip to `addons/`, restart Odoo, update the apps list.
-- **No native VoIP/Phone app.** The Odoo "Phone" app is Enterprise-only. See `docs/TELEPHONY_PLAN.md` for the self-hosted alternative plan.
+- **VoIP via OCA module.** The Odoo "Phone" app is Enterprise-only. We use `voip_oca` (OCA) + FusionPBX for equivalent functionality. See `docs/TELEPHONY_PLAN.md`.
+- **SMS via TextBee.** The `everjust_sms_gateway` module replaces Odoo IAP with a self-hosted TextBee gateway. All SMS UI (composer, templates, chatter) works unchanged.
 
 ## Status
 

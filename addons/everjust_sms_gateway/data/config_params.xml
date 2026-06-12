@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <!--
+            TextBee gateway configuration.
+            Set these via Settings > Technical > Parameters > System Parameters,
+            or through the control-plane provisioning script.
+
+            everjust.sms_gateway_url  — e.g. https://textbee.everjust.app
+            everjust.sms_gateway_key  — API key for outbound requests
+            everjust.sms_webhook_key  — shared secret to verify inbound webhooks
+        -->
+        <record id="param_sms_gateway_url" model="ir.config_parameter">
+            <field name="key">everjust.sms_gateway_url</field>
+            <field name="value"></field>
+        </record>
+
+        <record id="param_sms_gateway_key" model="ir.config_parameter">
+            <field name="key">everjust.sms_gateway_key</field>
+            <field name="value"></field>
+        </record>
+
+        <record id="param_sms_webhook_key" model="ir.config_parameter">
+            <field name="key">everjust.sms_webhook_key</field>
+            <field name="value"></field>
+        </record>
+
+    </data>
+</odoo>

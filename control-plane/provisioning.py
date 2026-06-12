@@ -28,7 +28,7 @@ def _pg_connect(dbname: str = "postgres"):
         password=DB_PASSWORD, dbname=dbname, connect_timeout=10,
     )
 
-EVERJUST_MODULES = "base,everjust_brand,everjust_theme,everjust_home"
+EVERJUST_MODULES = "base,everjust_brand,everjust_theme,everjust_home,voip_oca,everjust_sms_gateway"
 
 SUBDOMAIN_RE = re.compile(r"^[a-z0-9][a-z0-9-]{1,38}[a-z0-9]$")
 RESERVED = {"www", "app", "api", "admin", "mail", "ftp", "staging", "test"}

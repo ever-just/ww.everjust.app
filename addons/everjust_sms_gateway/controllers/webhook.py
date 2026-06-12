@@ -66,15 +66,12 @@ class SmsWebhookController(http.Controller):
                     status=403,
                 )
 
-        # Reverse-lookup: find partner by phone or mobile.
-        partner = (
-            request.env["res.partner"]
-            .sudo()
-            .search(
-                ["|", ("phone", "=", phone), ("mobile", "=", phone)],
-                limit=1,
-            )
-        )
+        # Reverse-lookup: find partner by phone (and mobile if the field exists).
+        Partner = request.env["res.partner"].sudo()
+        domain = [("phone", "=", phone)]
+        if "mobile" in Partner._fields:
+            domain = ["|", ("phone", "=", phone), ("mobile", "=", phone)]
+        partner = Partner.search(domain, limit=1)
 
         if partner:
             partner.message_post(

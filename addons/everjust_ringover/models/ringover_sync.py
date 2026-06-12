@@ -7,7 +7,7 @@ from odoo import api, models
 _logger = logging.getLogger(__name__)
 
 
-class RingoverSync(models.AbstractModel):
+class RingoverSync(models.TransientModel):
     _name = "ringover.sync"
     _description = "Ringover API Sync Service"
 

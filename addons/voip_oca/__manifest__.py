@@ -14,6 +14,7 @@
     "maintainers": ["etobella"],
     "data": [
         "security/ir.model.access.csv",
+        "data/voip_pbx_data.xml",
         "views/res_users.xml",
         "views/voip_call.xml",
         "views/voip_pbx.xml",

@@ -7,7 +7,10 @@ from odoo import fields, models
 class ResUsers(models.Model):
     _inherit = "res.users"
 
-    voip_pbx_id = fields.Many2one("voip.pbx")
+    voip_pbx_id = fields.Many2one(
+        "voip.pbx",
+        default=lambda self: self.env["voip.pbx"].search([], limit=1),
+    )
     voip_username = fields.Char()
     voip_password = fields.Char()
 

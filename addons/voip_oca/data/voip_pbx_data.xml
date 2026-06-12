@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <!--
+            Default PBX record so all users get VoIP configured out of the box.
+            Tenants just update domain + ws_server + mode in Phone > Configuration.
+            Individual users only need to set their SIP username/password.
+        -->
+        <record id="default_pbx" model="voip.pbx">
+            <field name="name">Default PBX</field>
+            <field name="domain">pbx.everjust.app</field>
+            <field name="ws_server">wss://pbx.everjust.app:7443</field>
+            <field name="mode">test</field>
+        </record>
+
+        <!-- Set the default PBX on admin and root users -->
+        <record id="base.user_admin" model="res.users">
+            <field name="voip_pbx_id" ref="default_pbx"/>
+        </record>
+        <record id="base.user_root" model="res.users">
+            <field name="voip_pbx_id" ref="default_pbx"/>
+        </record>
+
+    </data>
+</odoo>

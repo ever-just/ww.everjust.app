@@ -1,0 +1,44 @@
+name: Deploy to Production
+
+on:
+  push:
+    branches: [master]
+
+concurrency:
+  group: deploy-production
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Deploy via SSH
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.DEPLOY_HOST }}
+          username: ${{ secrets.DEPLOY_USER }}
+          key: ${{ secrets.DEPLOY_SSH_KEY }}
+          script_stop: true
+          script: |
+            set -euo pipefail
+            cd /opt/everjust/platform
+
+            echo "=== Pulling latest code ==="
+            git fetch origin master
+            git reset --hard origin/master
+
+            echo "=== Rebuilding control-plane ==="
+            cd deployment
+            docker compose build --no-cache control-plane
+
+            echo "=== Restarting services ==="
+            docker compose up -d --remove-orphans
+
+            echo "=== Waiting for health check ==="
+            sleep 5
+            curl -sf http://localhost:8000/healthz || { echo "Health check failed"; exit 1; }
+
+            echo "=== Deploy complete ==="

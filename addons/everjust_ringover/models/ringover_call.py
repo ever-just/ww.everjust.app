@@ -35,6 +35,7 @@ class RingoverCall(models.Model):
     ringover_user_id = fields.Char(readonly=True)
     ringover_user_name = fields.Char(string="Agent", readonly=True)
     partner_id = fields.Many2one("res.partner", string="Contact", readonly=True)
+    lead_id = fields.Many2one("crm.lead", string="Opportunity", readonly=True)
     user_id = fields.Many2one("res.users", string="Odoo User", readonly=True)
 
     @staticmethod
@@ -68,6 +69,14 @@ class RingoverCall(models.Model):
                 [("login", "=", ringover_user["email"])], limit=1,
             )
 
+        # Also find CRM lead linked to this partner
+        lead = self.env["crm.lead"]
+        if partner and "crm.lead" in self.env:
+            lead = self.env["crm.lead"].search(
+                [("partner_id", "=", partner.id), ("active", "=", True)],
+                order="id desc", limit=1,
+            )
+
         vals = {
             "cdr_id": cdr_id,
             "call_id": call_data.get("call_id", ""),
@@ -86,6 +95,7 @@ class RingoverCall(models.Model):
             "ringover_user_id": str(ringover_user.get("user_id", "")),
             "ringover_user_name": ringover_user.get("concat_name", ""),
             "partner_id": partner.id if partner else False,
+            "lead_id": lead.id if lead else False,
             "user_id": odoo_user.id if odoo_user else False,
         }
 
@@ -94,13 +104,16 @@ class RingoverCall(models.Model):
             return existing
 
         record = self.create(vals)
+        # Post to partner AND lead chatter
+        direction = "Incoming" if vals["direction"] == "in" else "Outgoing"
+        dur = vals["duration"]
+        body = "<b>%s call</b> — %s (%dm %ds)" % (direction, contact_number, dur // 60, dur % 60)
+        if vals["recording_url"]:
+            body += '<br/><a href="%s" target="_blank">Listen to recording</a>' % vals["recording_url"]
         if partner:
-            direction = "Incoming" if vals["direction"] == "in" else "Outgoing"
-            dur = vals["duration"]
-            body = "<b>%s call</b> — %s (%dm %ds)" % (direction, contact_number, dur // 60, dur % 60)
-            if vals["recording_url"]:
-                body += '<br/><a href="%s" target="_blank">Listen to recording</a>' % vals["recording_url"]
             partner.message_post(body=body, message_type="notification", subtype_xmlid="mail.mt_note")
+        if lead:
+            lead.message_post(body=body, message_type="notification", subtype_xmlid="mail.mt_note")
         return record
 
     # --- API helpers ---
@@ -138,3 +151,25 @@ class RingoverCall(models.Model):
             except Exception as exc:
                 _logger.error("Failed to sync call %s: %s", cd.get("cdr_id"), exc)
         _logger.info("Ringover: synced %s calls", count)
+
+    @api.model
+    def initiate_call(self, from_number, to_number):
+        """Initiate a callback via Ringover API — rings the agent first,
+        then auto-dials the recipient when agent picks up."""
+        ICP = self.env["ir.config_parameter"].sudo()
+        url = (ICP.get_param("everjust.ringover_api_url") or "").rstrip("/")
+        key = ICP.get_param("everjust.ringover_api_key") or ""
+        if not url or not key:
+            return {"error": "Ringover API not configured"}
+        try:
+            resp = requests.post(
+                "%s/callback" % url,
+                headers={"Authorization": key, "Content-Type": "application/json"},
+                json={"from_number": from_number, "to_number": to_number},
+                timeout=15,
+            )
+            if resp.ok:
+                return {"success": True}
+            return {"error": "Ringover API returned %s" % resp.status_code}
+        except requests.RequestException as exc:
+            return {"error": str(exc)}

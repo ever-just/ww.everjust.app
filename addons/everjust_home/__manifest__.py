@@ -2,16 +2,16 @@
 {
     "name": "EVERJUST.APP Home Menu",
     "version": "19.0.1.1.0",
-    "summary": "App grid home screen for Odoo Community — replaces the default Discuss landing.",
+    "summary": "App grid home screen — replaces the default Discuss landing.",
     "description": """
 EVERJUST.APP Home Menu
 ======================
 Adds a fullscreen app grid as the default landing page after login,
-similar to Odoo Enterprise's HomeMenu. Patches the WebClient so all
+with one tile per installed app. Patches the WebClient so all
 users see the grid instead of being dropped into the first app
 (typically Discuss).
 
-Works on Odoo 19 Community Edition.
+Part of the EVERJUST.APP platform.
 """,
     "author": "EVERJUST",
     "website": "https://everjust.app",

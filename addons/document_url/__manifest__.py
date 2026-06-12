@@ -4,7 +4,7 @@
     "name": "URL attachment",
     "version": "19.0.1.0.0",
     "category": "Tools",
-    "author": "Tecnativa, Odoo Community Association (OCA)",
+    "author": "Tecnativa, OCA",
     "website": "https://github.com/OCA/knowledge",
     "license": "AGPL-3",
     "depends": ["mail"],

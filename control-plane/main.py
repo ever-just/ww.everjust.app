@@ -1,161 +1,186 @@
 # -*- coding: utf-8 -*-
 """EVERJUST.APP control plane.
 
-Handles the public signup flow, Stripe billing, and tenant provisioning.
-Runs at everjust.app (root). Tenant instances live at <org>.everjust.app.
+Public site (landing, signup, sign-in), Stripe billing, and tenant
+provisioning. Runs at everjust.app (root); tenant workspaces live at
+<org>.everjust.app.
 """
+import datetime
 import os
+import pathlib
+
 import stripe
-from fastapi import FastAPI, Request, Form, HTTPException
-from fastapi.responses import HTMLResponse, RedirectResponse, JSONResponse
+from fastapi import FastAPI, Form, Request
+from fastapi.responses import FileResponse, HTMLResponse, JSONResponse, RedirectResponse
+from fastapi.staticfiles import StaticFiles
+from fastapi.templating import Jinja2Templates
 
 import provisioning
+import signup_store
 
 stripe.api_key = os.environ["STRIPE_SECRET_KEY"]
 STRIPE_PRICE_ID = os.environ.get("STRIPE_PRICE_ID", "price_1TflJNKL0p3ve1jHbCLlDNWS")
 WEBHOOK_SECRET = os.environ.get("STRIPE_WEBHOOK_SECRET", "")
 BASE_DOMAIN = os.environ.get("BASE_DOMAIN", "everjust.app")
 
-app = FastAPI(title="EVERJUST.APP")
+BASE_DIR = pathlib.Path(__file__).resolve().parent
+STATIC_DIR = BASE_DIR / "static"
+
+app = FastAPI(title="EVERJUST.APP", docs_url=None, redoc_url=None, openapi_url=None)
+app.mount("/static", StaticFiles(directory=str(STATIC_DIR)), name="static")
+
+templates = Jinja2Templates(directory=str(BASE_DIR / "templates"))
 
 
-SIGNUP_PAGE = """
-<!doctype html><html><head><meta charset="utf-8">
-<title>EVERJUST.APP</title>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<style>
-  body{{font-family:-apple-system,Segoe UI,Roboto,sans-serif;background:#fff;color:#000;
-       display:flex;min-height:100vh;align-items:center;justify-content:center;margin:0}}
-  .card{{width:400px;border:1px solid #000;border-radius:12px;padding:32px}}
-  h1{{font-weight:800;letter-spacing:1px;margin:0 0 4px}}
-  p{{color:#555;margin:0 0 24px}}
-  label{{display:block;font-size:13px;margin:16px 0 4px;font-weight:600}}
-  input{{width:100%;padding:10px;border:1px solid #000;border-radius:8px;box-sizing:border-box;
-         font-size:14px}}
-  .preview{{margin-top:8px;padding:10px 12px;border:1px dashed #bbb;border-radius:8px;
-            background:#fafafa;font-size:14px;display:flex;align-items:center;gap:2px}}
-  .preview .host{{font-weight:800}}
-  .preview .suffix{{color:#888}}
-  .preview .placeholder{{color:#bbb;font-weight:800}}
-  button{{width:100%;margin-top:28px;padding:12px;background:#000;color:#fff;border:0;
-          border-radius:8px;font-weight:700;cursor:pointer;font-size:15px}}
-  .divider{{display:flex;align-items:center;gap:12px;margin:28px 0 0;color:#aaa;font-size:13px}}
-  .divider::before,.divider::after{{content:'';flex:1;border-top:1px solid #ddd}}
-  .login-section{{margin-top:20px}}
-  .login-section p{{color:#555;margin:0 0 12px;font-size:14px}}
-  .login-row{{display:flex;gap:8px}}
-  .login-row input{{flex:1;margin:0}}
-  .login-row button{{width:auto;margin:0;padding:10px 16px;white-space:nowrap;font-size:13px}}
-  .login-suffix{{font-size:13px;color:#888;margin-top:4px}}
-</style></head><body>
-<div class="card">
-<form method="post" action="/signup">
-  <h1>EVERJUST.APP</h1>
-  <p>Start your workspace</p>
-  <label>Organization name</label>
-  <input name="org_name" id="org_name" required>
-  <label>Workspace address</label>
-  <input name="subdomain" id="subdomain" pattern="[a-z0-9-]+" autocomplete="off"
-         autocapitalize="off" spellcheck="false" required>
-  <div class="preview" id="preview">
-    <span class="placeholder">your-org</span><span class="suffix">.{domain}</span>
-  </div>
-  <label>Admin email</label>
-  <input name="email" type="email" required>
-  <label>Password</label>
-  <input name="password" type="password" minlength="8" required>
-  <button type="submit">Create workspace</button>
-</form>
-<div class="divider">or</div>
-<div class="login-section">
-  <p>Already have a workspace?</p>
-  <div class="login-row">
-    <input type="text" id="login_subdomain" placeholder="your-org" autocomplete="off"
-           autocapitalize="off" spellcheck="false">
-    <button type="button" id="login_btn">Log in &rarr;</button>
-  </div>
-  <div class="login-suffix">.{domain}</div>
-</div>
-</div>
-<script>
-  var sub = document.getElementById('subdomain');
-  var org = document.getElementById('org_name');
-  var preview = document.getElementById('preview');
-  var SUFFIX = '.{domain}';
-  function slug(v){{
-    return (v||'').toLowerCase().trim()
-      .replace(/[^a-z0-9-]+/g,'-').replace(/-+/g,'-').replace(/^-|-$/g,'');
-  }}
-  function render(){{
-    var v = slug(sub.value);
-    if(v){{
-      preview.innerHTML = '<span class="host">'+v+'</span><span class="suffix">'+SUFFIX+'</span>';
-    }} else {{
-      preview.innerHTML = '<span class="placeholder">your-org</span><span class="suffix">'+SUFFIX+'</span>';
-    }}
-  }}
-  sub.addEventListener('input', render);
-  // Suggest a workspace address from the org name until the user edits it.
-  var edited = false;
-  sub.addEventListener('input', function(){{ edited = true; }});
-  org.addEventListener('input', function(){{
-    if(!edited){{ sub.value = slug(org.value); render(); }}
-  }});
-  // Normalize on submit so what the user previewed is what gets sent.
-  sub.form.addEventListener('submit', function(){{ sub.value = slug(sub.value); }});
-  // Login redirect
-  var loginInput = document.getElementById('login_subdomain');
-  var loginBtn = document.getElementById('login_btn');
-  function goLogin(){{
-    var ws = slug(loginInput.value);
-    if(ws) window.location.href = 'https://' + ws + '.{domain}';
-  }}
-  loginBtn.addEventListener('click', goLogin);
-  loginInput.addEventListener('keydown', function(e){{ if(e.key==='Enter') goLogin(); }});
-</script>
-</body></html>
-"""
+def render(request: Request, name: str, status_code: int = 200, **ctx) -> HTMLResponse:
+    ctx.setdefault("domain", BASE_DOMAIN)
+    ctx.setdefault("year", datetime.date.today().year)
+    return templates.TemplateResponse(
+        request=request, name=name, context=ctx, status_code=status_code
+    )
 
+
+@app.middleware("http")
+async def security_headers(request: Request, call_next):
+    response = await call_next(request)
+    response.headers.setdefault("X-Content-Type-Options", "nosniff")
+    response.headers.setdefault("X-Frame-Options", "DENY")
+    response.headers.setdefault("Referrer-Policy", "strict-origin-when-cross-origin")
+    response.headers.setdefault(
+        "Permissions-Policy", "camera=(), microphone=(), geolocation=()"
+    )
+    return response
+
+
+# ── Pages ────────────────────────────────────────────────────────────────
 
 @app.get("/", response_class=HTMLResponse)
-def signup_page():
-    return SIGNUP_PAGE.format(domain=BASE_DOMAIN)
+def landing(request: Request):
+    return render(request, "landing.html")
+
+
+@app.get("/signup", response_class=HTMLResponse)
+def signup_page(request: Request):
+    return render(request, "signup.html")
+
+
+@app.get("/signin", response_class=HTMLResponse)
+def signin_page(request: Request):
+    return render(request, "signin.html")
+
+
+@app.get("/login")
+def login_alias():
+    return RedirectResponse("/signin", status_code=307)
+
+
+@app.get("/offline", response_class=HTMLResponse)
+def offline(request: Request):
+    return render(request, "offline.html")
+
+
+@app.get("/welcome", response_class=HTMLResponse)
+def welcome(request: Request, s: str = None, subdomain: str = None):
+    sub = (subdomain or "").lower().strip()
+    if not provisioning.validate_subdomain(sub):
+        return RedirectResponse("/signup", status_code=303)
+    return render(request, "welcome.html", subdomain=sub)
+
+
+# ── Signup flow ──────────────────────────────────────────────────────────
+
+def _signup_error(request: Request, message: str, **form_values) -> HTMLResponse:
+    return render(request, "signup.html", status_code=400, error=message, **form_values)
 
 
 @app.post("/signup")
-def signup(org_name: str = Form(...), subdomain: str = Form(...),
+def signup(request: Request,
+           org_name: str = Form(...), subdomain: str = Form(...),
            email: str = Form(...), password: str = Form(...)):
+    org_name = org_name.strip()
     subdomain = subdomain.lower().strip()
-    if not provisioning.validate_subdomain(subdomain):
-        raise HTTPException(400, "That workspace address is unavailable.")
-    if provisioning.database_exists(subdomain):
-        raise HTTPException(400, "That workspace address is taken.")
+    email = email.strip()
+    keep = {"org_name": org_name, "subdomain": subdomain, "email": email}
 
-    tenant_meta = {
-        "org_name": org_name,
-        "subdomain": subdomain,
-        "admin_email": email,
-        # Password is passed through metadata only for the provisioning
-        # step; replace with a one-time token store in production.
-        "admin_password": password,
-    }
-    session = stripe.checkout.Session.create(
-        mode="subscription",
-        line_items=[{"price": STRIPE_PRICE_ID, "quantity": 5}],
-        customer_email=email,
-        # Let customers enter a promo code (e.g. 100%-off access codes).
-        allow_promotion_codes=True,
-        # If a coupon brings the total to $0, don't force card entry.
-        payment_method_collection="if_required",
-        success_url=f"https://{BASE_DOMAIN}/welcome?s={{CHECKOUT_SESSION_ID}}&subdomain={subdomain}",
-        cancel_url=f"https://{BASE_DOMAIN}/",
-        metadata=tenant_meta,
-        # Carry tenant metadata onto the subscription so lifecycle webhooks
-        # (payment_failed, subscription.deleted) can resolve the tenant.
-        subscription_data={"metadata": tenant_meta},
-    )
+    if not org_name:
+        return _signup_error(request, "Please enter your organization name.", **keep)
+    if not provisioning.validate_subdomain(subdomain):
+        return _signup_error(
+            request,
+            "That workspace address can’t be used. Use 3–40 lowercase letters, "
+            "numbers, or dashes (it can’t start or end with a dash).",
+            **keep,
+        )
+    if "@" not in email or "." not in email.split("@")[-1]:
+        return _signup_error(request, "Please enter a valid email address.", **keep)
+    if len(password) < 8:
+        return _signup_error(request, "Your password must be at least 8 characters.", **keep)
+    if provisioning.database_exists(subdomain):
+        return _signup_error(
+            request,
+            f"{subdomain}.{BASE_DOMAIN} is already taken — try another address.",
+            **keep,
+        )
+
+    # Keep signup details (incl. the tenant admin password) server-side;
+    # only an opaque token travels through Stripe metadata.
+    token = signup_store.create(org_name, subdomain, email, password)
+    meta = {"signup_token": token, "subdomain": subdomain, "org_name": org_name}
+
+    try:
+        session = stripe.checkout.Session.create(
+            mode="subscription",
+            line_items=[{"price": STRIPE_PRICE_ID, "quantity": 5}],
+            customer_email=email,
+            # Let customers enter a promo code (e.g. 100%-off access codes).
+            allow_promotion_codes=True,
+            # If a coupon brings the total to $0, don't force card entry.
+            payment_method_collection="if_required",
+            success_url=f"https://{BASE_DOMAIN}/welcome?s={{CHECKOUT_SESSION_ID}}&subdomain={subdomain}",
+            cancel_url=f"https://{BASE_DOMAIN}/signup",
+            metadata=meta,
+            # Carry tenant metadata onto the subscription so lifecycle webhooks
+            # (payment_failed, subscription.deleted) can resolve the tenant.
+            subscription_data={"metadata": meta},
+        )
+    except stripe.StripeError:
+        return render(
+            request, "error.html", status_code=502,
+            message="We couldn’t reach our payment provider. Nothing was charged — "
+                    "please try again in a minute.",
+            back_url="/signup", back_label="Back to signup",
+        )
     return RedirectResponse(session.url, status_code=303)
 
+
+# ── APIs ─────────────────────────────────────────────────────────────────
+
+@app.get("/api/subdomain-check")
+def subdomain_check(subdomain: str = ""):
+    sub = (subdomain or "").lower().strip()
+    if not provisioning.validate_subdomain(sub):
+        return {
+            "subdomain": sub, "domain": BASE_DOMAIN,
+            "valid": False, "available": False,
+            "reason": "Use 3–40 lowercase letters, numbers, or dashes.",
+        }
+    try:
+        taken = provisioning.database_exists(sub)
+    except Exception:
+        # If the DB check fails, don't block the user here — POST /signup
+        # re-validates authoritatively.
+        return {"subdomain": sub, "domain": BASE_DOMAIN, "valid": True, "available": True}
+    return {"subdomain": sub, "domain": BASE_DOMAIN, "valid": True, "available": not taken}
+
+
+@app.get("/status/{subdomain}")
+def tenant_status(subdomain: str):
+    if not provisioning.validate_subdomain(subdomain):
+        return {"ready": False}
+    return {"ready": provisioning.database_exists(subdomain)}
+
+
+# ── Stripe webhooks ──────────────────────────────────────────────────────
 
 @app.post("/stripe/webhook")
 async def stripe_webhook(request: Request):
@@ -164,16 +189,30 @@ async def stripe_webhook(request: Request):
     try:
         event = stripe.Webhook.construct_event(payload, sig, WEBHOOK_SECRET)
     except Exception as e:
-        raise HTTPException(400, f"Webhook signature failed: {e}")
+        return JSONResponse({"error": f"Webhook signature failed: {e}"}, status_code=400)
 
     if event["type"] == "checkout.session.completed":
         s = event["data"]["object"]
-        meta = s.get("metadata", {})
+        meta = s.get("metadata", {}) or {}
+        pending = signup_store.pop(meta.get("signup_token"))
+        if pending is None and meta.get("admin_password"):
+            # Checkout sessions created before the token store carried the
+            # credentials directly in metadata.
+            pending = {
+                "subdomain": meta.get("subdomain"),
+                "admin_email": meta.get("admin_email"),
+                "admin_password": meta.get("admin_password"),
+            }
+        if not pending:
+            return JSONResponse(
+                {"provisioned": False, "error": "Unknown or expired signup token"},
+                status_code=500,
+            )
         try:
             provisioning.provision_tenant(
-                subdomain=meta["subdomain"],
-                admin_login=meta["admin_email"],
-                admin_password=meta["admin_password"],
+                subdomain=pending["subdomain"],
+                admin_login=pending["admin_email"],
+                admin_password=pending["admin_password"],
             )
         except Exception as e:
             return JSONResponse({"provisioned": False, "error": str(e)}, status_code=500)
@@ -181,106 +220,53 @@ async def stripe_webhook(request: Request):
 
     if event["type"] in ("invoice.payment_failed", "customer.subscription.deleted"):
         s = event["data"]["object"]
-        sub_meta = s.get("metadata", {})
+        sub_meta = s.get("metadata", {}) or {}
         if sub_meta.get("subdomain"):
             provisioning.suspend_tenant(sub_meta["subdomain"])
 
     return {"received": True}
 
 
-WELCOME_PAGE = """
-<!doctype html><html><head><meta charset="utf-8">
-<title>EVERJUST.APP — Setting up your workspace</title>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<style>
-  body{{font-family:-apple-system,Segoe UI,Roboto,sans-serif;background:#fff;color:#000;
-       display:flex;min-height:100vh;align-items:center;justify-content:center;margin:0;text-align:center}}
-  .card{{width:420px;padding:40px 32px}}
-  h1{{font-weight:800;letter-spacing:1px;margin:0 0 32px}}
-  .url{{font-weight:700;font-size:15px;color:#000;word-break:break-all}}
-  .box{{border:1px solid #000;border-radius:12px;padding:24px;margin:24px 0}}
-  .spinner{{width:36px;height:36px;border:3px solid #eee;border-top-color:#000;
-            border-radius:50%;animation:spin 0.8s linear infinite;margin:0 auto 20px}}
-  @keyframes spin{{to{{transform:rotate(360deg)}}}}
-  .status-text{{font-size:15px;color:#555;margin:0 0 8px}}
-  .note{{font-size:13px;color:#888;margin:0}}
-  .login-btn{{display:block;padding:14px;background:#000;color:#fff;text-decoration:none;
-              border-radius:8px;font-weight:700;font-size:15px;margin-bottom:16px}}
-  #state-ready,#state-timeout{{display:none}}
-</style>
-</head><body>
-<div class="card">
-  <h1>EVERJUST.APP</h1>
+# ── PWA / well-known files ───────────────────────────────────────────────
 
-  <div id="state-loading">
-    <div class="box">
-      <div class="spinner"></div>
-      <p class="status-text">Setting up <span class="url">{subdomain}.{domain}</span>&hellip;</p>
-      <p class="note">This usually takes 1&ndash;2 minutes. Hold tight.</p>
-    </div>
-  </div>
-
-  <div id="state-ready">
-    <div class="box">
-      <p class="status-text" style="margin-bottom:20px">Your workspace is ready.</p>
-      <a class="login-btn" href="https://{subdomain}.{domain}">
-        Log in to {subdomain}.{domain} &rarr;
-      </a>
-      <p class="note">No email confirmation needed &mdash; sign in with the email and password you just created.</p>
-    </div>
-  </div>
-
-  <div id="state-timeout">
-    <div class="box">
-      <p class="status-text">Still setting up&hellip;</p>
-      <p class="note" style="margin-bottom:16px">
-        It&rsquo;s taking longer than usual. Try logging in at:<br>
-        <a href="https://{subdomain}.{domain}" class="url">https://{subdomain}.{domain}</a>
-      </p>
-    </div>
-  </div>
-</div>
-<script>
-  var subdomain = {subdomain_js!r};
-  var attempts = 0;
-  var MAX = 60;
-  function poll() {{
-    fetch('/status/' + subdomain)
-      .then(function(r) {{ return r.json(); }})
-      .then(function(d) {{
-        if (d.ready) {{
-          document.getElementById('state-loading').style.display = 'none';
-          document.getElementById('state-ready').style.display = 'block';
-        }} else if (attempts++ < MAX) {{
-          setTimeout(poll, 3000);
-        }} else {{
-          document.getElementById('state-loading').style.display = 'none';
-          document.getElementById('state-timeout').style.display = 'block';
-        }}
-      }})
-      .catch(function() {{
-        if (attempts++ < MAX) setTimeout(poll, 3000);
-      }});
-  }}
-  poll();
-</script>
-</body></html>
-"""
-
-
-@app.get("/status/{subdomain}")
-def tenant_status(subdomain: str):
-    return {"ready": provisioning.database_exists(subdomain)}
-
-
-@app.get("/welcome", response_class=HTMLResponse)
-def welcome(s: str = None, subdomain: str = None):
-    sub = subdomain or "your-workspace"
-    return WELCOME_PAGE.format(
-        subdomain=sub,
-        subdomain_js=sub,
-        domain=BASE_DOMAIN,
+@app.get("/manifest.webmanifest", include_in_schema=False)
+def webmanifest():
+    return FileResponse(
+        STATIC_DIR / "manifest.webmanifest", media_type="application/manifest+json"
     )
+
+
+@app.get("/sw.js", include_in_schema=False)
+def service_worker():
+    # Served from the root so the service worker scope covers the whole site.
+    return FileResponse(
+        STATIC_DIR / "sw.js", media_type="application/javascript",
+        headers={"Cache-Control": "no-cache"},
+    )
+
+
+@app.get("/favicon.ico", include_in_schema=False)
+def favicon():
+    return FileResponse(STATIC_DIR / "img" / "favicon.ico")
+
+
+@app.get("/apple-touch-icon.png", include_in_schema=False)
+@app.get("/apple-touch-icon-precomposed.png", include_in_schema=False)
+def apple_touch_icon():
+    return FileResponse(STATIC_DIR / "img" / "apple-touch-icon.png")
+
+
+@app.get("/robots.txt", include_in_schema=False)
+def robots():
+    body = f"User-agent: *\nAllow: /\nSitemap: https://{BASE_DOMAIN}/sitemap.txt\n"
+    return HTMLResponse(body, media_type="text/plain")
+
+
+@app.get("/sitemap.txt", include_in_schema=False)
+def sitemap():
+    pages = ["", "signup", "signin"]
+    body = "\n".join(f"https://{BASE_DOMAIN}/{p}" for p in pages) + "\n"
+    return HTMLResponse(body, media_type="text/plain")
 
 
 @app.get("/healthz")

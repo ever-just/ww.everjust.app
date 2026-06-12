@@ -44,7 +44,7 @@ h1,.h1{font-size:clamp(2.2rem,5vw,3.5rem);}h2,.h2{font-size:clamp(1.7rem,3.5vw,2
   &.tcsw-visible{opacity:1;transform:none;}}
 
 // Navbar — transparent over hero (overlay header), solid teal on scroll.
-// Note: Odoo puts .o_header_overlay on #wrapwrap; affix classes go on #top.
+// Note: upstream puts .o_header_overlay on #wrapwrap; affix classes go on #top.
 #top .navbar{transition:background-color .3s ease,box-shadow .3s ease;}
 .navbar .nav-link{font-weight:500;letter-spacing:.01em;transition:color .15s ease;}
 .navbar .nav-link:hover{color:$tcsw-yellow !important;}

@@ -4,12 +4,12 @@
 
 {
     "name": "Document Management System",
-    "summary": """Document Management System for Odoo""",
+    "summary": """Document Management System for EVERJUST.APP""",
     "version": "19.0.1.0.0",
     "category": "Document Management",
     "license": "LGPL-3",
     "website": "https://github.com/OCA/dms",
-    "author": "MuK IT, Tecnativa, Odoo Community Association (OCA)",
+    "author": "MuK IT, Tecnativa, OCA",
     "depends": [
         "mail",
         "http_routing",

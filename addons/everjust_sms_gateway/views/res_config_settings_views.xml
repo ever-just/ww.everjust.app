@@ -44,7 +44,7 @@
             <field name="arch" type="xml">
                 <xpath expr="//setting[@id='sms']" position="after">
                     <setting string="Ringover VoIP Phone"
-                             help="Make and receive calls from Odoo with Ringover. Track calls, SMS, and get AI transcripts.">
+                             help="Make and receive calls from EVERJUST.APP with Ringover. Track calls, SMS, and get AI transcripts.">
                         <div class="content-group">
                             <div class="mt8">
                                 <button name="%(voip_oca.voip_pbx_act_window)d"

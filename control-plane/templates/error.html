@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block title %}Something went wrong — EVERJUST.APP{% endblock %}
+
+{% block content %}
+<div class="auth-wrap single" style="text-align:center">
+  <div class="card">
+    <h2>Something went wrong</h2>
+    <p class="card-sub">{{ message or "We hit an unexpected problem handling that request." }}</p>
+    <a class="btn btn-primary btn-block" href="{{ back_url or '/' }}">{{ back_label or "Back to home" }}</a>
+    <p class="switch-auth">Still stuck? <a href="mailto:company@everjust.co">Contact us</a> and we&rsquo;ll help right away.</p>
+  </div>
+</div>
+{% endblock %}

@@ -2,13 +2,13 @@
 
 A self-hosted, multi-tenant SaaS platform. Organizations sign up, pay, and get an isolated workspace at `<org>.everjust.app` — fully branded as EVERJUST.APP with zero upstream references.
 
-Built on a debranded Odoo 19 Community base, extended through modules (not a core fork) so it stays upgradeable.
+Built on a fully debranded open-source ERP core (v19 Community), extended through modules (not a core fork) so it stays upgradeable.
 
 ## How it works
 
-- **Platform + signup:** `everjust.app` (the control plane — signup + workspace login)
+- **Platform site:** `everjust.app` (the control plane — landing page, signup, sign-in, billing)
 - **Tenants:** `<org>.everjust.app`, each backed by its own isolated PostgreSQL database
-- **Routing:** Nginx + Odoo `dbfilter` map each subdomain to its database
+- **Routing:** Nginx + the core's `dbfilter` map each subdomain to its database
 - **Billing:** Stripe — $100/mo base (up to 5 users) + $15/user beyond
 - **Branding:** every upstream reference replaced with EVERJUST.APP; default theme is black & white
 - **Home screen:** Custom app grid (like Enterprise) replaces the default Discuss landing page
@@ -17,7 +17,7 @@ Built on a debranded Odoo 19 Community base, extended through modules (not a cor
 
 ```
 *.everjust.app  →  Nginx (wildcard SSL)  →  ┌─ everjust.app      → control-plane (signup, Stripe)
-                                            └─ <org>.everjust.app → Odoo 19 (dbfilter → DB <org>)
+                                            └─ <org>.everjust.app → app server (dbfilter → DB <org>)
                                                                          │
                                                               PostgreSQL: one DB per tenant
 ```
@@ -32,9 +32,12 @@ ww.everjust.app/
 │   ├── everjust_theme/     Black & white default theme
 │   ├── everjust_signup/    Self-service org signup (Phase 2)
 │   └── website_tcsw/       TCSW tenant-specific branding
-├── control-plane/          FastAPI: signup page, Stripe checkout, webhooks, provisioning
+├── control-plane/          FastAPI: landing/signup/sign-in pages (PWA), Stripe checkout, webhooks, provisioning
+│   ├── templates/          Jinja2 pages (landing, signup, signin, welcome, offline)
+│   ├── static/             CSS/JS/icons, web app manifest, service worker
+│   └── tests/              pytest suite (run: pip install pytest && pytest control-plane/tests)
 ├── deployment/
-│   ├── docker-compose.yml  odoo 19 + postgres 16 + nginx + control-plane
+│   ├── docker-compose.yml  app server + postgres 16 + nginx + control-plane
 │   ├── odoo.conf           dbfilter = ^%d$, list_db = False
 │   ├── nginx/everjust.conf wildcard + subdomain routing
 │   └── scripts/            provision_tenant, backup_all, debrand_check
@@ -46,7 +49,24 @@ ww.everjust.app/
 
 ## Why modules, not a core fork
 
-Debranding and theming are done entirely through add-on modules layered on the official `odoo:19` image. This keeps the platform fully customizable while remaining upgradeable — no 1 GB core fork to maintain. If deep core changes are ever needed, we fork at that point.
+Debranding and theming are done entirely through add-on modules layered on the official upstream v19 image. This keeps the platform fully customizable while remaining upgradeable — no 1 GB core fork to maintain. If deep core changes are ever needed, we fork at that point.
+
+## Control plane (everjust.app)
+
+The public site is a FastAPI app with server-rendered Jinja2 pages, installable as a PWA (web app manifest + service worker + offline fallback), and optimized for mobile:
+
+| Route | Purpose |
+|---|---|
+| `/` | Marketing landing page — features, pricing, FAQ, CTAs |
+| `/signup` | Workspace creation — live address availability check, password strength, inline errors, then Stripe Checkout |
+| `/signin` | Workspace locator — verifies the workspace exists, remembers recent workspaces, redirects to `<org>.everjust.app` |
+| `/welcome` | Post-checkout provisioning progress with next-step checklist |
+| `/api/subdomain-check` | JSON availability/validity check used by signup + sign-in |
+| `/stripe/webhook` | Provisioning + lifecycle (suspend on failed payment/cancellation) |
+
+Signup credentials never transit Stripe: the form stores pending signups server-side under an opaque token (`signup_store.py`); the webhook redeems the token to provision the tenant, then deletes it.
+
+Run the test suite with `pip install -r control-plane/requirements.txt pytest && python -m pytest control-plane/tests`.
 
 ## Branding coverage
 
@@ -121,7 +141,7 @@ push to master → GitHub Actions → SSH into EC2 → git pull → rebuild cont
 |---|---|---|
 | `everjust_brand` | Yes | Full debranding — login page, tab title, favicon, footers, user menu, upgrade banners |
 | `everjust_home` | Yes | App grid home screen with search + navbar home button (replaces Discuss default) |
-| `everjust_sms_gateway` | Yes | Routes SMS through TextBee instead of Odoo IAP — all existing SMS features work |
+| `everjust_sms_gateway` | Yes | Routes SMS through TextBee instead of metered IAP — all existing SMS features work |
 | `everjust_theme` | No | Black & white default color scheme |
 | `voip_oca` | No | SIP softphone widget — click-to-dial, call logging, transfer/hold/mute (OCA) |
 | `website_tcsw` | No | TCSW tenant-specific fonts/design (Space Grotesk + Inter) |
@@ -135,9 +155,9 @@ push to master → GitHub Actions → SSH into EC2 → git pull → rebuild cont
 
 ## Known limitations (Community Edition)
 
-- **No one-click third-party app install.** The Odoo Apps marketplace downloads `.zip` files in Community. One-click install requires an Enterprise contract. To install third-party modules: extract the zip to `addons/`, restart Odoo, update the apps list.
-- **VoIP via OCA module.** The Odoo "Phone" app is Enterprise-only. We use `voip_oca` (OCA) + FusionPBX for equivalent functionality. See `docs/TELEPHONY_PLAN.md`.
-- **SMS via TextBee.** The `everjust_sms_gateway` module replaces Odoo IAP with a self-hosted TextBee gateway. All SMS UI (composer, templates, chatter) works unchanged.
+- **No one-click third-party app install.** The upstream apps marketplace downloads `.zip` files in Community. One-click install requires an Enterprise contract. To install third-party modules: extract the zip to `addons/`, restart the app server, update the apps list.
+- **VoIP via OCA module.** The upstream "Phone" app is Enterprise-only. We use `voip_oca` (OCA) + FusionPBX for equivalent functionality. See `docs/TELEPHONY_PLAN.md`.
+- **SMS via TextBee.** The `everjust_sms_gateway` module replaces the upstream metered IAP service with a self-hosted TextBee gateway. All SMS UI (composer, templates, chatter) works unchanged.
 
 ## Status
 

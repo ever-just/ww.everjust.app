@@ -6,7 +6,7 @@
     "name": "Document Page",
     "version": "19.0.1.0.0",
     "category": "Knowledge Management",
-    "author": "OpenERP SA, Odoo Community Association (OCA)",
+    "author": "OCA",
     "images": [
         "images/category_list.png",
         "images/create_category.png",

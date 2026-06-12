@@ -9,7 +9,7 @@ _logger = logging.getLogger(__name__)
 
 
 class SmsWebhookController(http.Controller):
-    """Receive incoming SMS from TextBee and post them in Odoo chatter.
+    """Receive incoming SMS from TextBee and post them in the chatter.
 
     TextBee sends a POST with JSON like::
 

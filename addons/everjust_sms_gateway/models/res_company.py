@@ -2,7 +2,7 @@
 import logging
 import requests
 
-from odoo import models
+from odoo import fields, models
 from odoo.addons.sms.tools.sms_api import SmsApiBase
 
 _logger = logging.getLogger(__name__)
@@ -82,15 +82,25 @@ class SmsApiTextBee(SmsApiBase):
 class ResCompany(models.Model):
     _inherit = "res.company"
 
-    def _get_sms_api_class(self):
-        """Return the TextBee SMS API class instead of the default IAP one.
+    sms_provider = fields.Selection(
+        selection_add=[("textbee", "Send via TextBee (self-hosted)")],
+        ondelete={"textbee": "set default"},
+    )
 
-        If no gateway URL is configured, fall back to the stock IAP class so
-        the module doesn't break instances that haven't set up TextBee yet.
+    def _get_sms_api_class(self):
+        """Return the TextBee SMS API class when provider is 'textbee'.
+
+        Also auto-selects TextBee when no explicit provider is chosen but
+        the gateway URL is configured, so it works out of the box.
         """
-        gateway_url = self.env["ir.config_parameter"].sudo().get_param(
-            "everjust.sms_gateway_url"
-        )
-        if gateway_url:
+        self.ensure_one()
+        if self.sms_provider == "textbee":
             return SmsApiTextBee
+        # Fallback: if no provider explicitly set but gateway URL exists, use TextBee
+        if not self.sms_provider or self.sms_provider == "iap":
+            gateway_url = self.env["ir.config_parameter"].sudo().get_param(
+                "everjust.sms_gateway_url"
+            )
+            if gateway_url:
+                return SmsApiTextBee
         return super()._get_sms_api_class()

@@ -1,11 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <templates>
-    <t
-        t-name="dms.FileKanbanView.Buttons"
-        t-inherit="web.KanbanView.Buttons"
-        t-inherit-mode="primary"
-    >
-        <div role="toolbar" position="inside">
+    <t t-name="dms.FileKanbanView.Buttons">
+        <div role="toolbar" class="d-flex gap-1">
             <input
                 type="file"
                 multiple="true"

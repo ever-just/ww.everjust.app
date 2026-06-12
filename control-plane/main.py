@@ -39,8 +39,17 @@ SIGNUP_PAGE = """
   .preview .placeholder{{color:#bbb;font-weight:800}}
   button{{width:100%;margin-top:28px;padding:12px;background:#000;color:#fff;border:0;
           border-radius:8px;font-weight:700;cursor:pointer;font-size:15px}}
+  .divider{{display:flex;align-items:center;gap:12px;margin:28px 0 0;color:#aaa;font-size:13px}}
+  .divider::before,.divider::after{{content:'';flex:1;border-top:1px solid #ddd}}
+  .login-section{{margin-top:20px}}
+  .login-section p{{color:#555;margin:0 0 12px;font-size:14px}}
+  .login-row{{display:flex;gap:8px}}
+  .login-row input{{flex:1;margin:0}}
+  .login-row button{{width:auto;margin:0;padding:10px 16px;white-space:nowrap;font-size:13px}}
+  .login-suffix{{font-size:13px;color:#888;margin-top:4px}}
 </style></head><body>
-<form class="card" method="post" action="/signup">
+<div class="card">
+<form method="post" action="/signup">
   <h1>EVERJUST.APP</h1>
   <p>Start your workspace</p>
   <label>Organization name</label>
@@ -57,6 +66,17 @@ SIGNUP_PAGE = """
   <input name="password" type="password" minlength="8" required>
   <button type="submit">Create workspace</button>
 </form>
+<div class="divider">or</div>
+<div class="login-section">
+  <p>Already have a workspace?</p>
+  <div class="login-row">
+    <input type="text" id="login_subdomain" placeholder="your-org" autocomplete="off"
+           autocapitalize="off" spellcheck="false">
+    <button type="button" id="login_btn">Log in &rarr;</button>
+  </div>
+  <div class="login-suffix">.{domain}</div>
+</div>
+</div>
 <script>
   var sub = document.getElementById('subdomain');
   var org = document.getElementById('org_name');
@@ -83,6 +103,15 @@ SIGNUP_PAGE = """
   }});
   // Normalize on submit so what the user previewed is what gets sent.
   sub.form.addEventListener('submit', function(){{ sub.value = slug(sub.value); }});
+  // Login redirect
+  var loginInput = document.getElementById('login_subdomain');
+  var loginBtn = document.getElementById('login_btn');
+  function goLogin(){{
+    var ws = slug(loginInput.value);
+    if(ws) window.location.href = 'https://' + ws + '.{domain}';
+  }}
+  loginBtn.addEventListener('click', goLogin);
+  loginInput.addEventListener('keydown', function(e){{ if(e.key==='Enter') goLogin(); }});
 </script>
 </body></html>
 """

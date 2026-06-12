@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     "name": "EVERJUST.APP SMS Gateway",
-    "version": "19.0.1.1.0",
+    "version": "19.0.1.2.0",
     "summary": "Route SMS through TextBee instead of Odoo IAP — zero per-message cost.",
     "description": """
 EVERJUST.APP SMS Gateway
@@ -16,9 +16,10 @@ Also adds a webhook controller for receiving inbound SMS.
     "author": "EVERJUST",
     "website": "https://everjust.app",
     "category": "Hidden/Tools",
-    "depends": ["sms", "sms_twilio"],
+    "depends": ["sms", "sms_twilio", "voip_oca", "base_setup"],
     "data": [
         "data/config_params.xml",
+        "views/res_config_settings_views.xml",
     ],
     "installable": True,
     "application": False,

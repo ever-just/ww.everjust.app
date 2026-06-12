@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!--
+            1. Add TextBee config link when textbee SMS provider is selected
+            2. Add VoIP/Phone setting below SMS in the Contacts settings block
+        -->
+        <record id="res_config_settings_view_form" model="ir.ui.view">
+            <field name="name">res.config.settings.view.form.inherit.everjust</field>
+            <field name="model">res.config.settings</field>
+            <field name="inherit_id" ref="sms.res_config_settings_view_form"/>
+            <field name="arch" type="xml">
+                <!-- TextBee config when selected as SMS provider -->
+                <xpath expr="//widget[@service_name='sms']" position="after">
+                    <div class="content-group" invisible="sms_provider != 'textbee'">
+                        <div class="mt8 text-muted">
+                            Self-hosted SMS gateway — no per-message cost.
+                        </div>
+                        <div class="mt8">
+                            <button name="%(base_setup.action_general_configuration)d"
+                                    icon="oi-arrow-right"
+                                    type="action" class="btn-link"
+                                    string="Configure TextBee Gateway URL in System Parameters"/>
+                        </div>
+                    </div>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- VoIP / Phone setting in the Contacts block (after SMS) -->
+        <record id="res_config_settings_voip_view" model="ir.ui.view">
+            <field name="name">res.config.settings.view.form.inherit.everjust.voip</field>
+            <field name="model">res.config.settings</field>
+            <field name="inherit_id" ref="base_setup.res_config_settings_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//setting[@id='sms']" position="after">
+                    <setting string="VoIP Phone" help="Make and receive calls from Odoo with a softphone">
+                        <div class="content-group">
+                            <div class="mt8 text-muted">
+                                Connect to Ringover, or any SIP-compatible PBX via WebSocket.
+                                The softphone widget appears in the top-right navbar for all users.
+                            </div>
+                            <div class="mt8">
+                                <button name="%(voip_oca.voip_pbx_act_window)d"
+                                        icon="oi-arrow-right"
+                                        type="action" class="btn-link"
+                                        string="Configure PBX Server"/>
+                            </div>
+                            <div class="mt4">
+                                <a class="btn-link fw-bold"
+                                   href="https://chromewebstore.google.com/detail/ringover-voip-phone-for-o/bdeapcnahigpibeoehandgaiijljkdnl"
+                                   target="_blank">
+                                    <i class="oi oi-arrow-right"/>
+                                    Install Ringover Chrome Extension
+                                </a>
+                            </div>
+                        </div>
+                    </setting>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

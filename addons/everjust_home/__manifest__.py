@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     "name": "EVERJUST.APP Home Menu",
-    "version": "19.0.1.0.0",
+    "version": "19.0.1.1.0",
     "summary": "App grid home screen for Odoo Community — replaces the default Discuss landing.",
     "description": """
 EVERJUST.APP Home Menu
@@ -22,6 +22,8 @@ Works on Odoo 19 Community Edition.
             "everjust_home/static/src/home_menu/home_menu.js",
             "everjust_home/static/src/home_menu/home_menu.xml",
             "everjust_home/static/src/home_menu/home_menu.scss",
+            "everjust_home/static/src/home_button/home_button.js",
+            "everjust_home/static/src/home_button/home_button.xml",
         ],
     },
     "installable": True,

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="everjust_home.HomeButton">
+        <div class="ej_home_btn d-flex align-items-center ms-1 me-2">
+            <button class="btn btn-link text-white p-1 border-0"
+                    title="Home"
+                    aria-label="Home — show all apps"
+                    t-on-click="goHome">
+                <i class="oi oi-apps fs-4"/>
+            </button>
+        </div>
+    </t>
+
+</templates>

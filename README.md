@@ -6,11 +6,12 @@ Built on a debranded Odoo 19 Community base, extended through modules (not a cor
 
 ## How it works
 
-- **Platform + signup:** `everjust.app` (the control plane)
+- **Platform + signup:** `everjust.app` (the control plane — signup + workspace login)
 - **Tenants:** `<org>.everjust.app`, each backed by its own isolated PostgreSQL database
 - **Routing:** Nginx + Odoo `dbfilter` map each subdomain to its database
 - **Billing:** Stripe — $100/mo base (up to 5 users) + $15/user beyond
 - **Branding:** every upstream reference replaced with EVERJUST.APP; default theme is black & white
+- **Home screen:** Custom app grid (like Enterprise) replaces the default Discuss landing page
 
 ## Architecture
 
@@ -27,14 +28,17 @@ Built on a debranded Odoo 19 Community base, extended through modules (not a cor
 ww.everjust.app/
 ├── addons/
 │   ├── everjust_brand/     Full debranding (auto-installed on every tenant)
+│   ├── everjust_home/      App grid home screen (replaces Discuss as default landing)
 │   ├── everjust_theme/     Black & white default theme
-│   └── everjust_signup/    Self-service org signup (Phase 2)
+│   ├── everjust_signup/    Self-service org signup (Phase 2)
+│   └── website_tcsw/       TCSW tenant-specific branding
 ├── control-plane/          FastAPI: signup page, Stripe checkout, webhooks, provisioning
 ├── deployment/
 │   ├── docker-compose.yml  odoo 19 + postgres 16 + nginx + control-plane
 │   ├── odoo.conf           dbfilter = ^%d$, list_db = False
 │   ├── nginx/everjust.conf wildcard + subdomain routing
 │   └── scripts/            provision_tenant, backup_all, debrand_check
+├── .github/workflows/      CI/CD (deploy.yml)
 ├── docs/                   EVERJUST.APP documentation
 ├── MASTER_PLAN.md          Full build plan (A: plan, B: build, C: TCSW onboarding)
 └── .env.example
@@ -111,13 +115,36 @@ push to master → GitHub Actions → SSH into EC2 → git pull → rebuild cont
 - SSH user has passwordless `sudo`
 - `.env` populated with runtime secrets (Stripe, Postgres, Resend, etc.)
 
+## Custom modules
+
+| Module | Auto-install | Purpose |
+|---|---|---|
+| `everjust_brand` | Yes | Full debranding — login page, tab title, favicon, footers, user menu, upgrade banners |
+| `everjust_home` | Yes | App grid home screen with search + navbar home button (replaces Discuss default) |
+| `everjust_theme` | No | Black & white default color scheme |
+| `website_tcsw` | No | TCSW tenant-specific fonts/design (Space Grotesk + Inter) |
+
+## Active tenants
+
+| Tenant | URL |
+|---|---|
+| HeadsUp | `headsup.everjust.app` |
+| TCSW | `tcstartupweek.everjust.app` |
+
+## Known limitations (Community Edition)
+
+- **No one-click third-party app install.** The Odoo Apps marketplace downloads `.zip` files in Community. One-click install requires an Enterprise contract. To install third-party modules: extract the zip to `addons/`, restart Odoo, update the apps list.
+- **No native VoIP/Phone app.** The Odoo "Phone" app is Enterprise-only. See `docs/TELEPHONY_PLAN.md` for the self-hosted alternative plan.
+
 ## Status
 
 - [x] Plan, architecture, Stripe products
 - [x] Debranding + theme modules
 - [x] Deployment config (compose, nginx, odoo.conf)
-- [x] Control plane (signup, Stripe, provisioning)
+- [x] Control plane (signup, Stripe, provisioning, workspace login)
 - [x] AWS EC2 + wildcard DNS + SSL
-- [x] First tenant: TCSW (`tcsw.everjust.app`)
+- [x] First tenant: TCSW (`tcstartupweek.everjust.app`)
 - [x] CI/CD pipeline (GitHub Actions → EC2)
+- [x] App grid home screen (`everjust_home`)
 - [ ] Self-service signup automation (Phase 2)
+- [ ] Phone calls + SMS/texting (Phase 3 — see `docs/TELEPHONY_PLAN.md`)

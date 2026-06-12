@@ -83,8 +83,11 @@ class ResCompany(models.Model):
     _inherit = "res.company"
 
     sms_provider = fields.Selection(
-        selection_add=[("textbee", "Send via TextBee (self-hosted)")],
-        ondelete={"textbee": "set default"},
+        selection_add=[
+            ("textbee", "Send via TextBee (self-hosted)"),
+            ("ringover", "Send via Ringover"),
+        ],
+        ondelete={"textbee": "set default", "ringover": "set default"},
     )
 
     def _get_sms_api_class(self):

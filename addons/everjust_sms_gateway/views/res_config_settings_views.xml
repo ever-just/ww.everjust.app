@@ -1,17 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
-        <!--
-            1. Add TextBee config link when textbee SMS provider is selected
-            2. Add VoIP/Phone setting below SMS in the Contacts settings block
-        -->
+        <!-- Add Ringover as an SMS provider option + TextBee config -->
         <record id="res_config_settings_view_form" model="ir.ui.view">
             <field name="name">res.config.settings.view.form.inherit.everjust</field>
             <field name="model">res.config.settings</field>
             <field name="inherit_id" ref="sms.res_config_settings_view_form"/>
             <field name="arch" type="xml">
-                <!-- TextBee config when selected as SMS provider -->
                 <xpath expr="//widget[@service_name='sms']" position="after">
+                    <!-- TextBee config -->
                     <div class="content-group" invisible="sms_provider != 'textbee'">
                         <div class="mt8 text-muted">
                             Self-hosted SMS gateway — no per-message cost.
@@ -23,28 +20,37 @@
                                     string="Configure TextBee Gateway URL in System Parameters"/>
                         </div>
                     </div>
+                    <!-- Ringover config -->
+                    <div class="content-group" invisible="sms_provider != 'ringover'">
+                        <div class="mt8 text-muted">
+                            Send and receive SMS through Ringover. Requires a Ringover Business plan or higher.
+                        </div>
+                        <div class="mt8">
+                            <a class="btn-link fw-bold" href="https://www.ringover.com/apps" target="_blank">
+                                <i class="oi oi-arrow-right"/>
+                                Download Ringover App (iOS / Android / Desktop)
+                            </a>
+                        </div>
+                    </div>
                 </xpath>
             </field>
         </record>
 
-        <!-- VoIP / Phone setting in the Contacts block (after SMS) -->
+        <!-- Ringover VoIP Phone setting in Contacts block -->
         <record id="res_config_settings_voip_view" model="ir.ui.view">
             <field name="name">res.config.settings.view.form.inherit.everjust.voip</field>
             <field name="model">res.config.settings</field>
             <field name="inherit_id" ref="base_setup.res_config_settings_view_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//setting[@id='sms']" position="after">
-                    <setting string="VoIP Phone" help="Make and receive calls from Odoo with a softphone">
+                    <setting string="Ringover VoIP Phone"
+                             help="Make and receive calls from Odoo with Ringover. Track calls, SMS, and get AI transcripts.">
                         <div class="content-group">
-                            <div class="mt8 text-muted">
-                                Connect to Ringover, or any SIP-compatible PBX via WebSocket.
-                                The softphone widget appears in the top-right navbar for all users.
-                            </div>
                             <div class="mt8">
                                 <button name="%(voip_oca.voip_pbx_act_window)d"
                                         icon="oi-arrow-right"
                                         type="action" class="btn-link"
-                                        string="Configure PBX Server"/>
+                                        string="Configure PBX Connection"/>
                             </div>
                             <div class="mt4">
                                 <a class="btn-link fw-bold"
@@ -52,6 +58,14 @@
                                    target="_blank">
                                     <i class="oi oi-arrow-right"/>
                                     Install Ringover Chrome Extension
+                                </a>
+                            </div>
+                            <div class="mt4">
+                                <a class="btn-link fw-bold"
+                                   href="https://www.ringover.com/apps"
+                                   target="_blank">
+                                    <i class="oi oi-arrow-right"/>
+                                    Download Ringover Mobile App
                                 </a>
                             </div>
                         </div>

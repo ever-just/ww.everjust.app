@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import logging
+import requests
 
 from odoo import api, fields, models
 
@@ -29,16 +30,10 @@ class RingoverCall(models.Model):
     hangup_by = fields.Char(readonly=True)
     recording_url = fields.Char(string="Recording", readonly=True)
     voicemail_url = fields.Char(string="Voicemail", readonly=True)
-
-    # Ringover user
     ringover_user_id = fields.Char(readonly=True)
     ringover_user_name = fields.Char(string="Agent", readonly=True)
-
-    # Odoo links
     partner_id = fields.Many2one("res.partner", string="Contact", readonly=True)
     user_id = fields.Many2one("res.users", string="Odoo User", readonly=True)
-
-    _sql_constraints = []
 
     @api.model
     def _sync_from_api_data(self, call_data):
@@ -46,19 +41,19 @@ class RingoverCall(models.Model):
         cdr_id = str(call_data.get("cdr_id", ""))
         existing = self.search([("cdr_id", "=", cdr_id)], limit=1)
 
-        # Match partner by phone number
         contact_number = call_data.get("contact_number", "")
-        partner = self.env["res.partner"].search(
-            ["|", ("phone", "like", contact_number[-10:]),
-             ("mobile", "like", contact_number[-10:])],
-            limit=1,
-        ) if contact_number and len(contact_number) >= 10 else self.env["res.partner"]
+        partner = self.env["res.partner"]
+        if contact_number and len(contact_number) >= 10:
+            partner = self.env["res.partner"].search(
+                [("phone", "like", contact_number[-10:])], limit=1,
+            )
 
-        # Match Odoo user by email
-        ringover_user = call_data.get("user", {})
-        odoo_user = self.env["res.users"].search(
-            [("login", "=", ringover_user.get("email", ""))], limit=1
-        ) if ringover_user.get("email") else self.env["res.users"]
+        ringover_user = call_data.get("user") or {}
+        odoo_user = self.env["res.users"]
+        if ringover_user.get("email"):
+            odoo_user = self.env["res.users"].search(
+                [("login", "=", ringover_user["email"])], limit=1,
+            )
 
         vals = {
             "cdr_id": cdr_id,
@@ -73,9 +68,8 @@ class RingoverCall(models.Model):
             "is_answered": call_data.get("is_answered", False),
             "state": call_data.get("last_state", ""),
             "hangup_by": call_data.get("hangup_by", ""),
-            "recording_url": call_data.get("record", ""),
-            "voicemail_url": (call_data.get("voicemail") or {}).get("url", "")
-            if isinstance(call_data.get("voicemail"), dict) else "",
+            "recording_url": call_data.get("record") or "",
+            "voicemail_url": "",
             "ringover_user_id": str(ringover_user.get("user_id", "")),
             "ringover_user_name": ringover_user.get("concat_name", ""),
             "partner_id": partner.id if partner else False,
@@ -85,14 +79,49 @@ class RingoverCall(models.Model):
         if existing:
             existing.write(vals)
             return existing
-        else:
-            record = self.create(vals)
-            # Post to partner chatter if matched
-            if partner:
-                direction = "Incoming" if vals["direction"] == "in" else "Outgoing"
-                duration_str = "%dm %ds" % (vals["duration"] // 60, vals["duration"] % 60)
-                body = "<b>%s call</b> — %s (%s)" % (direction, contact_number, duration_str)
-                if vals["recording_url"]:
-                    body += '<br/><a href="%s" target="_blank">Listen to recording</a>' % vals["recording_url"]
-                partner.message_post(body=body, message_type="notification", subtype_xmlid="mail.mt_note")
-            return record
+
+        record = self.create(vals)
+        if partner:
+            direction = "Incoming" if vals["direction"] == "in" else "Outgoing"
+            dur = vals["duration"]
+            body = "<b>%s call</b> — %s (%dm %ds)" % (direction, contact_number, dur // 60, dur % 60)
+            if vals["recording_url"]:
+                body += '<br/><a href="%s" target="_blank">Listen to recording</a>' % vals["recording_url"]
+            partner.message_post(body=body, message_type="notification", subtype_xmlid="mail.mt_note")
+        return record
+
+    # --- API helpers ---
+
+    @api.model
+    def _ringover_api_get(self, endpoint, params=None):
+        ICP = self.env["ir.config_parameter"].sudo()
+        url = (ICP.get_param("everjust.ringover_api_url") or "").rstrip("/")
+        key = ICP.get_param("everjust.ringover_api_key") or ""
+        if not url or not key:
+            return None
+        try:
+            resp = requests.get(
+                "%s%s" % (url, endpoint),
+                headers={"Authorization": key},
+                params=params or {},
+                timeout=15,
+            )
+            return resp.json() if resp.ok else None
+        except requests.RequestException as exc:
+            _logger.error("Ringover API error: %s", exc)
+            return None
+
+    @api.model
+    def cron_sync_all(self):
+        """Cron: sync recent calls from Ringover."""
+        data = self._ringover_api_get("/calls", {"limit_count": 50})
+        if not data or "call_list" not in data:
+            return
+        count = 0
+        for cd in data["call_list"]:
+            try:
+                self._sync_from_api_data(cd)
+                count += 1
+            except Exception as exc:
+                _logger.error("Failed to sync call %s: %s", cd.get("cdr_id"), exc)
+        _logger.info("Ringover: synced %s calls", count)

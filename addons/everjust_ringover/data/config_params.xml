@@ -17,7 +17,7 @@
         <!-- Cron job: sync calls + SMS every 10 minutes -->
         <record id="ir_cron_ringover_sync" model="ir.cron">
             <field name="name">Ringover: Sync Calls and SMS</field>
-            <field name="model_id" ref="model_ringover_sync"/>
+            <field name="model_id" ref="model_ringover_call"/>
             <field name="state">code</field>
             <field name="code">model.cron_sync_all()</field>
             <field name="interval_number">10</field>

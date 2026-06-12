@@ -15,5 +15,4 @@ def _post_init_hook(env):
             "interval_number": 10,
             "interval_type": "minutes",
             "active": True,
-            "numbercall": -1,
         })

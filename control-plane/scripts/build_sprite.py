@@ -22,6 +22,7 @@ ICONS = [
     "user-plus", "settings", "life-buoy", "eye", "eye-off", "key-round",
     "layout-grid", "file-text", "refresh-cw", "badge-check", "clock",
     "server", "house", "chevron-right", "wallet", "party-popper",
+    "menu", "x", "cookie",
 ]
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]

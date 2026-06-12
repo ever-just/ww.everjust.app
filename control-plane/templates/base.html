@@ -30,6 +30,7 @@
   <meta name="twitter:card" content="summary">
 
   <link rel="stylesheet" href="/static/vendor/bootstrap/bootstrap.min.css">
+  <link rel="stylesheet" href="/static/vendor/cookieconsent/cookieconsent.css">
   <link rel="stylesheet" href="/static/css/site.css">
 
   <script type="application/ld+json">
@@ -51,23 +52,51 @@
   <header class="site-header">
     <div class="container">
       <nav class="navbar px-0" aria-label="Main">
-        <a class="wordmark" href="/" aria-label="EVERJUST.APP home">
-          <img src="/static/img/icon-192x192.png" alt="" width="26" height="26">
-          <span class="d-none d-sm-inline">EVERJUST.APP</span>
-          <span class="d-sm-none">EVERJUST</span>
+        <a class="brand-logo" href="/" aria-label="EVERJUST.APP home">
+          <img src="/static/img/icon-192x192.png" alt="EVERJUST.APP" width="34" height="34">
         </a>
         <div class="site-actions">
           {% block nav %}
-          <a class="nav-link-plain d-none d-md-inline-block" href="/#features">Features</a>
-          <a class="nav-link-plain d-none d-md-inline-block" href="/#pricing">Pricing</a>
-          <a class="nav-link-plain d-none d-md-inline-block" href="/docs">Docs</a>
-          <a class="btn btn-outline-dark" href="/signin">Sign in</a>
+          <a class="nav-link-plain d-none d-lg-inline-block" href="/#features">Features</a>
+          <a class="nav-link-plain d-none d-lg-inline-block" href="/#pricing">Pricing</a>
+          <a class="nav-link-plain d-none d-lg-inline-block" href="/docs">Docs</a>
+          <a class="btn btn-outline-dark d-none d-sm-inline-flex" href="/signin">Sign in</a>
           <a class="btn btn-primary" href="/signup">Get started</a>
           {% endblock %}
+          <button class="menu-toggle d-lg-none" type="button" data-bs-toggle="offcanvas"
+                  data-bs-target="#siteMenu" aria-controls="siteMenu" aria-label="Open menu">
+            {{ icon("menu", 22) }}
+          </button>
         </div>
       </nav>
     </div>
   </header>
+
+  <div class="offcanvas offcanvas-end site-menu" tabindex="-1" id="siteMenu" aria-labelledby="siteMenuLabel">
+    <div class="offcanvas-header">
+      <a class="brand-logo" href="/" id="siteMenuLabel" aria-label="EVERJUST.APP home">
+        <img src="/static/img/icon-192x192.png" alt="EVERJUST.APP" width="30" height="30">
+      </a>
+      <button type="button" class="menu-toggle" data-bs-dismiss="offcanvas" aria-label="Close menu">
+        {{ icon("x", 22) }}
+      </button>
+    </div>
+    <div class="offcanvas-body d-flex flex-column">
+      <nav class="site-menu-nav" aria-label="Mobile">
+        <a href="/#features" data-bs-dismiss="offcanvas">Features {{ icon("chevron-right", 18) }}</a>
+        <a href="/#pricing" data-bs-dismiss="offcanvas">Pricing {{ icon("chevron-right", 18) }}</a>
+        <a href="/docs" data-bs-dismiss="offcanvas">Docs {{ icon("chevron-right", 18) }}</a>
+        <a href="/signin" data-bs-dismiss="offcanvas">Sign in {{ icon("chevron-right", 18) }}</a>
+      </nav>
+      <div class="mt-auto pt-4">
+        <a class="btn btn-primary btn-lg w-100 mb-2" href="/signup">Create your workspace {{ icon("arrow-right", 18) }}</a>
+        <a class="btn btn-outline-dark w-100" href="/signin">Sign in to your workspace</a>
+        <p class="small text-secondary text-center mt-3 mb-0">
+          Questions? <a href="mailto:company@everjust.co">company@everjust.co</a>
+        </p>
+      </div>
+    </div>
+  </div>
 
   <main id="main">
     {% block content %}{% endblock %}
@@ -75,15 +104,15 @@
 
   <footer class="site-footer">
     <div class="container">
-      <div class="row gy-4">
-        <div class="col-12 col-md-4">
-          <a class="wordmark mb-2" href="/">
-            <img src="/static/img/icon-192x192.png" alt="" width="26" height="26">
-            EVERJUST.APP
+      <div class="row gy-4 align-items-start">
+        <div class="col-12 col-lg-4 pe-lg-5">
+          <a class="brand-logo mb-3 d-inline-flex" href="/" aria-label="EVERJUST.APP home">
+            <img src="/static/img/icon-192x192.png" alt="EVERJUST.APP" width="36" height="36">
           </a>
-          <p class="mt-2 mb-0">Run your entire business in one private, fully-branded workspace.</p>
+          <p class="footer-tagline">Run your entire business in one private, fully-branded workspace.</p>
+          <a class="footer-cta" href="/signup">Create your workspace {{ icon("arrow-right", 14) }}</a>
         </div>
-        <div class="col-6 col-md-2 offset-md-2">
+        <div class="col-6 col-sm-4 col-lg-2 offset-lg-2">
           <h4>Product</h4>
           <ul>
             <li><a href="/#features">Features</a></li>
@@ -92,7 +121,7 @@
             <li><a href="/signup">Get started</a></li>
           </ul>
         </div>
-        <div class="col-6 col-md-2">
+        <div class="col-6 col-sm-4 col-lg-2">
           <h4>Resources</h4>
           <ul>
             <li><a href="/docs">Documentation</a></li>
@@ -101,7 +130,7 @@
             <li><a href="/docs/security">Security &amp; data</a></li>
           </ul>
         </div>
-        <div class="col-6 col-md-2">
+        <div class="col-6 col-sm-4 col-lg-2">
           <h4>Account</h4>
           <ul>
             <li><a href="/signin">Sign in</a></li>
@@ -111,13 +140,20 @@
           </ul>
         </div>
       </div>
-      <div class="d-flex flex-wrap justify-content-between gap-2 mt-4 pt-3 border-top">
-        <span>&copy; {{ year }} EVERJUST.APP — All rights reserved.</span>
-        <a href="/sitemap.xml">Sitemap</a>
+      <div class="footer-legal">
+        <span>&copy; {{ year }} EVERJUST.APP &mdash; All rights reserved.</span>
+        <nav class="footer-legal-links" aria-label="Legal">
+          <a href="/privacy">Privacy</a>
+          <button type="button" data-cc="show-preferencesModal">Cookie preferences</button>
+          <a href="/sitemap.xml">Sitemap</a>
+        </nav>
       </div>
     </div>
   </footer>
 
+  <script src="/static/vendor/bootstrap/bootstrap.bundle.min.js" defer></script>
+  <script src="/static/vendor/cookieconsent/cookieconsent.umd.js" defer></script>
+  <script src="/static/js/consent.js" defer></script>
   <script src="/static/js/pwa.js" defer></script>
   {% block scripts %}{% endblock %}
 </body>

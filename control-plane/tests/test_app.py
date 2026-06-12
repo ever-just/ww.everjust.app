@@ -308,6 +308,35 @@ def test_pages_use_bootstrap_and_icon_sprite(client):
     assert client.get("/static/vendor/lucide/sprite.svg").status_code == 200
 
 
+def test_header_is_logo_only_with_mobile_menu(client):
+    body = client.get("/").text
+    header = body.split("</header>")[0]
+    assert 'class="brand-logo"' in header
+    assert ">EVERJUST.APP<" not in header        # logo only, no wordmark text
+    assert 'data-bs-target="#siteMenu"' in header  # mobile menu trigger
+    assert 'id="siteMenu"' in body                 # offcanvas menu exists
+    assert "/static/vendor/bootstrap/bootstrap.bundle.min.js" in body
+
+
+def test_consent_banner_wiring(client):
+    body = client.get("/").text
+    assert "/static/vendor/cookieconsent/cookieconsent.css" in body
+    assert "/static/vendor/cookieconsent/cookieconsent.umd.js" in body
+    assert "/static/js/consent.js" in body
+    assert 'data-cc="show-preferencesModal"' in body  # footer reopen button
+    assert client.get("/static/vendor/cookieconsent/cookieconsent.umd.js").status_code == 200
+    assert client.get("/static/js/consent.js").status_code == 200
+
+
+def test_privacy_page(client):
+    r = client.get("/privacy")
+    assert r.status_code == 200
+    assert "ej_consent" in r.text                 # cookie table documented
+    assert "recentWorkspaces" in r.text
+    assert "<loc>https://everjust.app/privacy</loc>" in client.get("/sitemap.xml").text
+    assert 'href="/privacy"' in client.get("/").text  # footer backlink
+
+
 def test_canonical_and_structured_data(client):
     body = client.get("/").text
     assert '<link rel="canonical" href="https://everjust.app/">' in body
@@ -352,8 +381,8 @@ def test_api_docs_disabled(client):
 
 def test_no_upstream_branding_on_any_page(client):
     paths = ["/", "/signup", "/signin", "/offline", "/welcome?subdomain=acme",
-             "/docs", "/docs/getting-started", "/docs/invite-team", "/docs/apps",
-             "/docs/billing", "/docs/mobile-app", "/docs/security"]
+             "/privacy", "/docs", "/docs/getting-started", "/docs/invite-team",
+             "/docs/apps", "/docs/billing", "/docs/mobile-app", "/docs/security"]
     for path in paths:
         body = client.get(path).text
         assert "odoo" not in body.lower(), f"upstream branding leak on {path}"

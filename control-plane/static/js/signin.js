@@ -24,6 +24,8 @@
   }
 
   function saveRecent(ws) {
+    // Functional storage is opt-in via the consent banner.
+    if (window.ejConsent && !window.ejConsent.functional()) return;
     try {
       var list = getRecents().filter(function (s) { return s !== ws; });
       list.unshift(ws);

@@ -110,6 +110,11 @@ def offline(request: Request):
     return render(request, "offline.html")
 
 
+@app.get("/privacy", response_class=HTMLResponse)
+def privacy(request: Request):
+    return render(request, "privacy.html")
+
+
 @app.get("/docs", response_class=HTMLResponse)
 def docs_index(request: Request):
     return render(request, "docs/index.html", active="index")
@@ -327,6 +332,7 @@ SITEMAP_PAGES = {
     "/signin": ("monthly", "0.8"),
     "/docs": ("weekly", "0.8"),
     **{f"/docs/{slug}": ("monthly", "0.7") for slug in DOCS_PAGES},
+    "/privacy": ("yearly", "0.4"),
 }
 
 

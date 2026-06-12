@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+{% from "_icons.html" import icon %}
+
+{% block title %}Privacy policy — EVERJUST.APP{% endblock %}
+{% block description %}How EVERJUST.APP handles your data: what we collect, what we never do, cookies and on-device storage, and your rights.{% endblock %}
+
+{% block content %}
+<div class="docs-layout container">
+  <div class="row justify-content-center">
+    <article class="col-12 col-lg-8 docs-body">
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb small">
+          <li class="breadcrumb-item"><a href="/">Home</a></li>
+          <li class="breadcrumb-item active" aria-current="page">Privacy</li>
+        </ol>
+      </nav>
+
+      <h1>Privacy policy</h1>
+      <p class="lead-muted">The short version: your workspace data is yours, lives in its own database, and we don't track you. Here's the longer version.</p>
+
+      <h2>What we collect</h2>
+      <ul>
+        <li><b>Account details</b> — your email, organization name, and workspace address, collected at signup to create and administer your workspace.</li>
+        <li><b>Billing</b> — handled entirely by Stripe. Card numbers never touch our servers; we receive only subscription status and receipts metadata.</li>
+        <li><b>Workspace content</b> — whatever your team puts in your workspace. It's stored in your own isolated database and processed only to provide the service.</li>
+        <li><b>Operational logs</b> — standard server logs (IP, timestamp, request path) kept briefly for security and reliability.</li>
+      </ul>
+
+      <h2>What we never do</h2>
+      <ul>
+        <li>No analytics or advertising trackers on this site or in your workspace.</li>
+        <li>No selling, sharing, pooling, or mining of your data.</li>
+        <li>No training of AI models on your content.</li>
+        <li>No third-party cookies.</li>
+      </ul>
+
+      <h2>Cookies &amp; on-device storage</h2>
+      <p>You can change these choices anytime via <b>Cookie preferences</b> in the footer.</p>
+      <div class="table-responsive">
+        <table class="table table-bordered small align-middle">
+          <thead>
+            <tr><th>Name</th><th>Type</th><th>Purpose</th><th>Category</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>ej_consent</code></td>
+              <td>Cookie (6 months)</td>
+              <td>Remembers your consent choice.</td>
+              <td>Strictly necessary</td>
+            </tr>
+            <tr>
+              <td><code>session_id</code></td>
+              <td>Cookie</td>
+              <td>Keeps you signed in to <i>your workspace</i> at <span class="text-anywhere">your-org.{{ domain }}</span>.</td>
+              <td>Strictly necessary</td>
+            </tr>
+            <tr>
+              <td><code>everjust.recentWorkspaces</code></td>
+              <td>localStorage</td>
+              <td>Remembers up to 3 recent workspaces for one-tap sign-in on this device. Never sent to us.</td>
+              <td>Functional (opt-in)</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2>Where your data lives</h2>
+      <p>Each workspace runs on its own dedicated PostgreSQL database — no shared tenancy, no cross-workspace queries. Traffic is encrypted in transit (TLS), passwords are stored as salted hashes, and databases are backed up automatically. More in <a href="/docs/security">Security &amp; data</a>.</p>
+
+      <h2>Your rights</h2>
+      <ul>
+        <li><b>Access &amp; export</b> — export records from any list view, bulk-download files, or request a full export.</li>
+        <li><b>Correction &amp; deletion</b> — edit or delete your data in the workspace anytime; on cancellation we delete workspace data on request or per retention schedule.</li>
+        <li><b>Questions or requests</b> — email <a href="mailto:company@everjust.co">company@everjust.co</a> and a human will handle it.</li>
+      </ul>
+
+      <h2>Changes</h2>
+      <p>If this policy changes materially, we'll note it here and, for significant changes, email workspace administrators.</p>
+      <p class="small text-secondary">Last updated: June 2026</p>
+    </article>
+  </div>
+</div>
+{% endblock %}

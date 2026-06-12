@@ -153,14 +153,17 @@ class RingoverCall(models.Model):
         _logger.info("Ringover: synced %s calls", count)
 
     @api.model
-    def initiate_call(self, from_number, to_number):
+    def initiate_call(self, _from_unused, to_number):
         """Initiate a callback via Ringover API — rings the agent first,
         then auto-dials the recipient when agent picks up."""
         ICP = self.env["ir.config_parameter"].sudo()
         url = (ICP.get_param("everjust.ringover_api_url") or "").rstrip("/")
         key = ICP.get_param("everjust.ringover_api_key") or ""
+        from_number = ICP.get_param("everjust.ringover_from_number") or ""
         if not url or not key:
-            return {"error": "Ringover API not configured"}
+            return {"error": "Ringover API not configured. Set API key in Settings."}
+        if not from_number:
+            return {"error": "Set your Ringover phone number (everjust.ringover_from_number) in System Parameters."}
         try:
             resp = requests.post(
                 "%s/callback" % url,
@@ -170,6 +173,7 @@ class RingoverCall(models.Model):
             )
             if resp.ok:
                 return {"success": True}
-            return {"error": "Ringover API returned %s" % resp.status_code}
+            _logger.warning("Ringover callback failed: %s %s", resp.status_code, resp.text[:200])
+            return {"error": "Ringover returned %s" % resp.status_code}
         except requests.RequestException as exc:
             return {"error": str(exc)}

@@ -15,6 +15,11 @@
         "views/res_partner_views.xml",
         "views/crm_lead_views.xml",
     ],
+    "assets": {
+        "web.assets_backend": [
+            "everjust_ringover/static/src/ringover_agent_patch.esm.js",
+        ],
+    },
     "installable": True,
     "application": False,
     "auto_install": False,

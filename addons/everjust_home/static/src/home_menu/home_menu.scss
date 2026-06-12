@@ -1,0 +1,27 @@
+.o_home_menu {
+    background: #f8f8f8;
+}
+
+.ej_app {
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+    color: inherit;
+
+    &:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        background: #fff;
+    }
+
+    &:active {
+        transform: scale(0.97);
+    }
+}
+
+.ej_app_icon {
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
+}
+
+.ej_app_label {
+    word-break: break-word;
+    line-height: 1.3;
+}

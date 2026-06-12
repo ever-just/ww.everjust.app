@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="everjust_home.HomeMenu">
+        <div class="o_home_menu d-flex flex-column align-items-center w-100 overflow-auto"
+             style="min-height: 100%;">
+            <div class="ej_home_container mt-5 mb-4 w-100 px-3"
+                 style="max-width: 900px;">
+
+                <!-- Search -->
+                <div class="ej_search mb-4 d-flex justify-content-center">
+                    <input type="text"
+                           class="form-control"
+                           style="max-width: 400px; border-color: #000; border-radius: 8px;"
+                           placeholder="Search apps..."
+                           t-on-input="onSearchInput"
+                           t-on-keydown="onSearchKeydown"
+                           data-allow-hotkeys="true"/>
+                </div>
+
+                <!-- App Grid -->
+                <div class="ej_apps row justify-content-center g-3"
+                     role="listbox">
+                    <t t-foreach="displayedApps" t-as="app" t-key="app.id">
+                        <div class="col-4 col-sm-3 col-md-2">
+                            <a class="ej_app d-flex flex-column align-items-center text-center
+                                      text-decoration-none rounded-3 p-3 cursor-pointer"
+                               t-att-href="app.href"
+                               t-on-click.prevent="() => this.onAppClick(app)"
+                               role="option">
+                                <img t-if="app.webIconData"
+                                     t-att-src="app.webIconData"
+                                     class="ej_app_icon rounded-3"
+                                     width="64" height="64"
+                                     loading="lazy"/>
+                                <div t-else=""
+                                     class="ej_app_icon rounded-3 d-flex align-items-center justify-content-center"
+                                     style="width: 64px; height: 64px;"
+                                     t-attf-style="width:64px;height:64px;background-color:{{ app.webIcon and app.webIcon.backgroundColor or '#875A7B' }};">
+                                    <i t-if="app.webIcon"
+                                       t-attf-class="{{ app.webIcon.iconClass }}"
+                                       t-attf-style="color: {{ app.webIcon.color or '#fff' }}; font-size: 28px;"/>
+                                </div>
+                                <span class="ej_app_label mt-2 small fw-medium text-dark"
+                                      t-out="app.label"/>
+                            </a>
+                        </div>
+                    </t>
+                </div>
+
+                <!-- Empty state -->
+                <div t-if="displayedApps.length === 0"
+                     class="text-center text-muted mt-5">
+                    <p>No apps match your search.</p>
+                </div>
+
+            </div>
+        </div>
+    </t>
+
+</templates>

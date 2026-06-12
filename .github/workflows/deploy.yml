@@ -27,6 +27,7 @@ jobs:
             cd /opt/everjust/platform
 
             echo "=== Pulling latest code ==="
+            git config --global --add safe.directory /opt/everjust/platform
             git fetch origin master
             git reset --hard origin/master
 

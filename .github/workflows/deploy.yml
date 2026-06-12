@@ -21,7 +21,6 @@ jobs:
           host: ${{ secrets.DEPLOY_HOST }}
           username: ${{ secrets.DEPLOY_USER }}
           key: ${{ secrets.DEPLOY_SSH_KEY }}
-          script_stop: true
           script: |
             set -euo pipefail
             cd /opt/everjust/platform
@@ -39,5 +38,13 @@ jobs:
             sudo docker compose up -d --remove-orphans
 
             echo "=== Waiting for health check ==="
-            sleep 5
-            curl -sf http://localhost:8000/healthz || { echo "Health check failed"; exit 1; }
+            for i in 1 2 3 4 5 6; do
+              sleep 5
+              if curl -sf http://localhost:8000/healthz > /dev/null 2>&1; then
+                echo "Health check passed"
+                exit 0
+              fi
+              echo "Attempt $i: waiting for control-plane..."
+            done
+            echo "Health check failed after 30s"
+            exit 1

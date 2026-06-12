@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form_ringover" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.ringover</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="base_setup.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//setting[@id='sms']" position="after">
+                <setting string="Ringover Integration"
+                         help="Connect Ringover for calls, SMS, and call recordings">
+                    <div class="content-group">
+                        <div class="row mt16">
+                            <label for="ringover_api_key" class="col-3 col-lg-3 o_light_label"/>
+                            <field name="ringover_api_key" class="oe_inline"
+                                   placeholder="US_xxxx or EU_xxxx"/>
+                        </div>
+                        <div class="row">
+                            <label for="ringover_api_url" class="col-3 col-lg-3 o_light_label"/>
+                            <field name="ringover_api_url" class="oe_inline"
+                                   placeholder="https://public-api-us.ringover.com/v2"/>
+                        </div>
+                        <div class="row">
+                            <label for="ringover_webhook_secret" class="col-3 col-lg-3 o_light_label"/>
+                            <field name="ringover_webhook_secret" class="oe_inline"
+                                   placeholder="Optional webhook verification secret"/>
+                        </div>
+                        <div class="mt8 text-muted">
+                            Calls and SMS sync automatically every 10 minutes.
+                            Call recordings are linked to contacts in the chatter.
+                        </div>
+                        <div class="mt8">
+                            <button name="%(voip_oca.voip_pbx_act_window)d"
+                                    icon="oi-arrow-right"
+                                    type="action" class="btn-link"
+                                    string="Configure PBX Server"/>
+                        </div>
+                        <div class="mt4">
+                            <a class="btn-link fw-bold"
+                               href="https://chromewebstore.google.com/detail/ringover-voip-phone-for-o/bdeapcnahigpibeoehandgaiijljkdnl"
+                               target="_blank">
+                                <i class="oi oi-arrow-right"/>
+                                Install Ringover Chrome Extension
+                            </a>
+                        </div>
+                        <div class="mt4">
+                            <a class="btn-link fw-bold"
+                               href="https://www.ringover.com/apps" target="_blank">
+                                <i class="oi oi-arrow-right"/>
+                                Download Ringover Mobile App (iOS / Android)
+                            </a>
+                        </div>
+                    </div>
+                </setting>
+            </xpath>
+        </field>
+    </record>
+</odoo>

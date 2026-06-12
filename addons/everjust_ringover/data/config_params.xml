@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="param_ringover_api_url" model="ir.config_parameter">
+            <field name="key">everjust.ringover_api_url</field>
+            <field name="value">https://public-api-us.ringover.com/v2</field>
+        </record>
+        <record id="param_ringover_api_key" model="ir.config_parameter">
+            <field name="key">everjust.ringover_api_key</field>
+            <field name="value"></field>
+        </record>
+        <record id="param_ringover_webhook_secret" model="ir.config_parameter">
+            <field name="key">everjust.ringover_webhook_secret</field>
+            <field name="value"></field>
+        </record>
+
+        <!-- Cron job: sync calls + SMS every 10 minutes -->
+        <record id="ir_cron_ringover_sync" model="ir.cron">
+            <field name="name">Ringover: Sync Calls and SMS</field>
+            <field name="model_id" ref="model_ringover_sync"/>
+            <field name="state">code</field>
+            <field name="code">model.cron_sync_all()</field>
+            <field name="interval_number">10</field>
+            <field name="interval_type">minutes</field>
+            <field name="active" eval="True"/>
+            <field name="numbercall">-1</field>
+        </record>
+    </data>
+</odoo>

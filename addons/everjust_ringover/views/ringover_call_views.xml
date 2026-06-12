@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="ringover_call_list_view" model="ir.ui.view">
+        <field name="name">ringover.call.list</field>
+        <field name="model">ringover.call</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="start_time"/>
+                <field name="direction"/>
+                <field name="contact_number"/>
+                <field name="partner_id"/>
+                <field name="ringover_user_name" string="Agent"/>
+                <field name="duration" string="Duration (s)"/>
+                <field name="is_answered"/>
+                <field name="state"/>
+                <field name="recording_url" widget="url" string="Recording"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="ringover_call_form_view" model="ir.ui.view">
+        <field name="name">ringover.call.form</field>
+        <field name="model">ringover.call</field>
+        <field name="arch" type="xml">
+            <form create="false" edit="false">
+                <sheet>
+                    <group>
+                        <group string="Call Details">
+                            <field name="direction"/>
+                            <field name="contact_number"/>
+                            <field name="from_number"/>
+                            <field name="to_number"/>
+                            <field name="start_time"/>
+                            <field name="end_time"/>
+                            <field name="duration"/>
+                            <field name="is_answered"/>
+                            <field name="state"/>
+                            <field name="hangup_by"/>
+                        </group>
+                        <group string="Links">
+                            <field name="partner_id"/>
+                            <field name="user_id"/>
+                            <field name="ringover_user_name"/>
+                            <field name="recording_url" widget="url"/>
+                            <field name="voicemail_url" widget="url"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="ringover_call_search_view" model="ir.ui.view">
+        <field name="name">ringover.call.search</field>
+        <field name="model">ringover.call</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="contact_number"/>
+                <field name="partner_id"/>
+                <field name="ringover_user_name"/>
+                <filter name="incoming" string="Incoming" domain="[('direction','=','in')]"/>
+                <filter name="outgoing" string="Outgoing" domain="[('direction','=','out')]"/>
+                <filter name="answered" string="Answered" domain="[('is_answered','=',True)]"/>
+                <filter name="missed" string="Missed" domain="[('is_answered','=',False)]"/>
+                <filter name="has_recording" string="Has Recording" domain="[('recording_url','!=',False)]"/>
+                <group>
+                    <filter name="group_by_partner" string="Contact" context="{'group_by': 'partner_id'}"/>
+                    <filter name="group_by_direction" string="Direction" context="{'group_by': 'direction'}"/>
+                    <filter name="group_by_agent" string="Agent" context="{'group_by': 'ringover_user_name'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="ringover_call_action" model="ir.actions.act_window">
+        <field name="name">Ringover Calls</field>
+        <field name="res_model">ringover.call</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <!-- Add to Phone menu -->
+    <menuitem
+        id="ringover_call_menu"
+        name="Ringover Calls"
+        parent="voip_oca.voip_menu_root"
+        action="ringover_call_action"
+        sequence="20"
+    />
+</odoo>

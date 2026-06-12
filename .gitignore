@@ -3,8 +3,12 @@ odoo/
 
 # Secrets
 .env
+.env.*
+!.env.example
 *.pem
 *.key
+*.p8
+*.p12
 deployment/ssl/
 
 # Python

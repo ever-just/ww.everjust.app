@@ -75,12 +75,49 @@ docker compose up -d
 ./scripts/provision_tenant.sh acme admin@acme.com 'strong-pass'
 ```
 
+## CI/CD
+
+Automated via GitHub Actions. Every push to `master` triggers a production deploy.
+
+**Pipeline:** `.github/workflows/deploy.yml`
+
+```
+push to master → GitHub Actions → SSH into EC2 → git pull → rebuild control-plane → restart compose → health check
+```
+
+**Security hardening:**
+
+| Measure | Detail |
+|---|---|
+| Action pinned to SHA | `appleboy/ssh-action@0ff420...` prevents tag-hijack supply-chain attacks |
+| Minimal workflow permissions | `permissions: {}` — no GitHub token access granted |
+| Environment-scoped secrets | `DEPLOY_HOST`, `DEPLOY_USER`, `DEPLOY_SSH_KEY` live on the `production` environment, not repo-level |
+| Branch-restricted environment | `production` environment only allows deploys from `master` |
+| Concurrency guard | Only one deploy runs at a time; queued pushes wait |
+| Health check | Post-deploy verification that the control-plane responds 200 |
+
+**Required GitHub secrets** (set on the `production` environment):
+
+| Secret | Value |
+|---|---|
+| `DEPLOY_HOST` | EC2 public IP |
+| `DEPLOY_USER` | `ubuntu` |
+| `DEPLOY_SSH_KEY` | Contents of the EC2 SSH private key (PEM) |
+
+**Server prerequisites:**
+
+- Repo cloned at `/opt/everjust/platform`
+- Docker and Docker Compose installed
+- SSH user has passwordless `sudo`
+- `.env` populated with runtime secrets (Stripe, Postgres, Resend, etc.)
+
 ## Status
 
 - [x] Plan, architecture, Stripe products
 - [x] Debranding + theme modules
 - [x] Deployment config (compose, nginx, odoo.conf)
 - [x] Control plane (signup, Stripe, provisioning)
-- [ ] AWS EC2 + wildcard DNS + SSL
-- [ ] First tenant: TCSW (`tcsw.everjust.app`)
+- [x] AWS EC2 + wildcard DNS + SSL
+- [x] First tenant: TCSW (`tcsw.everjust.app`)
+- [x] CI/CD pipeline (GitHub Actions → EC2)
 - [ ] Self-service signup automation (Phase 2)

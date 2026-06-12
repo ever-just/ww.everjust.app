@@ -4,6 +4,9 @@ on:
   push:
     branches: [master]
 
+# Minimal permissions — this workflow needs no GitHub token access.
+permissions: {}
+
 concurrency:
   group: deploy-production
   cancel-in-progress: false
@@ -13,10 +16,12 @@ jobs:
     name: Deploy
     runs-on: ubuntu-latest
     timeout-minutes: 10
+    environment: production
 
     steps:
+      # Pin to exact commit SHA to prevent supply-chain tag hijacking.
       - name: Deploy via SSH
-        uses: appleboy/ssh-action@v1
+        uses: appleboy/ssh-action@0ff4204d59e8e51228ff73bce53f80d53301dee2 # v1
         with:
           host: ${{ secrets.DEPLOY_HOST }}
           username: ${{ secrets.DEPLOY_USER }}
@@ -39,6 +44,5 @@ jobs:
 
             echo "=== Verifying deployment ==="
             sleep 5
-            sudo docker compose exec -T control-plane python -c "import httpx; r = httpx.get('http://localhost:8000/healthz'); print(r.json()); assert r.status_code == 200" \
-              || sudo docker compose exec -T control-plane python -c "from urllib.request import urlopen; import json; r = urlopen('http://localhost:8000/healthz'); print(json.loads(r.read())); assert r.status == 200"
+            sudo docker compose exec -T control-plane python -c "from urllib.request import urlopen; import json; r = urlopen('http://localhost:8000/healthz'); print(json.loads(r.read())); assert r.status == 200"
             echo "=== Deploy complete ==="

@@ -2,6 +2,8 @@
 import logging
 import requests
 
+from datetime import datetime
+
 from odoo import api, fields, models
 
 _logger = logging.getLogger(__name__)
@@ -35,6 +37,17 @@ class RingoverCall(models.Model):
     partner_id = fields.Many2one("res.partner", string="Contact", readonly=True)
     user_id = fields.Many2one("res.users", string="Odoo User", readonly=True)
 
+    @staticmethod
+    def _parse_dt(val):
+        """Convert ISO 8601 datetime string to Odoo-compatible format."""
+        if not val:
+            return False
+        try:
+            dt = datetime.fromisoformat(val.replace("Z", "+00:00"))
+            return dt.strftime("%Y-%m-%d %H:%M:%S")
+        except (ValueError, AttributeError):
+            return False
+
     @api.model
     def _sync_from_api_data(self, call_data):
         """Create or update a call record from Ringover API response data."""
@@ -62,8 +75,8 @@ class RingoverCall(models.Model):
             "contact_number": contact_number,
             "from_number": call_data.get("from_number", ""),
             "to_number": call_data.get("to_number", ""),
-            "start_time": call_data.get("start_time"),
-            "end_time": call_data.get("end_time"),
+            "start_time": self._parse_dt(call_data.get("start_time")),
+            "end_time": self._parse_dt(call_data.get("end_time")),
             "duration": call_data.get("incall_duration") or 0,
             "is_answered": call_data.get("is_answered", False),
             "state": call_data.get("last_state", ""),

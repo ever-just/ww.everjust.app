@@ -1,0 +1,38 @@
+{% extends "docs/_base.html" %}
+{% from "_icons.html" import icon %}
+
+{% block title %}Use it on your phone — EVERJUST.APP Docs{% endblock %}
+{% block description %}Install your EVERJUST.APP workspace on iPhone or Android as a home-screen app, with notifications and an app-like experience.{% endblock %}
+
+{% block doc %}
+<h1>Use it on your phone</h1>
+<p class="lead-muted">The whole platform is responsive, and both the site and your workspace install to your home screen as an app — no app store needed.</p>
+
+<h2>iPhone &amp; iPad (Safari)</h2>
+<ol>
+  <li>Open <b class="text-anywhere">your&#8209;org.{{ domain }}</b> in Safari and sign in.</li>
+  <li>Tap the <b>Share</b> button (the square with the arrow).</li>
+  <li>Scroll down and tap <b>Add to Home Screen</b>, then <b>Add</b>.</li>
+</ol>
+<p>The EVERJUST icon appears on your home screen and opens full-screen, without browser chrome.</p>
+
+<h2>Android (Chrome)</h2>
+<ol>
+  <li>Open <b class="text-anywhere">your&#8209;org.{{ domain }}</b> in Chrome and sign in.</li>
+  <li>Tap the <b>&#8942;</b> menu, then <b>Install app</b> (or <b>Add to Home screen</b>).</li>
+  <li>Confirm. Chrome may also offer an install banner automatically.</li>
+</ol>
+
+<h2>Tips for mobile work</h2>
+<ul>
+  <li><b>Stay signed in.</b> The installed app keeps your session, so it opens straight to your work.</li>
+  <li><b>Approve on the go.</b> Time-off requests, document signatures, and task updates all work well on a phone.</li>
+  <li><b>Click-to-dial.</b> Phone numbers in contacts are tappable — calls go through your phone with the record kept in the workspace.</li>
+</ul>
+
+<h2>Troubleshooting</h2>
+<ul>
+  <li><b>No "Install app" option?</b> Make sure you're in Safari (iOS) or Chrome (Android) — some in-app browsers (e.g. from a messaging app) can't install.</li>
+  <li><b>Old icon or stale page?</b> Remove the home-screen app and add it again; it picks up the latest version.</li>
+</ul>
+{% endblock %}

@@ -1,0 +1,29 @@
+{% extends "docs/_base.html" %}
+{% from "_icons.html" import icon %}
+
+{% block title %}Billing — EVERJUST.APP Docs{% endblock %}
+{% block description %}How EVERJUST.APP pricing works: $100/month including 5 users, $15 per extra user, promo codes, invoices, and cancellation.{% endblock %}
+
+{% block doc %}
+<h1>Billing</h1>
+<p class="lead-muted">One plan, no tiers. Billing is handled by Stripe; we never see or store your card details.</p>
+
+<h2>The plan</h2>
+<ul>
+  <li><b>$100/month</b> — includes every app and your first 5 users.</li>
+  <li><b>$15/user/month</b> — for each active user beyond 5, prorated automatically.</li>
+  <li><b>No add-ons.</b> Apps, storage growth, backups, and support are all included.</li>
+</ul>
+
+<h2>Promo and access codes</h2>
+<p>Codes are entered on the Stripe checkout page when you create your workspace. A 100%-off code brings the total to $0 and no card is required.</p>
+
+<h2>Receipts and invoices</h2>
+<p>Stripe emails a receipt to the billing email (the address used at signup) every cycle. Need the billing email changed or a past invoice re-sent? <a href="mailto:company@everjust.co">Contact us</a>.</p>
+
+<h2>Failed payments</h2>
+<p>If a renewal payment fails, we'll retry and notify you. While payment is outstanding the workspace is suspended — sign-ins are disabled but <b>no data is deleted</b>. Settling the invoice restores access.</p>
+
+<h2>Cancelling</h2>
+<p>You can cancel anytime; your subscription runs to the end of the paid period. Export anything you need beforehand (Documents supports bulk ZIP download, and list views export to spreadsheet). If you'd like a full data export, <a href="mailto:company@everjust.co">ask us</a> and we'll provide one.</p>
+{% endblock %}

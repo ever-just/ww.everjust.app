@@ -1,0 +1,43 @@
+{% extends "docs/_base.html" %}
+{% from "_icons.html" import icon %}
+
+{% block title %}Security & data — EVERJUST.APP Docs{% endblock %}
+{% block description %}How EVERJUST.APP isolates and protects your data: dedicated databases per workspace, encryption in transit, backups, and access control.{% endblock %}
+
+{% block doc %}
+<h1>Security &amp; data</h1>
+<p class="lead-muted">Your workspace is private by architecture, not by policy promise.</p>
+
+<h2>Isolation</h2>
+<ul>
+  <li><b>One database per workspace.</b> Your data lives in its own dedicated PostgreSQL database. There is no shared tenancy at the data layer and no cross-workspace queries.</li>
+  <li><b>One address per workspace.</b> Your workspace is only reachable at <b class="text-anywhere">your&#8209;org.{{ domain }}</b>; requests to other subdomains can't touch your database.</li>
+</ul>
+
+<h2>Encryption &amp; transport</h2>
+<ul>
+  <li>All traffic is served over <b>HTTPS/TLS</b> — including the installed mobile app and all API access.</li>
+  <li>Passwords are stored as salted hashes, never in plain text.</li>
+  <li>Card details never touch our servers — checkout and billing run on <b>Stripe</b>.</li>
+</ul>
+
+<h2>Backups</h2>
+<p>Workspace databases are backed up automatically on a rolling schedule. If you ever need a restore or a copy of a backup, <a href="mailto:company@everjust.co">contact us</a>.</p>
+
+<h2>Access control</h2>
+<ul>
+  <li>Access rights are <b>per app, per user</b> — see <a href="/docs/invite-team">Invite your team</a>.</li>
+  <li>Documents adds <b>directory-level access groups</b> on top, so sensitive folders (HR, contracts) can be restricted to named people.</li>
+  <li>Archiving a user disables sign-in immediately while preserving their history.</li>
+</ul>
+
+<h2>Your data is yours</h2>
+<ul>
+  <li>We don't pool, mine, sell, or train on your data.</li>
+  <li>You can export records to spreadsheets from any list view, bulk-download files as ZIP, and request a full export at any time.</li>
+  <li>On cancellation your data is retained briefly for recovery, then deleted on request or per schedule.</li>
+</ul>
+
+<h2>Reporting a concern</h2>
+<p>Found a vulnerability or have a security question? Email <a href="mailto:company@everjust.co">company@everjust.co</a> with "SECURITY" in the subject — it goes to the top of the queue.</p>
+{% endblock %}

@@ -1,0 +1,25 @@
+{% extends "docs/_base.html" %}
+{% from "_icons.html" import icon %}
+
+{% block title %}Documentation — EVERJUST.APP{% endblock %}
+{% block description %}Everything you need to run your EVERJUST.APP workspace: getting started, inviting your team, the apps, billing, mobile install, and security.{% endblock %}
+
+{% block doc %}
+<h1>Documentation</h1>
+<p class="lead-muted">Everything you need to set up and run your workspace — from first sign-in to payroll. Short, practical, and searchable with <kbd class="px-1">Ctrl</kbd>+<kbd class="px-1">F</kbd>.</p>
+
+<div class="row g-3 mt-3">
+  {% for slug, page in docs_pages.items() %}
+  <div class="col-12 col-sm-6">
+    <a class="docs-card" href="/docs/{{ slug }}">
+      <span class="icon-tile d-inline-flex align-items-center justify-content-center" style="width:38px;height:38px;border:1px solid #000;border-radius:.625rem">{{ icon(page.icon, 18) }}</span>
+      <h3>{{ page.title }}</h3>
+      <p>{{ page.blurb }}</p>
+    </a>
+  </div>
+  {% endfor %}
+</div>
+
+<h2>Can&rsquo;t find what you need?</h2>
+<p>Email <a href="mailto:company@everjust.co">company@everjust.co</a> and a human will answer. If you don&rsquo;t have a workspace yet, <a href="/signup">create one</a> — it takes about 2 minutes.</p>
+{% endblock %}

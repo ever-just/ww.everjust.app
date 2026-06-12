@@ -25,13 +25,16 @@
     steps.ready.querySelector(".marker").innerHTML = "&#10003;";
     loading.hidden = true;
     ready.hidden = false;
-    // Remember this workspace for the sign-in page.
-    try {
-      var KEY = "everjust.recentWorkspaces";
-      var list = JSON.parse(localStorage.getItem(KEY) || "[]");
-      list = [subdomain].concat(list.filter(function (s) { return s !== subdomain; }));
-      localStorage.setItem(KEY, JSON.stringify(list.slice(0, 3)));
-    } catch (e) { /* storage unavailable */ }
+    // Remember this workspace for the sign-in page (functional storage
+    // is opt-in via the consent banner).
+    if (!window.ejConsent || window.ejConsent.functional()) {
+      try {
+        var KEY = "everjust.recentWorkspaces";
+        var list = JSON.parse(localStorage.getItem(KEY) || "[]");
+        list = [subdomain].concat(list.filter(function (s) { return s !== subdomain; }));
+        localStorage.setItem(KEY, JSON.stringify(list.slice(0, 3)));
+      } catch (e) { /* storage unavailable */ }
+    }
   }
 
   function markTimeout() {

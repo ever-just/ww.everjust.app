@@ -2,12 +2,17 @@
  * assets, network-first for pages with an offline fallback. */
 "use strict";
 
-const CACHE = "everjust-v1";
+const CACHE = "everjust-v3";
 const OFFLINE_URL = "/offline";
 
 const PRECACHE = [
   OFFLINE_URL,
+  "/static/vendor/bootstrap/bootstrap.min.css",
+  "/static/vendor/bootstrap/bootstrap.bundle.min.js",
+  "/static/vendor/cookieconsent/cookieconsent.css",
+  "/static/vendor/cookieconsent/cookieconsent.umd.js",
   "/static/css/site.css",
+  "/static/js/consent.js",
   "/static/js/pwa.js",
   "/static/img/icon-192x192.png",
   "/static/img/icon-512x512.png",

@@ -32,9 +32,40 @@ app.mount("/static", StaticFiles(directory=str(STATIC_DIR)), name="static")
 templates = Jinja2Templates(directory=str(BASE_DIR / "templates"))
 
 
+# Documentation pages: slug -> sidebar metadata. Order defines the
+# sidebar and prev/next links. Each has a template at templates/docs/.
+DOCS_PAGES = {
+    "getting-started": {
+        "title": "Getting started", "icon": "rocket",
+        "blurb": "Create your workspace, sign in, and find your way around.",
+    },
+    "invite-team": {
+        "title": "Invite your team", "icon": "user-plus",
+        "blurb": "Add users, set per-app access rights, manage seats.",
+    },
+    "apps": {
+        "title": "The apps", "icon": "layout-grid",
+        "blurb": "CRM, projects, documents, eSign, HR, payroll, calls & SMS.",
+    },
+    "billing": {
+        "title": "Billing", "icon": "credit-card",
+        "blurb": "Pricing, promo codes, invoices, and cancellation.",
+    },
+    "mobile-app": {
+        "title": "Use it on your phone", "icon": "smartphone",
+        "blurb": "Install the workspace on iPhone or Android.",
+    },
+    "security": {
+        "title": "Security & data", "icon": "shield-check",
+        "blurb": "Isolation, encryption, backups, and data ownership.",
+    },
+}
+
+
 def render(request: Request, name: str, status_code: int = 200, **ctx) -> HTMLResponse:
     ctx.setdefault("domain", BASE_DOMAIN)
     ctx.setdefault("year", datetime.date.today().year)
+    ctx.setdefault("docs_pages", DOCS_PAGES)
     return templates.TemplateResponse(
         request=request, name=name, context=ctx, status_code=status_code
     )
@@ -79,6 +110,27 @@ def offline(request: Request):
     return render(request, "offline.html")
 
 
+@app.get("/privacy", response_class=HTMLResponse)
+def privacy(request: Request):
+    return render(request, "privacy.html")
+
+
+@app.get("/docs", response_class=HTMLResponse)
+def docs_index(request: Request):
+    return render(request, "docs/index.html", active="index")
+
+
+@app.get("/docs/{slug}", response_class=HTMLResponse)
+def docs_page(request: Request, slug: str):
+    if slug not in DOCS_PAGES:
+        return render(
+            request, "error.html", status_code=404,
+            message="That documentation page doesn’t exist.",
+            back_url="/docs", back_label="Back to docs",
+        )
+    return render(request, f"docs/{slug}.html", active=slug)
+
+
 @app.get("/welcome", response_class=HTMLResponse)
 def welcome(request: Request, s: str = None, subdomain: str = None):
     sub = (subdomain or "").lower().strip()
@@ -89,8 +141,10 @@ def welcome(request: Request, s: str = None, subdomain: str = None):
 
 # ── Signup flow ──────────────────────────────────────────────────────────
 
-def _signup_error(request: Request, message: str, **form_values) -> HTMLResponse:
-    return render(request, "signup.html", status_code=400, error=message, **form_values)
+def _signup_error(request: Request, message: str, step: int = 1, **form_values) -> HTMLResponse:
+    # `step` tells the wizard which step the offending field lives on.
+    return render(request, "signup.html", status_code=400,
+                  error=message, error_step=step, **form_values)
 
 
 @app.post("/signup")
@@ -102,24 +156,25 @@ def signup(request: Request,
     email = email.strip()
     keep = {"org_name": org_name, "subdomain": subdomain, "email": email}
 
+    if "@" not in email or "." not in email.split("@")[-1]:
+        return _signup_error(request, "Please enter a valid email address.", step=1, **keep)
+    if len(password) < 8:
+        return _signup_error(request, "Your password must be at least 8 characters.",
+                             step=1, **keep)
     if not org_name:
-        return _signup_error(request, "Please enter your organization name.", **keep)
+        return _signup_error(request, "Please enter your organization name.", step=2, **keep)
     if not provisioning.validate_subdomain(subdomain):
         return _signup_error(
             request,
             "That workspace address can’t be used. Use 3–40 lowercase letters, "
             "numbers, or dashes (it can’t start or end with a dash).",
-            **keep,
+            step=2, **keep,
         )
-    if "@" not in email or "." not in email.split("@")[-1]:
-        return _signup_error(request, "Please enter a valid email address.", **keep)
-    if len(password) < 8:
-        return _signup_error(request, "Your password must be at least 8 characters.", **keep)
     if provisioning.database_exists(subdomain):
         return _signup_error(
             request,
             f"{subdomain}.{BASE_DOMAIN} is already taken — try another address.",
-            **keep,
+            step=2, **keep,
         )
 
     # Keep signup details (incl. the tenant admin password) server-side;
@@ -258,14 +313,52 @@ def apple_touch_icon():
 
 @app.get("/robots.txt", include_in_schema=False)
 def robots():
-    body = f"User-agent: *\nAllow: /\nSitemap: https://{BASE_DOMAIN}/sitemap.txt\n"
+    body = (
+        "User-agent: *\n"
+        "Allow: /\n"
+        "Disallow: /welcome\n"
+        "Disallow: /offline\n"
+        "Disallow: /status/\n"
+        "Disallow: /api/\n"
+        f"Sitemap: https://{BASE_DOMAIN}/sitemap.xml\n"
+    )
     return HTMLResponse(body, media_type="text/plain")
 
 
-@app.get("/sitemap.txt", include_in_schema=False)
+# Indexable pages: path -> (changefreq, priority).
+SITEMAP_PAGES = {
+    "/": ("weekly", "1.0"),
+    "/signup": ("monthly", "0.9"),
+    "/signin": ("monthly", "0.8"),
+    "/docs": ("weekly", "0.8"),
+    **{f"/docs/{slug}": ("monthly", "0.7") for slug in DOCS_PAGES},
+    "/privacy": ("yearly", "0.4"),
+}
+
+
+@app.get("/sitemap.xml", include_in_schema=False)
 def sitemap():
-    pages = ["", "signup", "signin"]
-    body = "\n".join(f"https://{BASE_DOMAIN}/{p}" for p in pages) + "\n"
+    today = datetime.date.today().isoformat()
+    urls = "".join(
+        "<url>"
+        f"<loc>https://{BASE_DOMAIN}{path}</loc>"
+        f"<lastmod>{today}</lastmod>"
+        f"<changefreq>{freq}</changefreq>"
+        f"<priority>{prio}</priority>"
+        "</url>"
+        for path, (freq, prio) in SITEMAP_PAGES.items()
+    )
+    body = (
+        '<?xml version="1.0" encoding="UTF-8"?>'
+        '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'
+        f"{urls}</urlset>"
+    )
+    return HTMLResponse(body, media_type="application/xml")
+
+
+@app.get("/sitemap.txt", include_in_schema=False)
+def sitemap_txt():
+    body = "\n".join(f"https://{BASE_DOMAIN}{p}" for p in SITEMAP_PAGES) + "\n"
     return HTMLResponse(body, media_type="text/plain")
 
 

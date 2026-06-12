@@ -164,16 +164,23 @@ class RingoverCall(models.Model):
             return {"error": "Ringover API not configured. Set API key in Settings."}
         if not from_number:
             return {"error": "Set your Ringover phone number (everjust.ringover_from_number) in System Parameters."}
+        # Strip non-digits and any leading +
+        clean_to = to_number.lstrip("+").replace("-", "").replace(" ", "").replace("(", "").replace(")", "")
         try:
             resp = requests.post(
                 "%s/callback" % url,
                 headers={"Authorization": key, "Content-Type": "application/json"},
-                json={"from_number": from_number, "to_number": to_number},
+                json={
+                    "to_number": clean_to,
+                    "from_number": from_number.lstrip("+").replace("-", "").replace(" ", ""),
+                    "device": "ALL",
+                    "timeout": 30,
+                },
                 timeout=15,
             )
             if resp.ok:
                 return {"success": True}
             _logger.warning("Ringover callback failed: %s %s", resp.status_code, resp.text[:200])
-            return {"error": "Ringover returned %s" % resp.status_code}
+            return {"error": "Ringover returned %s: %s" % (resp.status_code, resp.text[:100])}
         except requests.RequestException as exc:
             return {"error": str(exc)}

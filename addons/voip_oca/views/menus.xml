@@ -2,9 +2,43 @@
 <!-- Copyright 2025 Dixmit
      License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
 <odoo>
+    <!-- Top-level Phone app menu (visible in app grid) -->
+    <menuitem
+        id="voip_menu_root"
+        name="Phone"
+        web_icon="voip_oca,static/description/icon.png"
+        sequence="42"
+    />
+
+    <!-- Call History submenu -->
+    <menuitem
+        name="Call History"
+        id="voip_call_menu_action"
+        parent="voip_menu_root"
+        action="voip_oca.voip_call_act_window_list"
+        sequence="10"
+    />
+
+    <!-- Configuration submenu -->
+    <menuitem
+        name="Configuration"
+        id="voip_menu_config"
+        parent="voip_menu_root"
+        sequence="90"
+    />
+
+    <menuitem
+        name="PBX Servers"
+        id="voip_pbx_menu_config"
+        parent="voip_menu_config"
+        action="voip_oca.voip_pbx_act_window"
+        sequence="10"
+    />
+
+    <!-- Keep the technical menu entries too -->
     <menuitem
         name="Voip/Calls"
-        id="voip_call_menu_action"
+        id="voip_call_menu_technical"
         parent="mail.mail_menu_technical"
         action="voip_oca.voip_call_act_window_list"
     />

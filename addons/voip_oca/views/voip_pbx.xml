@@ -47,10 +47,5 @@
         <field name="context">{}</field>
     </record>
 
-    <record model="ir.ui.menu" id="voip_pbx_menu">
-        <field name="name">PBX Servers</field>
-        <field name="parent_id" ref="mail.mail_menu_technical" />
-        <field name="action" ref="voip_pbx_act_window" />
-        <field name="sequence" eval="16" />
-    </record>
+    <!-- PBX menu is now under Phone > Configuration in menus.xml -->
 </odoo>

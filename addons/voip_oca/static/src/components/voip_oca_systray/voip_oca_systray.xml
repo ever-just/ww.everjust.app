@@ -6,7 +6,7 @@
         <div>
             <button
                 t-attf-class="o_nav_entry o_voip_#{ voip_oca.status }"
-                title="Softphone"
+                title="Ringover Phone"
                 t-on-click="onClick"
                 t-if="voip_oca.pbx_id"
             >

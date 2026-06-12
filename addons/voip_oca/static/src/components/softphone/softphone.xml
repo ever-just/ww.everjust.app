@@ -15,8 +15,8 @@
                     <span
                         t-attf-class="o_voip_status_icon fa fa-circle ms-3 me-1 o_voip_#{voip.status}"
                     />
-                    <span class="oi oi-large oi-voip mx-1" />
-                    <span class="mx-1">VoIP</span>
+                    <span class="fa fa-phone mx-1" />
+                    <span class="mx-1">Ringover</span>
                 </div>
                 <div>
                     <button

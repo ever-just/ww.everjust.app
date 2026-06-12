@@ -28,7 +28,7 @@ def _pg_connect(dbname: str = "postgres"):
         password=DB_PASSWORD, dbname=dbname, connect_timeout=10,
     )
 
-EVERJUST_MODULES = "base,everjust_brand,everjust_theme,everjust_home,voip_oca,everjust_sms_gateway,document_page,document_page_partner,document_url,attachment_zipped_download,dms"
+EVERJUST_MODULES = "base,everjust_brand,everjust_theme,everjust_home,voip_oca,everjust_sms_gateway,document_page,document_page_partner,document_url,attachment_zipped_download,dms,payroll,sign_oca,hr_holidays,hr_timesheet"
 
 SUBDOMAIN_RE = re.compile(r"^[a-z0-9][a-z0-9-]{1,38}[a-z0-9]$")
 RESERVED = {"www", "app", "api", "admin", "mail", "ftp", "staging", "test"}
@@ -72,6 +72,7 @@ def provision_tenant(subdomain: str, admin_login: str, admin_password: str) -> d
 
     _set_admin_credentials(subdomain, admin_login, admin_password)
     _configure_mail(subdomain)
+    _configure_dms(subdomain)
     ensure_dns(subdomain)
 
     return {
@@ -144,6 +145,43 @@ def _configure_mail(db: str) -> None:
         ["docker", "exec", "-i", ODOO_CONTAINER, "odoo", "shell",
          "-d", db, "--db_user", DB_USER, "--db_password", DB_PASSWORD, "--no-http"],
         input=_MAIL_SETUP_PY, text=True, check=False,
+    )
+
+
+_DMS_SETUP_PY = """
+# Add admin to DMS Manager group and create default storage + directory
+dms_mgr = env.ref('dms.group_dms_manager', raise_if_not_found=False)
+admin = env['res.users'].browse(2)
+if dms_mgr and dms_mgr.id not in admin.group_ids.ids:
+    admin.write({'group_ids': [(4, dms_mgr.id)]})
+
+# Create default storage and root directory with full-access group
+if not env['dms.storage'].search([], limit=1):
+    storage = env['dms.storage'].create({'name': 'Default Storage', 'save_type': 'database'})
+    root_dir = env['dms.directory'].create({
+        'name': 'Documents',
+        'storage_id': storage.id,
+        'is_root_directory': True,
+    })
+    if dms_mgr:
+        access_group = env['dms.access.group'].create({
+            'name': 'Full Access',
+            'perm_create': True,
+            'perm_write': True,
+            'perm_unlink': True,
+            'group_ids': [(4, dms_mgr.id)],
+        })
+        root_dir.write({'group_ids': [(4, access_group.id)]})
+env.cr.commit()
+"""
+
+
+def _configure_dms(db: str) -> None:
+    """Set up DMS with default storage, root directory, and admin permissions."""
+    subprocess.run(
+        ["docker", "exec", "-i", ODOO_CONTAINER, "odoo", "shell",
+         "-d", db, "--db_user", DB_USER, "--db_password", DB_PASSWORD, "--no-http"],
+        input=_DMS_SETUP_PY, text=True, check=False,
     )
 
 

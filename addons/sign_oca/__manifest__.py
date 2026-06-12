@@ -4,10 +4,10 @@
 {
     "name": "Sign Oca",
     "summary": """
-        Allow to sign documents inside Odoo CE""",
+        Allow to sign documents inside EVERJUST.APP""",
     "version": "19.0.1.0.0",
     "license": "AGPL-3",
-    "author": "Dixmit,Odoo Community Association (OCA)",
+    "author": "Dixmit,OCA",
     "website": "https://github.com/OCA/sign",
     "depends": ["portal"],
     "data": [

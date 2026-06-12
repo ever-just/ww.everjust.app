@@ -34,7 +34,7 @@ patch(VoipAgent.prototype, {
             return;
         }
 
-        // Create call record in Odoo
+        // Create the call record
         await this.createCall({
             partner_id: partner && partner.id,
             phone_number: phone_number,

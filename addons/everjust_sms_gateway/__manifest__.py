@@ -2,11 +2,11 @@
 {
     "name": "EVERJUST.APP SMS Gateway",
     "version": "19.0.1.2.0",
-    "summary": "Route SMS through TextBee instead of Odoo IAP — zero per-message cost.",
+    "summary": "Route SMS through TextBee — zero per-message cost.",
     "description": """
 EVERJUST.APP SMS Gateway
 ========================
-Replaces Odoo's default IAP-based SMS sending with a self-hosted TextBee
+Replaces the default metered SMS sending with a self-hosted TextBee
 gateway. All existing SMS features continue to work (composer, templates,
 phone field buttons, chatter threading, CRM/Sales/Events bridges, SMS
 Marketing) — only the transport layer changes.

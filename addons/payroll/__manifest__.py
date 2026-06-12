@@ -1,4 +1,4 @@
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
+# See LICENSE file for full copyright and licensing details.
 
 {
     "name": "Payroll",
@@ -8,7 +8,7 @@
     "sequence": 38,
     "summary": "Manage your employee payroll records",
     "license": "LGPL-3",
-    "author": "Odoo SA, Odoo Community Association (OCA)",
+    "author": "OCA",
     "depends": [
         "hr_holidays",
         "mail",

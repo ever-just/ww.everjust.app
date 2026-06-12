@@ -29,7 +29,7 @@
             </p>
         <p>
                 Directories can be used to structure and organize
-                files directly in Odoo.
+                files directly in your workspace.
             </p>
     </field>
 </record>
@@ -48,7 +48,7 @@
                 Click to add a new file.
             </p>
         <p>
-                Files are used to save content directly in Odoo.
+                Files are used to save content directly in your workspace.
             </p>
     </field>
 </record>
@@ -73,7 +73,7 @@
                 Add a new File.
             </p>
         <p>
-                Files are used to save content directly in Odoo.
+                Files are used to save content directly in your workspace.
             </p>
     </field>
 </record>

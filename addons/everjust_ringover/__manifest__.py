@@ -2,7 +2,7 @@
 {
     "name": "EVERJUST.APP Ringover Integration",
     "version": "19.0.1.0.0",
-    "summary": "Native Ringover integration — call logging, SMS, recordings synced to Odoo.",
+    "summary": "Native Ringover integration — call logging, SMS, recordings synced to EVERJUST.APP.",
     "author": "EVERJUST",
     "website": "https://everjust.app",
     "category": "Productivity/VOIP",

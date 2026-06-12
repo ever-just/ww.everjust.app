@@ -5,7 +5,7 @@
     "version": "19.0.1.0.0",
     "category": "Tools",
     "website": "https://github.com/OCA/knowledge",
-    "author": "Tecnativa, Odoo Community Association (OCA)",
+    "author": "Tecnativa, OCA",
     "license": "AGPL-3",
     "depends": ["base"],
     "data": [

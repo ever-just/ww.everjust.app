@@ -1,0 +1,158 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="hero container">
+  <h1>Run your entire business in one workspace.</h1>
+  <p class="sub">
+    EVERJUST.APP gives your organization a private, fully-branded workspace at
+    <b>your&#8209;org.{{ domain }}</b> — CRM, projects, documents, e&#8209;signatures,
+    HR, payroll, calls and SMS, all in one place. No per-app pricing, no setup calls.
+  </p>
+  <div class="hero-cta">
+    <a class="btn btn-primary" href="/signup">Create your workspace &rarr;</a>
+    <a class="btn btn-ghost" href="/signin">Sign in to your workspace</a>
+  </div>
+  <p class="fineprint">Live in about 2 minutes &middot; $100/mo for your first 5 users &middot; cancel anytime</p>
+
+  <div class="hero-mock" aria-hidden="true">
+    <div class="bar">
+      <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+      <span class="urlbox"><b>your-org</b>.{{ domain }}</span>
+    </div>
+    <div class="mock-grid">
+      <div class="mock-app"><span class="tile">&#128202;</span>CRM</div>
+      <div class="mock-app"><span class="tile">&#128176;</span>Sales</div>
+      <div class="mock-app"><span class="tile">&#128203;</span>Projects</div>
+      <div class="mock-app"><span class="tile">&#128193;</span>Documents</div>
+      <div class="mock-app"><span class="tile">&#9997;&#65039;</span>eSign</div>
+      <div class="mock-app"><span class="tile">&#128101;</span>HR</div>
+      <div class="mock-app"><span class="tile">&#128181;</span>Payroll</div>
+      <div class="mock-app"><span class="tile">&#128222;</span>Calls</div>
+      <div class="mock-app"><span class="tile">&#128172;</span>SMS</div>
+      <div class="mock-app"><span class="tile">&#128218;</span>Knowledge</div>
+      <div class="mock-app"><span class="tile">&#128197;</span>Time Off</div>
+      <div class="mock-app"><span class="tile">&#9201;&#65039;</span>Timesheets</div>
+    </div>
+  </div>
+</section>
+
+<section class="section alt" id="features">
+  <div class="container">
+    <h2>Everything included. Nothing bolted on.</h2>
+    <p class="lede">One subscription unlocks the full suite. Every app shares the same contacts, files, and activity feed — so nothing falls between tools.</p>
+    <div class="feature-grid">
+      <div class="feature">
+        <div class="icon">&#128202;</div>
+        <h3>CRM &amp; Sales</h3>
+        <p>Track leads, pipelines, and quotes. Every email, call, and meeting logged against the customer automatically.</p>
+      </div>
+      <div class="feature">
+        <div class="icon">&#128203;</div>
+        <h3>Projects &amp; Timesheets</h3>
+        <p>Plan work on kanban boards, log hours as you go, and see exactly where every project stands.</p>
+      </div>
+      <div class="feature">
+        <div class="icon">&#128193;</div>
+        <h3>Documents &amp; eSign</h3>
+        <p>A real document management system with folders, permissions, and legally-binding electronic signatures built in.</p>
+      </div>
+      <div class="feature">
+        <div class="icon">&#128101;</div>
+        <h3>HR, Time Off &amp; Payroll</h3>
+        <p>Employee records, leave requests, attendance, and payslips computed from actual clock-in/out data.</p>
+      </div>
+      <div class="feature">
+        <div class="icon">&#128222;</div>
+        <h3>Calls &amp; SMS</h3>
+        <p>Click-to-dial from any contact, call logging, and two-way SMS — right inside your workspace.</p>
+      </div>
+      <div class="feature">
+        <div class="icon">&#128274;</div>
+        <h3>Private by design</h3>
+        <p>Your workspace runs on its own isolated database. Your data is never pooled, mined, or shared.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="how">
+  <div class="container">
+    <h2>Up and running in three steps</h2>
+    <p class="lede">No sales call, no onboarding fee, no migration project. Claim an address and start working.</p>
+    <div class="steps">
+      <div class="step">
+        <h3>Claim your workspace</h3>
+        <p>Pick your address — <b>your&#8209;org.{{ domain }}</b> — and create your admin account. Checkout takes a minute.</p>
+      </div>
+      <div class="step">
+        <h3>We build it while you watch</h3>
+        <p>Your private workspace is provisioned automatically in about 2 minutes, pre-configured and ready to use.</p>
+      </div>
+      <div class="step">
+        <h3>Invite your team</h3>
+        <p>Add teammates from Settings. Your first 5 users are included; more are just $15 each per month.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section alt" id="pricing">
+  <div class="container">
+    <h2>Simple, flat pricing</h2>
+    <p class="lede">One plan. Every app. No add-ons, no tiers to compare, no surprises on the invoice.</p>
+    <div class="price-card">
+      <div class="amount">$100<span>/month</span></div>
+      <p class="seat-note">includes 5 users &middot; $15/user/month after that</p>
+      <ul>
+        <li>All apps included — CRM, projects, documents, eSign, HR, payroll, calls &amp; SMS</li>
+        <li>Your own address: <b>your&#8209;org.{{ domain }}</b></li>
+        <li>Isolated database — your data stays yours</li>
+        <li>Unlimited records, automatic backups</li>
+        <li>Works on desktop and mobile — installable as an app</li>
+        <li>Promo codes accepted at checkout</li>
+        <li>Cancel anytime</li>
+      </ul>
+      <a class="btn btn-primary btn-block" href="/signup">Create your workspace &rarr;</a>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="faq">
+  <div class="container">
+    <h2>Questions, answered</h2>
+    <div class="faq">
+      <details>
+        <summary>How fast can we start?</summary>
+        <p>Immediately. After checkout your workspace is provisioned automatically — usually in under 2 minutes — and you sign in with the email and password you chose at signup. No confirmation email gauntlet.</p>
+      </details>
+      <details>
+        <summary>Is our data separated from other companies?</summary>
+        <p>Yes. Every workspace runs on its own dedicated database. There is no shared tenancy at the data layer, and your workspace is only reachable at your own subdomain.</p>
+      </details>
+      <details>
+        <summary>Does it work on phones?</summary>
+        <p>Yes. The whole platform is responsive, and you can install it to your home screen as an app: on iPhone use Share &rarr; &ldquo;Add to Home Screen&rdquo;, on Android tap &ldquo;Install app&rdquo; in the browser menu.</p>
+      </details>
+      <details>
+        <summary>What happens when we add people?</summary>
+        <p>Your first 5 users are covered by the base $100/month. Each additional user is $15/month, prorated automatically — invite people whenever you need to.</p>
+      </details>
+      <details>
+        <summary>Can we cancel?</summary>
+        <p>Anytime, from your billing portal. Your subscription stops at the end of the billing period and you can export your data beforehand.</p>
+      </details>
+      <details>
+        <summary>I already have a workspace — where do I sign in?</summary>
+        <p>Go to <a href="/signin">everjust.app/signin</a> and enter your workspace name, or visit <b>your&#8209;org.{{ domain }}</b> directly and bookmark it.</p>
+      </details>
+    </div>
+  </div>
+</section>
+
+<section class="cta-band">
+  <div class="container">
+    <h2>Your workspace is two minutes away.</h2>
+    <a class="btn btn-primary" href="/signup">Create your workspace &rarr;</a>
+  </div>
+</section>
+{% endblock %}

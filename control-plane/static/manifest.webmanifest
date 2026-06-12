@@ -1,0 +1,44 @@
+{
+  "name": "EVERJUST.APP",
+  "short_name": "EVERJUST",
+  "description": "Run your entire business in one workspace — CRM, projects, documents, eSign, HR, payroll, calls and SMS.",
+  "id": "/",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#ffffff",
+  "theme_color": "#000000",
+  "icons": [
+    {
+      "src": "/static/img/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/static/img/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/static/img/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Sign in",
+      "url": "/signin",
+      "icons": [{ "src": "/static/img/icon-192x192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Create a workspace",
+      "url": "/signup",
+      "icons": [{ "src": "/static/img/icon-192x192.png", "sizes": "192x192" }]
+    }
+  ]
+}

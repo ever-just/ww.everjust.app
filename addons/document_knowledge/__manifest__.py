@@ -7,7 +7,7 @@
     "MONK Software, "
     "Tecnativa, "
     "ForgeFlow, "
-    "Odoo Community Association (OCA)",
+    "OCA",
     "category": "Knowledge",
     "license": "AGPL-3",
     "website": "https://github.com/OCA/knowledge",

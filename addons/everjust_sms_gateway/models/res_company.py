@@ -9,7 +9,7 @@ _logger = logging.getLogger(__name__)
 
 
 class SmsApiTextBee(SmsApiBase):
-    """Send SMS through a self-hosted TextBee gateway instead of Odoo IAP.
+    """Send SMS through a self-hosted TextBee gateway instead of metered IAP.
 
     TextBee exposes a REST API at ``POST /api/messages/send`` that accepts
     ``{recipients: [{phone}], message}`` and returns a result per recipient.

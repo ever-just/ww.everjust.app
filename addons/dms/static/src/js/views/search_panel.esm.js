@@ -14,7 +14,7 @@ patch(SearchModel.prototype, {
             }
 
             // Make sure to filter selected category only for DMS hierarchies,
-            // not other Odoo models such as product categories
+            // not other models such as product categories
             // where child_of could be better than "=" operator
             if (category.activeValueId && this.resModel.startsWith("dms")) {
                 domain.push([category.fieldName, "=", category.activeValueId]);

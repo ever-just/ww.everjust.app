@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+
+{% block title %}Create your workspace — EVERJUST.APP{% endblock %}
+{% block description %}Claim your-org.{{ domain }} and get a private, fully-branded workspace with every app included. Live in about 2 minutes.{% endblock %}
+
+{% block nav %}
+<a class="nav-link" href="/#pricing">Pricing</a>
+<a class="btn btn-ghost" href="/signin">Sign in</a>
+{% endblock %}
+
+{% block content %}
+<div class="auth-wrap">
+  <aside class="auth-aside">
+    <h1>Create your workspace</h1>
+    <p class="sub">Pick an address, set up your admin account, and you&rsquo;re live in about 2 minutes.</p>
+    <ul>
+      <li><b>All apps included</b> — CRM, projects, documents, eSign, HR, payroll, calls &amp; SMS</li>
+      <li><b>$100/month</b> for your first 5 users, then $15/user</li>
+      <li><b>Private database</b> — your data is isolated from every other workspace</li>
+      <li><b>No email confirmation</b> — sign in the moment it&rsquo;s ready</li>
+      <li><b>Cancel anytime</b> from your billing portal</li>
+    </ul>
+    <p class="aside-note">Have a promo or access code? You can enter it on the checkout page.</p>
+  </aside>
+
+  <div class="card">
+    <h2>Start your workspace</h2>
+    <p class="card-sub">Step 1 of 2 — workspace details. Next: secure checkout.</p>
+
+    {% if error %}
+    <div class="form-error" role="alert">
+      <span aria-hidden="true">&#9888;&#65039;</span>
+      <span>{{ error }}</span>
+    </div>
+    {% endif %}
+
+    <form method="post" action="/signup" id="signup_form" novalidate>
+      <div class="field">
+        <label for="org_name">Organization name</label>
+        <input class="input" name="org_name" id="org_name" autocomplete="organization"
+               maxlength="80" required value="{{ org_name or '' }}" placeholder="Acme Inc.">
+      </div>
+
+      <div class="field">
+        <label for="subdomain">Workspace address</label>
+        <div class="input-group">
+          <input class="input" name="subdomain" id="subdomain" pattern="[a-z0-9][a-z0-9-]{1,38}[a-z0-9]"
+                 autocomplete="off" autocapitalize="off" spellcheck="false" required
+                 inputmode="url" maxlength="40" value="{{ subdomain or '' }}" placeholder="acme">
+          <span class="addon">.{{ domain }}</span>
+        </div>
+        <p class="availability" id="availability" aria-live="polite"></p>
+        <p class="hint">Lowercase letters, numbers, and dashes. This becomes your team&rsquo;s sign-in address &mdash; choose carefully.</p>
+      </div>
+
+      <div class="field">
+        <label for="email">Your work email</label>
+        <input class="input" name="email" id="email" type="email" autocomplete="email"
+               required value="{{ email or '' }}" placeholder="you@acme.com">
+        <p class="hint">This becomes the admin sign-in for your workspace and receives your receipts.</p>
+      </div>
+
+      <div class="field">
+        <label for="password">Password</label>
+        <div class="password-wrap">
+          <input class="input" name="password" id="password" type="password"
+                 minlength="8" maxlength="128" autocomplete="new-password" required>
+          <button type="button" class="toggle-pass" id="toggle_pass" aria-pressed="false">Show</button>
+        </div>
+        <div class="strength" id="strength" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
+        <p class="hint" id="password_hint">At least 8 characters. Use a mix of words, numbers, and symbols.</p>
+      </div>
+
+      <button type="submit" class="btn btn-primary btn-block" id="submit_btn">
+        Continue to secure checkout &rarr;
+      </button>
+
+      <p class="checkout-note">
+        <span aria-hidden="true">&#128274;</span>
+        <span>Payments are processed by Stripe. You&rsquo;ll review the $100/month plan (5 users included) before anything is charged. Promo codes can be applied at checkout.</span>
+      </p>
+    </form>
+
+    <p class="switch-auth">Already have a workspace? <a href="/signin">Sign in</a></p>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="/static/js/signup.js" defer></script>
+{% endblock %}

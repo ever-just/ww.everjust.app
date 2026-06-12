@@ -12,7 +12,7 @@
         </xpath>
     </template>
 
-    <!-- Replace Odoo apple-touch-icon in the backend webclient -->
+    <!-- Replace the upstream apple-touch-icon in the backend webclient -->
     <template id="everjust_webclient_icons" inherit_id="web.webclient_bootstrap">
         <xpath expr="//link[@rel='apple-touch-icon']" position="replace">
             <link rel="apple-touch-icon" href="/everjust_brand/static/img/apple-touch-icon.png"/>

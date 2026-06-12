@@ -4,7 +4,7 @@
     "name": "Link to a partner in document pages",
     "version": "19.0.1.0.0",
     "website": "https://github.com/OCA/knowledge",
-    "author": "Therp BV, Odoo Community Association (OCA)",
+    "author": "Therp BV, OCA",
     "license": "AGPL-3",
     "category": "Knowledge Management",
     "summary": "Allows to link doucment pages to a partner",

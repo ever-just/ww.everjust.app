@@ -9,7 +9,7 @@
                  alt="EVERJUST.APP"
                  class="everjust-login-logo"/>
         </xpath>
-        <!-- Remove the "Powered by Odoo" footer link -->
+        <!-- Remove the upstream "Powered by" footer link -->
         <xpath expr="//a[contains(@href, 'odoo.com')]" position="replace"/>
     </template>
 

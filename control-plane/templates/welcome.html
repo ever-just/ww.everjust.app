@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+
+{% block title %}Setting up your workspace — EVERJUST.APP{% endblock %}
+
+{% block nav %}{% endblock %}
+
+{% block content %}
+<div class="auth-wrap single" style="text-align:center">
+  <div class="card" data-subdomain="{{ subdomain }}" data-domain="{{ domain }}" id="welcome_card">
+    <h2>Welcome to EVERJUST.APP</h2>
+    <p class="card-sub">Payment confirmed &mdash; we&rsquo;re building your workspace now.</p>
+
+    <span class="url-chip">{{ subdomain }}.{{ domain }}</span>
+
+    <ol class="progress-steps" id="progress">
+      <li class="done" data-step="payment"><span class="marker">&#10003;</span> Payment confirmed</li>
+      <li class="active" data-step="provision"><span class="marker"><span class="spinner"></span></span> Creating your private workspace</li>
+      <li data-step="ready"><span class="marker">3</span> Ready to sign in</li>
+    </ol>
+
+    <div id="state-loading">
+      <p class="hint" style="font-size:13.5px;color:#888">
+        This usually takes 1&ndash;2 minutes. You can keep this tab open &mdash; we&rsquo;ll
+        switch over the moment it&rsquo;s ready.
+      </p>
+    </div>
+
+    <div id="state-ready" hidden>
+      <a class="btn btn-primary btn-block" id="login_link" href="https://{{ subdomain }}.{{ domain }}">
+        Sign in to {{ subdomain }}.{{ domain }} &rarr;
+      </a>
+      <p class="hint" style="margin-top:12px">No email confirmation needed &mdash; use the email and password you just created.</p>
+      <div class="next-steps">
+        <h3>First things to do</h3>
+        <ul class="progress-steps" style="margin:0">
+          <li class="done"><span class="marker">1</span> Bookmark your workspace address</li>
+          <li class="done"><span class="marker">2</span> Invite your team from Settings &rarr; Users</li>
+          <li class="done"><span class="marker">3</span> On mobile? Add it to your home screen as an app</li>
+        </ul>
+      </div>
+    </div>
+
+    <div id="state-timeout" hidden>
+      <p class="form-error" role="alert" style="text-align:left">
+        <span aria-hidden="true">&#9203;</span>
+        <span>Setup is taking longer than usual. Your workspace is still being created &mdash;
+        try the button below in a few minutes. If it&rsquo;s still not up in 15 minutes,
+        email <a href="mailto:company@everjust.co">company@everjust.co</a> and we&rsquo;ll sort it out.</span>
+      </p>
+      <a class="btn btn-ghost btn-block" href="https://{{ subdomain }}.{{ domain }}">
+        Try {{ subdomain }}.{{ domain }} &rarr;
+      </a>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="/static/js/welcome.js" defer></script>
+{% endblock %}

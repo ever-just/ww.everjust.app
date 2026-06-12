@@ -27,19 +27,17 @@ jobs:
             cd /opt/everjust/platform
 
             echo "=== Pulling latest code ==="
-            git config --global --add safe.directory /opt/everjust/platform
-            git fetch origin master
-            git reset --hard origin/master
+            sudo git config --global --add safe.directory /opt/everjust/platform
+            sudo git fetch origin master
+            sudo git reset --hard origin/master
 
             echo "=== Rebuilding control-plane ==="
             cd deployment
-            docker compose build --no-cache control-plane
+            sudo docker compose build --no-cache control-plane
 
             echo "=== Restarting services ==="
-            docker compose up -d --remove-orphans
+            sudo docker compose up -d --remove-orphans
 
             echo "=== Waiting for health check ==="
             sleep 5
             curl -sf http://localhost:8000/healthz || { echo "Health check failed"; exit 1; }
-
-            echo "=== Deploy complete ==="

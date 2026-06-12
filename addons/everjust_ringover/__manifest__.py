@@ -16,5 +16,6 @@
     "installable": True,
     "application": False,
     "auto_install": False,
+    "post_init_hook": "_post_init_hook",
     "license": "LGPL-3",
 }

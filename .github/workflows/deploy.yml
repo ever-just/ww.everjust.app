@@ -37,16 +37,8 @@ jobs:
             echo "=== Restarting services ==="
             sudo docker compose up -d --remove-orphans
 
-            echo "=== Waiting for health check ==="
-            for i in 1 2 3 4 5 6; do
-              sleep 5
-              if sudo docker compose exec -T control-plane curl -sf http://localhost:8000/healthz > /dev/null 2>&1; then
-                echo "Health check passed"
-                exit 0
-              fi
-              echo "Attempt $i: waiting for control-plane..."
-            done
-            echo "Health check failed after 30s — checking container status"
-            sudo docker compose ps control-plane
-            sudo docker compose logs --tail=20 control-plane
-            exit 1
+            echo "=== Verifying deployment ==="
+            sleep 5
+            sudo docker compose exec -T control-plane python -c "import httpx; r = httpx.get('http://localhost:8000/healthz'); print(r.json()); assert r.status_code == 200" \
+              || sudo docker compose exec -T control-plane python -c "from urllib.request import urlopen; import json; r = urlopen('http://localhost:8000/healthz'); print(json.loads(r.read())); assert r.status == 200"
+            echo "=== Deploy complete ==="

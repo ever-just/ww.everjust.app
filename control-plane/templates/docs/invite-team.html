@@ -1,0 +1,33 @@
+{% extends "docs/_base.html" %}
+{% from "_icons.html" import icon %}
+
+{% block title %}Invite your team — EVERJUST.APP Docs{% endblock %}
+{% block description %}Add users to your EVERJUST.APP workspace, set their access rights, and understand how seats affect billing.{% endblock %}
+
+{% block doc %}
+<h1>Invite your team</h1>
+<p class="lead-muted">Add people in under a minute each. Your first 5 users are included in the base plan.</p>
+
+<h2>Add a user</h2>
+<ol>
+  <li>Open <b>Settings &rarr; Users &amp; Companies &rarr; Users</b> from the app grid.</li>
+  <li>Click <b>New</b>, enter the person's name and work email.</li>
+  <li>Choose their access rights per app (for example: Project — User; Documents — User; Settings — nothing).</li>
+  <li>Save, then use <b>Send an invitation email</b> so they can set their own password.</li>
+</ol>
+<p>New users sign in at the same address as everyone else: <b class="text-anywhere">your&#8209;org.{{ domain }}</b>.</p>
+
+<h2>Access rights, simply</h2>
+<ul>
+  <li><b>User</b> — can work in the app: create and edit their own records.</li>
+  <li><b>Manager / Administrator</b> (varies by app) — can configure the app and see everything in it.</li>
+  <li><b>Settings administrator</b> — can manage users and workspace-wide configuration. Keep this to one or two people.</li>
+</ul>
+<p>Rights are per app, so a bookkeeper can administer invoicing without seeing HR, and a contractor can live in Projects only.</p>
+
+<h2>Deactivating people</h2>
+<p>When someone leaves, <b>archive</b> their user (Users list &rarr; select &rarr; Archive). Their history stays attached to every record they touched; they just can't sign in. Archived users free up their seat.</p>
+
+<h2>Seats and billing</h2>
+<p>The base $100/month covers 5 active users. From the 6th active user, each seat is $15/month, prorated automatically — you never need to tell us you've added someone. Details in <a href="/docs/billing">Billing</a>.</p>
+{% endblock %}

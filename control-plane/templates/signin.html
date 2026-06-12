@@ -1,47 +1,51 @@
 {% extends "base.html" %}
+{% from "_icons.html" import icon %}
 
 {% block title %}Sign in — EVERJUST.APP{% endblock %}
 {% block description %}Sign in to your EVERJUST.APP workspace. Enter your workspace name and we'll take you to your team's sign-in page.{% endblock %}
 
 {% block nav %}
-<a class="nav-link" href="/#pricing">Pricing</a>
+<a class="nav-link-plain d-none d-md-inline-block" href="/#pricing">Pricing</a>
+<a class="nav-link-plain d-none d-md-inline-block" href="/docs">Docs</a>
 <a class="btn btn-primary" href="/signup">Get started</a>
 {% endblock %}
 
 {% block content %}
-<div class="auth-wrap single">
-  <div class="card">
-    <h2>Sign in to your workspace</h2>
-    <p class="card-sub">Every team has its own address. Enter yours and we&rsquo;ll take you to your sign-in page.</p>
+<div class="auth-wrap container">
+  <div class="auth-card mx-auto" style="max-width:440px">
+    <h2 class="h4 fw-bold mb-1">Sign in to your workspace</h2>
+    <p class="text-secondary small mb-4">Every team has its own address. Enter yours and we&rsquo;ll take you to your sign-in page.</p>
 
-    <div class="recent-list" id="recent_list" hidden>
-      <p class="recent-label">Recent workspaces</p>
+    <div class="mb-3" id="recent_list" hidden>
+      <p class="text-uppercase fw-bold small text-secondary mb-2" style="letter-spacing:.06em;font-size:.6875rem">Recent workspaces</p>
       <!-- populated from localStorage by signin.js -->
     </div>
 
     <form id="signin_form" novalidate>
-      <div class="field">
-        <label for="workspace">Workspace address</label>
+      <div class="mb-3">
+        <label class="form-label" for="workspace">Workspace address</label>
         <div class="input-group">
-          <input class="input" id="workspace" name="workspace" autocomplete="off"
+          <input class="form-control" id="workspace" name="workspace" autocomplete="off"
                  autocapitalize="off" spellcheck="false" inputmode="url"
                  maxlength="40" required placeholder="your-org" autofocus>
-          <span class="addon">.{{ domain }}</span>
+          <span class="input-group-text">.{{ domain }}</span>
         </div>
-        <p class="availability" id="lookup_status" aria-live="polite"></p>
+        <p class="availability mb-0" id="lookup_status" aria-live="polite"></p>
       </div>
 
-      <button type="submit" class="btn btn-primary btn-block" id="continue_btn">Continue &rarr;</button>
+      <button type="submit" class="btn btn-primary btn-lg w-100" id="continue_btn">
+        Continue {{ icon("arrow-right", 18) }}
+      </button>
     </form>
 
-    <p class="switch-auth">
-      New here? <a href="/signup">Create a workspace</a><br>
-      <span style="display:inline-block;margin-top:10px;font-size:13px;color:#888">
+    <div class="border-top pt-3 mt-4 small text-secondary text-center">
+      <p class="mb-2">New here? <a class="fw-bold" href="/signup">Create a workspace</a></p>
+      <p class="mb-0" style="font-size:.8125rem">
         Forgot your workspace name? It&rsquo;s the first part of the address your team uses
-        (<b>your&#8209;org</b>.{{ domain }}) &mdash; check your welcome email, or
+        (<b class="text-anywhere">your&#8209;org</b>.{{ domain }}) — check your welcome email, or
         <a href="mailto:company@everjust.co">contact us</a> and we&rsquo;ll find it.
-      </span>
-    </p>
+      </p>
+    </div>
   </div>
 </div>
 {% endblock %}

@@ -1,22 +1,75 @@
-/* Signup page: slug suggestion, live availability check, password strength. */
+/* Signup wizard: step navigation, slug suggestion, live availability
+ * check, password strength. The form is a single POST — steps are a
+ * client-side progressive enhancement (without JS both steps render). */
 (function () {
   "use strict";
+
+  var form = document.getElementById("signup_form");
+  var step1 = document.getElementById("step1");
+  var step2 = document.getElementById("step2");
+  var toStep2 = document.getElementById("to_step2");
+  var backStep1 = document.getElementById("back_step1");
+  var progress = document.getElementById("wizard_progress");
+
+  var email = document.getElementById("email");
+  var pass = document.getElementById("password");
+  var toggle = document.getElementById("toggle_pass");
+  var strength = document.getElementById("strength");
 
   var org = document.getElementById("org_name");
   var sub = document.getElementById("subdomain");
   var availability = document.getElementById("availability");
-  var pass = document.getElementById("password");
-  var toggle = document.getElementById("toggle_pass");
-  var strength = document.getElementById("strength");
-  var form = document.getElementById("signup_form");
   var submitBtn = document.getElementById("submit_btn");
+
+  // ── Wizard navigation ─────────────────────────────────
+
+  function setProgress(step) {
+    progress.querySelectorAll(".wstep[data-wstep]").forEach(function (el) {
+      var n = parseInt(el.getAttribute("data-wstep"), 10);
+      el.classList.toggle("done", n < step);
+      el.classList.toggle("active", n === step);
+      if (n < step) el.querySelector(".wdot").textContent = "✓";
+      else el.querySelector(".wdot").textContent = String(n);
+    });
+  }
+
+  function showStep(step) {
+    step1.hidden = step !== 1;
+    step2.hidden = step !== 2;
+    setProgress(step);
+    var first = (step === 1 ? step1 : step2).querySelector("input");
+    if (first) first.focus({ preventScroll: false });
+  }
+
+  function step1Valid() {
+    var fields = [email, pass];
+    for (var i = 0; i < fields.length; i++) {
+      if (!fields[i].checkValidity()) {
+        fields[i].reportValidity();
+        return false;
+      }
+    }
+    return true;
+  }
+
+  toStep2.addEventListener("click", function () {
+    if (step1Valid()) showStep(2);
+  });
+
+  backStep1.addEventListener("click", function () { showStep(1); });
+
+  // If the server re-rendered with a validation error, open the step
+  // the error belongs to so the user lands on the offending field.
+  var initialStep = parseInt(form.getAttribute("data-error-step") || "1", 10);
+  showStep(initialStep === 2 ? 2 : 1);
+
+  // ── Slug suggestion + availability ────────────────────
 
   function slug(v) {
     return (v || "").toLowerCase().trim()
       .replace(/[^a-z0-9-]+/g, "-").replace(/-+/g, "-").replace(/^-|-$/g, "");
   }
 
-  // Suggest a workspace address from the org name until the user edits it.
   var subEdited = !!sub.value;
   sub.addEventListener("input", function () { subEdited = true; });
   org.addEventListener("input", function () {
@@ -26,12 +79,11 @@
     }
   });
 
-  // Debounced availability check against /api/subdomain-check.
   var timer = null;
   var lastChecked = "";
 
   function setStatus(cls, text) {
-    availability.className = "availability" + (cls ? " " + cls : "");
+    availability.className = "availability mb-0" + (cls ? " " + cls : "");
     availability.textContent = text || "";
   }
 
@@ -64,7 +116,8 @@
   sub.addEventListener("input", checkAvailability);
   if (sub.value) checkAvailability();
 
-  // Show/hide password.
+  // ── Password helpers ──────────────────────────────────
+
   toggle.addEventListener("click", function () {
     var showing = pass.type === "text";
     pass.type = showing ? "password" : "text";
@@ -73,7 +126,6 @@
     pass.focus();
   });
 
-  // Lightweight strength meter (length + character variety).
   pass.addEventListener("input", function () {
     var v = pass.value;
     var score = 0;
@@ -84,12 +136,18 @@
     strength.className = "strength s" + score;
   });
 
-  // Normalize the slug on submit so what was previewed is what gets sent,
-  // and guard against double submission.
+  // ── Submit ────────────────────────────────────────────
+
   form.addEventListener("submit", function (e) {
     sub.value = slug(sub.value);
+    if (!step1Valid()) {
+      e.preventDefault();
+      showStep(1);
+      return;
+    }
     if (!form.checkValidity()) {
       e.preventDefault();
+      showStep(2);
       form.reportValidity();
       return;
     }

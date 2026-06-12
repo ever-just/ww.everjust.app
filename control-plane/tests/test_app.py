@@ -257,8 +257,84 @@ def test_static_assets(client):
 
 
 def test_robots_and_sitemap(client):
-    assert "Allow: /" in client.get("/robots.txt").text
+    robots = client.get("/robots.txt").text
+    assert "Allow: /" in robots
+    assert "Sitemap: https://everjust.app/sitemap.xml" in robots
+    assert "Disallow: /welcome" in robots
+
+    r = client.get("/sitemap.xml")
+    assert r.status_code == 200
+    assert "application/xml" in r.headers["content-type"]
+    for path in ("/", "/signup", "/signin", "/docs", "/docs/getting-started",
+                 "/docs/billing", "/docs/security"):
+        assert f"<loc>https://everjust.app{path}</loc>" in r.text
+
     assert "https://everjust.app/signup" in client.get("/sitemap.txt").text
+
+
+# ── Docs ─────────────────────────────────────────────────────────────────
+
+def test_docs_index(client):
+    r = client.get("/docs")
+    assert r.status_code == 200
+    for title in ("Getting started", "Invite your team", "The apps",
+                  "Billing", "Use it on your phone", "Security"):
+        assert title in r.text
+
+
+def test_docs_pages_render_with_nav(client):
+    for slug in ("getting-started", "invite-team", "apps",
+                 "billing", "mobile-app", "security"):
+        r = client.get(f"/docs/{slug}")
+        assert r.status_code == 200, slug
+        assert "breadcrumb" in r.text, slug          # breadcrumb backlinks
+        assert 'href="/docs"' in r.text, slug        # backlink to index
+
+
+def test_docs_unknown_slug_404(client):
+    r = client.get("/docs/not-a-page")
+    assert r.status_code == 404
+    assert "Back to docs" in r.text
+
+
+# ── UI framework / icons / SEO plumbing ──────────────────────────────────
+
+def test_pages_use_bootstrap_and_icon_sprite(client):
+    body = client.get("/").text
+    assert "/static/vendor/bootstrap/bootstrap.min.css" in body
+    assert '<use href="#i-' in body            # inline Lucide sprite in use
+    assert "<symbol" in body                   # sprite symbols inlined
+    assert client.get("/static/vendor/bootstrap/bootstrap.min.css").status_code == 200
+    assert client.get("/static/vendor/lucide/sprite.svg").status_code == 200
+
+
+def test_canonical_and_structured_data(client):
+    body = client.get("/").text
+    assert '<link rel="canonical" href="https://everjust.app/">' in body
+    assert "application/ld+json" in body
+    docs = client.get("/docs/billing").text
+    assert '<link rel="canonical" href="https://everjust.app/docs/billing">' in docs
+
+
+def test_welcome_not_indexable(client):
+    body = client.get("/welcome", params={"subdomain": "acme"}).text
+    assert 'content="noindex"' in body
+
+
+def test_signup_wizard_structure(client):
+    body = client.get("/signup").text
+    assert 'id="step1"' in body and 'id="step2"' in body
+    assert "Checkout" in body                  # 3-step progress indicator
+    assert 'data-error-step="1"' in body
+
+
+def test_signup_error_opens_correct_wizard_step(client):
+    # Subdomain problems live on step 2 of the wizard.
+    r = client.post("/signup", data=dict(VALID_FORM, subdomain="acme"))
+    assert 'data-error-step="2"' in r.text
+    # Account problems live on step 1.
+    r = client.post("/signup", data=dict(VALID_FORM, password="short"))
+    assert 'data-error-step="1"' in r.text
 
 
 def test_healthz(client):
@@ -266,13 +342,18 @@ def test_healthz(client):
 
 
 def test_api_docs_disabled(client):
-    assert client.get("/docs").status_code == 404
+    # /docs serves our documentation, not FastAPI's Swagger UI.
+    assert "swagger" not in client.get("/docs").text.lower()
     assert client.get("/openapi.json").status_code == 404
+    assert client.get("/redoc").status_code == 404
 
 
 # ── Branding ─────────────────────────────────────────────────────────────
 
 def test_no_upstream_branding_on_any_page(client):
-    for path in ("/", "/signup", "/signin", "/offline", "/welcome?subdomain=acme"):
+    paths = ["/", "/signup", "/signin", "/offline", "/welcome?subdomain=acme",
+             "/docs", "/docs/getting-started", "/docs/invite-team", "/docs/apps",
+             "/docs/billing", "/docs/mobile-app", "/docs/security"]
+    for path in paths:
         body = client.get(path).text
         assert "odoo" not in body.lower(), f"upstream branding leak on {path}"

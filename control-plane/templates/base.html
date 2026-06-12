@@ -1,10 +1,13 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" class="js">
+{% from "_icons.html" import icon %}
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>{% block title %}EVERJUST.APP — Run your business in one workspace{% endblock %}</title>
   <meta name="description" content="{% block description %}EVERJUST.APP gives your organization an isolated, fully-branded workspace — CRM, projects, documents, e-signatures, HR, payroll, calls and SMS in one place.{% endblock %}">
+  <meta name="robots" content="{% block robots %}index, follow{% endblock %}">
+  <link rel="canonical" href="https://{{ domain }}{{ canonical_path if canonical_path is defined else request.url.path }}">
   <meta name="theme-color" content="#000000">
   <meta name="color-scheme" content="light">
 
@@ -20,29 +23,48 @@
 
   <meta property="og:site_name" content="EVERJUST.APP">
   <meta property="og:type" content="website">
+  <meta property="og:url" content="https://{{ domain }}{{ canonical_path if canonical_path is defined else request.url.path }}">
   <meta property="og:title" content="{{ self.title() }}">
   <meta property="og:description" content="{{ self.description() }}">
   <meta property="og:image" content="https://{{ domain }}/static/img/icon-512x512.png">
+  <meta name="twitter:card" content="summary">
 
+  <link rel="stylesheet" href="/static/vendor/bootstrap/bootstrap.min.css">
   <link rel="stylesheet" href="/static/css/site.css">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "EVERJUST.APP",
+    "url": "https://{{ domain }}/",
+    "logo": "https://{{ domain }}/static/img/icon-512x512.png",
+    "email": "company@everjust.co"
+  }
+  </script>
   {% block head %}{% endblock %}
 </head>
 <body>
+  {% include "_sprite.html" %}
   <a class="skip-link" href="#main">Skip to content</a>
 
   <header class="site-header">
     <div class="container">
-      <a class="wordmark" href="/" aria-label="EVERJUST.APP home">
-        <img src="/static/img/icon-192x192.png" alt="" width="26" height="26">
-        EVERJUST.APP
-      </a>
-      <nav class="site-nav" aria-label="Main">
-        {% block nav %}
-        <a class="nav-link" href="/#features">Features</a>
-        <a class="nav-link" href="/#pricing">Pricing</a>
-        <a class="btn btn-ghost" href="/signin">Sign in</a>
-        <a class="btn btn-primary" href="/signup">Get started</a>
-        {% endblock %}
+      <nav class="navbar px-0" aria-label="Main">
+        <a class="wordmark" href="/" aria-label="EVERJUST.APP home">
+          <img src="/static/img/icon-192x192.png" alt="" width="26" height="26">
+          <span class="d-none d-sm-inline">EVERJUST.APP</span>
+          <span class="d-sm-none">EVERJUST</span>
+        </a>
+        <div class="site-actions">
+          {% block nav %}
+          <a class="nav-link-plain d-none d-md-inline-block" href="/#features">Features</a>
+          <a class="nav-link-plain d-none d-md-inline-block" href="/#pricing">Pricing</a>
+          <a class="nav-link-plain d-none d-md-inline-block" href="/docs">Docs</a>
+          <a class="btn btn-outline-dark" href="/signin">Sign in</a>
+          <a class="btn btn-primary" href="/signup">Get started</a>
+          {% endblock %}
+        </div>
       </nav>
     </div>
   </header>
@@ -53,15 +75,46 @@
 
   <footer class="site-footer">
     <div class="container">
-      <span>&copy; {{ year }} EVERJUST.APP &mdash; All rights reserved.</span>
-      <nav aria-label="Footer">
-        <a href="/#features">Features</a>
-        <a href="/#pricing">Pricing</a>
-        <a href="/#faq">FAQ</a>
-        <a href="/signin">Sign in</a>
-        <a href="/signup">Get started</a>
-        <a href="mailto:company@everjust.co">Contact</a>
-      </nav>
+      <div class="row gy-4">
+        <div class="col-12 col-md-4">
+          <a class="wordmark mb-2" href="/">
+            <img src="/static/img/icon-192x192.png" alt="" width="26" height="26">
+            EVERJUST.APP
+          </a>
+          <p class="mt-2 mb-0">Run your entire business in one private, fully-branded workspace.</p>
+        </div>
+        <div class="col-6 col-md-2 offset-md-2">
+          <h4>Product</h4>
+          <ul>
+            <li><a href="/#features">Features</a></li>
+            <li><a href="/#pricing">Pricing</a></li>
+            <li><a href="/#faq">FAQ</a></li>
+            <li><a href="/signup">Get started</a></li>
+          </ul>
+        </div>
+        <div class="col-6 col-md-2">
+          <h4>Resources</h4>
+          <ul>
+            <li><a href="/docs">Documentation</a></li>
+            <li><a href="/docs/getting-started">Getting started</a></li>
+            <li><a href="/docs/mobile-app">Mobile app</a></li>
+            <li><a href="/docs/security">Security &amp; data</a></li>
+          </ul>
+        </div>
+        <div class="col-6 col-md-2">
+          <h4>Account</h4>
+          <ul>
+            <li><a href="/signin">Sign in</a></li>
+            <li><a href="/signup">Create workspace</a></li>
+            <li><a href="/docs/billing">Billing</a></li>
+            <li><a href="mailto:company@everjust.co">Contact</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="d-flex flex-wrap justify-content-between gap-2 mt-4 pt-3 border-top">
+        <span>&copy; {{ year }} EVERJUST.APP — All rights reserved.</span>
+        <a href="/sitemap.xml">Sitemap</a>
+      </div>
     </div>
   </footer>
 

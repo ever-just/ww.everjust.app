@@ -1,0 +1,40 @@
+{% extends "docs/_base.html" %}
+{% from "_icons.html" import icon %}
+
+{% block title %}Getting started — EVERJUST.APP Docs{% endblock %}
+{% block description %}Create your EVERJUST.APP workspace, sign in for the first time, and find your way around the app grid.{% endblock %}
+
+{% block doc %}
+<h1>Getting started</h1>
+<p class="lead-muted">From zero to a working workspace in about 2 minutes.</p>
+
+<h2>1. Create your workspace</h2>
+<p>Go to <a href="/signup">everjust.app/signup</a> and complete two short steps:</p>
+<ul>
+  <li><b>Account</b> — your work email and a password. This becomes the admin sign-in for your workspace; there's no confirmation-email step.</li>
+  <li><b>Workspace</b> — your organization name and your address, e.g. <b class="text-anywhere">acme.{{ domain }}</b>. The address is checked for availability as you type. Choose carefully: it's the address your whole team will use.</li>
+</ul>
+<p>Then you'll review the plan on the secure Stripe checkout page ($100/month including 5 users). Promo and access codes can be applied there. If a code brings the total to $0, no card is required.</p>
+
+<h2>2. Watch it build</h2>
+<p>After checkout you'll land on a progress page while your private workspace is provisioned — its own database, pre-configured apps, and your admin account. This usually takes under 2 minutes. The page switches automatically when it's ready.</p>
+
+<h2>3. Sign in</h2>
+<p>Click the sign-in button on the progress page, or visit your address directly. Use the email and password you chose at signup. Bookmark the address — and if you're on a phone, <a href="/docs/mobile-app">install it as an app</a>.</p>
+
+<h2>4. Find your way around</h2>
+<p>You land on the <b>app grid</b> — every app in your workspace, one tile each. A few places worth knowing on day one:</p>
+<ul>
+  <li><b>Contacts</b> — the shared address book every app draws from. Add your customers and suppliers here first.</li>
+  <li><b>Documents</b> — your file home: folders, tags, and permissions. See <a href="/docs/apps">The apps</a>.</li>
+  <li><b>Settings</b> — workspace configuration, including <a href="/docs/invite-team">inviting your team</a>.</li>
+</ul>
+<p>The home button in the top bar always brings you back to the grid.</p>
+
+<h2>What to do next</h2>
+<ul>
+  <li><a href="/docs/invite-team">Invite your team</a> — your first 5 users are included.</li>
+  <li><a href="/docs/apps">Tour the apps</a> — what each one does and how they fit together.</li>
+  <li><a href="/docs/mobile-app">Put it on your phone</a> — the workspace installs as a mobile app.</li>
+</ul>
+{% endblock %}

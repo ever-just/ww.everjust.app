@@ -1,0 +1,4 @@
+{# Lucide icon helper. Icons must be listed in scripts/build_sprite.py. #}
+{% macro icon(name, size=24, cls="") -%}
+<svg class="lucide{% if cls %} {{ cls }}{% endif %}" width="{{ size }}" height="{{ size }}" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="#i-{{ name }}"/></svg>
+{%- endmacro %}

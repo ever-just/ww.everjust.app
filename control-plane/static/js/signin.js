@@ -2,7 +2,7 @@
 (function () {
   "use strict";
 
-  var DOMAIN = document.querySelector(".input-group .addon").textContent.replace(/^\./, "");
+  var DOMAIN = document.querySelector(".input-group-text").textContent.replace(/^\./, "");
   var STORAGE_KEY = "everjust.recentWorkspaces";
   var form = document.getElementById("signin_form");
   var input = document.getElementById("workspace");
@@ -37,7 +37,7 @@
   }
 
   function setStatus(cls, text) {
-    status.className = "availability" + (cls ? " " + cls : "");
+    status.className = "availability mb-0" + (cls ? " " + cls : "");
     status.textContent = text || "";
   }
 

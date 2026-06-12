@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% from "_icons.html" import icon %}
+
+{% block content %}
+<div class="docs-layout container">
+  <div class="row g-4">
+    <aside class="col-12 col-lg-3">
+      <nav class="docs-nav" aria-label="Documentation">
+        <div class="list-group list-group-flush">
+          <a class="list-group-item {{ 'active' if active == 'index' }}" href="/docs">{{ icon("book-open", 16) }} Overview</a>
+          {% for slug, page in docs_pages.items() %}
+          <a class="list-group-item {{ 'active' if active == slug }}" href="/docs/{{ slug }}">{{ icon(page.icon, 16) }} {{ page.title }}</a>
+          {% endfor %}
+        </div>
+      </nav>
+    </aside>
+    <article class="col-12 col-lg-8 offset-lg-1 docs-body">
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb small">
+          <li class="breadcrumb-item"><a href="/">Home</a></li>
+          <li class="breadcrumb-item"><a href="/docs">Docs</a></li>
+          {% if active != 'index' %}<li class="breadcrumb-item active" aria-current="page">{{ docs_pages[active].title }}</li>{% endif %}
+        </ol>
+      </nav>
+      {% block doc %}{% endblock %}
+      {% if active != 'index' %}
+      <div class="docs-toc-footer small">
+        {% set slugs = docs_pages.keys() | list %}
+        {% set idx = slugs.index(active) %}
+        <span>
+          {% if idx > 0 %}
+          <a class="fw-bold" href="/docs/{{ slugs[idx-1] }}">&larr; {{ docs_pages[slugs[idx-1]].title }}</a>
+          {% else %}
+          <a class="fw-bold" href="/docs">&larr; Docs overview</a>
+          {% endif %}
+        </span>
+        <span>
+          {% if idx < slugs|length - 1 %}
+          <a class="fw-bold" href="/docs/{{ slugs[idx+1] }}">{{ docs_pages[slugs[idx+1]].title }} &rarr;</a>
+          {% endif %}
+        </span>
+      </div>
+      {% endif %}
+    </article>
+  </div>
+</div>
+{% endblock %}

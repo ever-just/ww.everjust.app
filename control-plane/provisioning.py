@@ -88,7 +88,7 @@ def _set_admin_credentials(db: str, login: str, password: str) -> None:
     through the ORM shell, which also resets the company/admin defaults.
     """
     py = (
-        "env['res.users'].browse(2).write({'login': %r, 'password': %r}); "
+        "env['res.users'].browse(2).write({'login': %r, 'password': %r, 'action_id': False}); "
         "env.cr.commit()" % (login, password)
     )
     subprocess.run(

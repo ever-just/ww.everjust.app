@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     "name": "EVERJUST.APP Branding",
-    "version": "19.0.1.1.0",
+    "version": "19.0.1.2.0",
     "summary": "Full white-label rebrand to EVERJUST.APP. Removes all upstream branding.",
     "description": """
 EVERJUST.APP Branding

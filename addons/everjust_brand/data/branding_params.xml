@@ -17,5 +17,19 @@
         <!-- Apply branded company report footers on install -->
         <function model="res.company" name="_everjust_apply_defaults"/>
 
+        <!--
+            Clear the default home action so users land on the app grid
+            (home menu) instead of being dumped into Discuss. The mail
+            module sets action_id to Discuss on fresh databases; this
+            overrides that for the admin user (uid 2) and the default
+            template user (uid 1).
+        -->
+        <record id="base.user_admin" model="res.users">
+            <field name="action_id" eval="False"/>
+        </record>
+        <record id="base.user_root" model="res.users">
+            <field name="action_id" eval="False"/>
+        </record>
+
     </data>
 </odoo>

@@ -43,9 +43,11 @@
   <div class="app-marquee" aria-hidden="true">
     <div class="app-marquee-track">
       {% for _ in range(2) %}
+        <span class="marq-set">
         {% for slug, a in apps.items() %}
         <span class="app-chip">{{ icon(a.icon, 16) }} {{ a.name }}</span>
         {% endfor %}
+        </span>
       {% endfor %}
     </div>
   </div>
@@ -126,7 +128,7 @@
   <div class="container">
     <p class="eyebrow" data-reveal>The full suite</p>
     <h2 data-reveal>{{ apps|length }} apps, eight categories.</h2>
-    <p class="section-lede" data-reveal>Turn on what you need, when you need it — nothing to buy separately.</p>
+    <p class="section-lede" data-reveal>Every app is included in your plan — switch on the ones you need, whenever you need them. Nothing to buy separately.</p>
     <nav class="cat-teaser" aria-label="App categories">
       {% for slug, cat in categories.items() %}
       <a href="/apps#{{ slug }}">

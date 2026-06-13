@@ -39,6 +39,21 @@
 
   search.addEventListener("input", apply);
 
+  // Deep link: /apps#sales pre-selects that category filter.
+  function activate(cat) {
+    var btn = filters.querySelector('.chip[data-cat="' + cat + '"]');
+    if (!btn) return;
+    activeCat = cat;
+    filters.querySelectorAll(".chip").forEach(function (c) {
+      c.classList.toggle("is-active", c === btn);
+    });
+    apply();
+  }
+  if (location.hash) {
+    var h = location.hash.slice(1);
+    if (filters.querySelector('.chip[data-cat="' + h + '"]')) activate(h);
+  }
+
   filters.addEventListener("click", function (e) {
     var btn = e.target.closest(".chip");
     if (!btn) return;

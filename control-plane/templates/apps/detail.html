@@ -4,6 +4,38 @@
 {% block title %}{{ app_data.name }} — EVERJUST.APP{% endblock %}
 {% block description %}{{ app_data.summary }}{% endblock %}
 
+{% block head %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "{{ app_data.name }} — EVERJUST.APP",
+  "applicationCategory": "BusinessApplication",
+  "operatingSystem": "Web",
+  "url": "https://{{ domain }}/apps/{{ slug }}",
+  "description": "{{ app_data.summary }}",
+  "offers": {
+    "@type": "Offer",
+    "price": "100",
+    "priceCurrency": "USD",
+    "description": "Included in the EVERJUST.APP plan — $100/month for 5 users, then $15/user."
+  },
+  "isPartOf": { "@type": "WebApplication", "name": "EVERJUST.APP", "url": "https://{{ domain }}/" }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {"@type": "ListItem", "position": 1, "name": "Home", "item": "https://{{ domain }}/"},
+    {"@type": "ListItem", "position": 2, "name": "Apps", "item": "https://{{ domain }}/apps"},
+    {"@type": "ListItem", "position": 3, "name": "{{ app_data.name }}", "item": "https://{{ domain }}/apps/{{ slug }}"}
+  ]
+}
+</script>
+{% endblock %}
+
 {% block content %}
 <section class="hero container app-hero">
   <nav aria-label="breadcrumb">

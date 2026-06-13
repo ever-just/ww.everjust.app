@@ -200,3 +200,47 @@ See `.env.example` for the full list. Real values are in `deployment/.env` (giti
 - All tenants share one Odoo binary but have isolated Postgres databases.
 - Custom modules go in `addons/` and must be LGPL-3 compatible.
 - The `control-plane/` is a FastAPI service, not part of Odoo.
+
+---
+
+## Marketing site / control-plane frontend (conventions)
+
+The `control-plane/` FastAPI app also renders the public marketing pages (landing,
+app catalog, per-app pages, `/pricing`, `/docs`) with Jinja2 + a self-hosted design
+system. When working on those pages, follow these conventions:
+
+- **Run the checks:**
+  ```bash
+  cd control-plane && python3 -m pytest tests/test_app.py -q   # conftest sets dummy env
+  bash deployment/scripts/branding_lint.sh                     # fails on user-facing "Odoo"
+  cd control-plane && python3 scripts/build_sprite.py          # after adding an icon to ICONS
+  cd control-plane && python3 scripts/build_og_image.py && python3 scripts/build_app_og_images.py
+  ```
+- **Content is data-driven.** Add/edit apps in `content.py` (`APPS`, `APP_DEPTH`,
+  `CATEGORIES`), not by hand-writing per-app templates. `apps/detail.html` renders
+  from the data; every app gets the same depth (features + workflow + diagram).
+- **Brand voice** lives in `docs/BRAND_VOICE.md` — plainspoken operator, no AI/buzzword
+  filler, every claim literally true. Apply it to all copy.
+- **Visuals are diagrams + icons, not images.** The product is debranded, so we don't
+  ship product screenshots. On-page "visuals" are CSS/SVG (spec strips, the connected-
+  workspace diagram, step-flows, the price table). Real raster images are **social-share
+  cards only** (`static/img/og/*.jpg`), surfaced via per-page `og:image`.
+- **`og:image`:** override the `og_image` block per page; `twitter:image` follows it via
+  `self.og_image()` — never hardcode the two separately.
+- **Asset versioning + PWA freshness:** static URLs get `?v={{ asset_v }}`; the service
+  worker (`static/sw.js`) is stale-while-revalidate with a `controllerchange` auto-reload,
+  so deploys go live without manual cache clearing. Bump the SW cache name when editing it.
+- **Docs vs Apps:** `/apps` is the catalog (what each app does); `/docs` is the help center
+  (in-depth guides + account topics). Keep them separate — don't re-list the catalog in docs.
+- **Security:** the OpenAI key used by the OG-card scripts lives **outside the repo**
+  (`~/.everjust_openai.key`) and is never committed. `website_enrichment.py` fetches
+  customer-supplied URLs and is **SSRF-guarded** — keep that guard intact.
+- **CI:** `pull_request` events are unreliable here; the CI workflow also has a
+  `workflow_dispatch` trigger — dispatch it manually and poll the run for status.
+
+### Reusable techniques → `ever-just/agentskills`
+
+Patterns from this repo are extracted as standalone Claude Code skills in
+`ever-just/agentskills`: headless visual verification, OG-card generation, SSRF-safe
+fetch, PWA deploy freshness, debrand lint, inline SVG icon sprite, CSS diagrams without
+images, and anti-AI-tell web copy. Reach for those when a task matches.

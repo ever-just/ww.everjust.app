@@ -721,15 +721,18 @@ def test_savings_calculator(client):
     assert client.get("/static/js/calc.js").status_code == 200
 
 
-def test_docs_lists_every_app_and_links_subpages(client):
+def test_docs_is_help_center_not_app_catalog(client):
+    # Docs and the app catalog are separate concerns: docs covers the 8 in-depth
+    # guides + account topics and points to /apps for the full list, rather than
+    # re-listing all 29 apps (which duplicated the catalog and read confusingly).
     body = client.get("/docs").text
-    assert 'id="every-app"' in body
-    # Every app appears and links to its /apps subpage (docs <-> apps cross-link).
-    for slug, a in main.content.APPS.items():
-        assert f'href="/apps/{slug}"' in body
-    # The detailed apps surface their guide link too.
-    assert "docs-applist-guide" in body
-    assert 'href="/docs#every-app"' in body          # sidebar entry
+    assert "docs-catalog-link" in body               # single pointer to the catalog
+    assert 'href="/apps"' in body
+    assert 'id="every-app"' not in body              # no duplicated catalog
+    assert "docs-applist" not in body
+    # The 8 in-depth guides still surface as cards.
+    for slug in main.content.APP_GUIDES:
+        assert f'href="/docs/{slug}"' in body
 
 
 def test_pwa_auto_reload_on_new_version(client):

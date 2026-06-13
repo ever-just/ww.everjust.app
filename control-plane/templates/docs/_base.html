@@ -29,8 +29,8 @@
           <a class="docs-nav-item {{ 'active' if active == 'index' }}" href="/docs">
             {{ icon("book-open", 16) }} Overview
           </a>
-          <a class="docs-nav-item" href="/docs#every-app">
-            {{ icon("layout-grid", 16) }} All {{ apps|length }} apps
+          <a class="docs-nav-item" href="/apps">
+            {{ icon("layout-grid", 16) }} App catalog
           </a>
           {% for section_title, slugs in docs_sections %}
           <p class="docs-nav-section">{{ section_title }}</p>

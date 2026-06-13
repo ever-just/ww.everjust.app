@@ -27,21 +27,14 @@
 </div>
 {% endfor %}
 
-<h2 id="every-app">Every app</h2>
-<p>Documentation for all {{ apps|length }} apps in your workspace. The essentials have a step-by-step guide; every app has a full overview page.</p>
-{% for cat_slug, items in apps_by_category.items() %}
-{% if items %}
-<p class="docs-applist-cat">{{ icon(categories[cat_slug].icon, 15) }} {{ categories[cat_slug].name }}</p>
-<ul class="docs-applist">
-  {% for slug, a in items %}
-  <li>
-    <a href="/apps/{{ slug }}">{{ a.name }}</a>
-    {% if a.guide %}<a class="docs-applist-guide" href="/docs/{{ a.guide }}">{{ icon("book-open", 12) }} Guide</a>{% endif %}
-  </li>
-  {% endfor %}
-</ul>
-{% endif %}
-{% endfor %}
+<a class="docs-catalog-link" href="/apps">
+  <span class="docs-catalog-icon">{{ icon("layout-grid", 22) }}</span>
+  <span class="docs-catalog-text">
+    <span class="docs-catalog-title">Looking for a specific app?</span>
+    <span class="docs-catalog-desc">Browse all {{ apps|length }} apps and what each one does in the catalog.</span>
+  </span>
+  {{ icon("arrow-right", 18, "docs-catalog-arrow") }}
+</a>
 
 <h2>Can&rsquo;t find what you need?</h2>
 <p>Email <a href="mailto:company@everjust.co">company@everjust.co</a> and a human will answer. If you don&rsquo;t have a workspace yet, <a href="/signup">create one</a> — it takes about 2 minutes.</p>

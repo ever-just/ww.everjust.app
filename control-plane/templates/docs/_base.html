@@ -7,32 +7,37 @@
 
     <aside class="col-12 col-lg-3">
       <div class="docs-nav">
-        <div class="docs-search mb-3">
+        <div class="docs-search mb-2">
           <label class="visually-hidden" for="docs_search">Search docs</label>
           <div class="docs-search-box">
             {{ icon("search", 16) }}
-            <input id="docs_search" type="search" placeholder="Search docs…"
+            <input id="docs_search" type="search" placeholder="Search documentation…"
                    autocomplete="off" spellcheck="false">
           </div>
           <div class="docs-search-results" id="docs_search_results" hidden></div>
         </div>
 
-        <details class="docs-nav-collapse" {% if True %}open{% endif %}>
-          <summary class="d-lg-none">Browse documentation {{ icon("chevron-right", 16) }}</summary>
-          <nav aria-label="Documentation">
-            <a class="docs-nav-item {{ 'active' if active == 'index' }}" href="/docs">
-              {{ icon("book-open", 16) }} Overview
-            </a>
-            {% for section_title, slugs in docs_sections %}
-            <p class="docs-nav-section">{{ section_title }}</p>
-            {% for slug in slugs %}
-            <a class="docs-nav-item {{ 'active' if active == slug }}" href="/docs/{{ slug }}">
-              {{ icon(docs_pages[slug].icon, 16) }} {{ docs_pages[slug].title }}
-            </a>
-            {% endfor %}
-            {% endfor %}
-          </nav>
-        </details>
+        <button type="button" class="docs-nav-toggle d-lg-none" id="docs_nav_toggle"
+                aria-expanded="false" aria-controls="docs_nav_list">
+          <span class="dnt-label">
+            {% if active == 'index' %}Browse all documentation{% else %}{{ icon(docs_pages[active].icon, 16) }} {{ docs_pages[active].title }}{% endif %}
+          </span>
+          {{ icon("chevron-right", 18, "dnt-caret") }}
+        </button>
+
+        <nav class="docs-nav-list" id="docs_nav_list" aria-label="Documentation">
+          <a class="docs-nav-item {{ 'active' if active == 'index' }}" href="/docs">
+            {{ icon("book-open", 16) }} Overview
+          </a>
+          {% for section_title, slugs in docs_sections %}
+          <p class="docs-nav-section">{{ section_title }}</p>
+          {% for slug in slugs %}
+          <a class="docs-nav-item {{ 'active' if active == slug }}" href="/docs/{{ slug }}">
+            {{ icon(docs_pages[slug].icon, 16) }} {{ docs_pages[slug].title }}
+          </a>
+          {% endfor %}
+          {% endfor %}
+        </nav>
       </div>
     </aside>
 

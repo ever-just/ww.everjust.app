@@ -53,7 +53,7 @@
     <div class="container">
       <nav class="navbar px-0" aria-label="Main">
         <a class="brand-logo" href="/" aria-label="EVERJUST.APP home">
-          <img src="/static/img/icon-192x192.png" alt="EVERJUST.APP" width="34" height="34">
+          <span class="brand-word">EVERJUST<span class="brand-dot">.app</span></span>
         </a>
         <div class="site-actions">
           {% block nav %}
@@ -78,26 +78,12 @@
       </button>
     </div>
     <div class="offcanvas-body pt-1">
-      <div class="sheet-grid">
-        <a class="sheet-tile" href="/apps" data-bs-dismiss="offcanvas">
-          {{ icon("layout-grid", 22) }}<span>Apps</span>
-        </a>
-        <a class="sheet-tile" href="/#pricing" data-bs-dismiss="offcanvas">
-          {{ icon("wallet", 22) }}<span>Pricing</span>
-        </a>
-        <a class="sheet-tile" href="/docs" data-bs-dismiss="offcanvas">
-          {{ icon("book-open", 22) }}<span>Docs</span>
-        </a>
-        <a class="sheet-tile" href="/#faq" data-bs-dismiss="offcanvas">
-          {{ icon("life-buoy", 22) }}<span>FAQ</span>
-        </a>
-        <a class="sheet-tile" href="/privacy" data-bs-dismiss="offcanvas">
-          {{ icon("shield-check", 22) }}<span>Privacy</span>
-        </a>
-        <a class="sheet-tile" href="mailto:company@everjust.co">
-          {{ icon("mail", 22) }}<span>Contact</span>
-        </a>
-      </div>
+      <nav class="sheet-list" aria-label="Menu">
+        <a href="/apps" data-bs-dismiss="offcanvas">{{ icon("layout-grid", 20) }}<span>Apps</span>{{ icon("chevron-right", 18, "ms-auto") }}</a>
+        <a href="/docs" data-bs-dismiss="offcanvas">{{ icon("book-open", 20) }}<span>Documentation</span>{{ icon("chevron-right", 18, "ms-auto") }}</a>
+        <a href="/#pricing" data-bs-dismiss="offcanvas">{{ icon("wallet", 20) }}<span>Pricing</span>{{ icon("chevron-right", 18, "ms-auto") }}</a>
+        <a href="mailto:company@everjust.co">{{ icon("mail", 20) }}<span>Contact us</span>{{ icon("chevron-right", 18, "ms-auto") }}</a>
+      </nav>
       <div class="sheet-cta">
         <a class="btn btn-primary btn-lg w-100 mb-2" href="/signup">Create your workspace {{ icon("arrow-right", 18) }}</a>
         <a class="btn btn-outline-dark w-100" href="/signin">Sign in to your workspace</a>
@@ -114,7 +100,7 @@
       <div class="row gy-4 align-items-start">
         <div class="col-12 col-lg-4 pe-lg-5">
           <a class="brand-logo mb-3 d-inline-flex" href="/" aria-label="EVERJUST.APP home">
-            <img src="/static/img/icon-192x192.png" alt="EVERJUST.APP" width="36" height="36">
+            <span class="brand-word">EVERJUST<span class="brand-dot">.app</span></span>
           </a>
           <p class="footer-tagline">Run your entire business in one private, fully-branded workspace.</p>
           <a class="footer-cta" href="/signup">Create your workspace {{ icon("arrow-right", 14) }}</a>

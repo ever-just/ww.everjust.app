@@ -17,9 +17,6 @@
         "data/pages/about.xml",
     ],
     "assets": {
-        "web._assets_primary_variables": [
-            ("prepend", "website_headsup/static/src/scss/primary_variables.scss"),
-        ],
         "web.assets_frontend": [
             "website_headsup/static/src/scss/theme.scss",
             "website_headsup/static/src/js/theme.js",

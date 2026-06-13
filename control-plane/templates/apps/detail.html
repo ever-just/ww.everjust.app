@@ -3,6 +3,8 @@
 
 {% block title %}{{ app_data.name }} — EVERJUST.APP{% endblock %}
 {% block description %}{{ app_data.summary }}{% endblock %}
+{% block og_image %}/static/img/og/{{ slug }}.jpg{% endblock %}
+{% block og_image_alt %}{{ app_data.name }} on EVERJUST.APP — {{ app_data.tagline }}{% endblock %}
 
 {% block head %}
 <script type="application/ld+json">

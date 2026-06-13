@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 """Control-plane route tests (Stripe, Postgres, and provisioning mocked)."""
 import html
+import pathlib
 from unittest import mock
 
 import stripe
@@ -303,10 +304,14 @@ def test_apps_index(client):
 
 
 def test_app_detail_pages(client):
+    og_dir = pathlib.Path(__file__).resolve().parents[1] / "static" / "img" / "og"
     for slug, a in main.content.APPS.items():
         r = client.get(f"/apps/{slug}")
         assert r.status_code == 200, slug
         assert html.escape(a["name"], quote=False) in r.text
+        # Every app gets its own social card, and the file must exist on disk.
+        assert f"/static/img/og/{slug}.jpg" in r.text, slug
+        assert (og_dir / f"{slug}.jpg").exists(), slug
         # Detailed apps link their guide + show the workflow; lighter catalog
         # entries render cleanly without those sections.
         if a.get("guide"):

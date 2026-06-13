@@ -306,10 +306,28 @@ def test_app_detail_pages(client):
     for slug, a in main.content.APPS.items():
         r = client.get(f"/apps/{slug}")
         assert r.status_code == 200, slug
-        assert html.escape(a["tagline"], quote=False) in r.text
-        assert f'/docs/{a["guide"]}' in r.text          # backlink to its guide
-        assert "How it works" in r.text
+        assert html.escape(a["name"], quote=False) in r.text
+        # Detailed apps link their guide + show the workflow; lighter catalog
+        # entries render cleanly without those sections.
+        if a.get("guide"):
+            assert f'/docs/{a["guide"]}' in r.text
+            assert "How it works" in r.text
+        if a.get("replaces"):
+            assert "Replaces tools like" in r.text
     assert client.get("/apps/not-an-app").status_code == 404
+
+
+def test_app_catalog_breadth_and_filter(client):
+    body = client.get("/apps").text
+    # The catalog must surface the full suite, not just 8 apps.
+    assert len(main.content.APPS) >= 25
+    assert "Point of Sale" in body and "Inventory" in body and "Manufacturing" in body
+    # Category groups + search + filter chips are present.
+    for cat in main.content.CATEGORIES.values():
+        assert cat["name"] in body
+    assert 'id="app_search"' in body
+    assert 'id="catalog_filters"' in body
+    assert "/static/js/catalog.js" in body
 
 
 def test_landing_features_link_to_app_pages(client):

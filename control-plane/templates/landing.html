@@ -59,14 +59,14 @@
       <div class="mock-app"><span class="tile">{{ icon("timer", 22) }}</span>Timesheets</div>
     </div>
   </div>
-  <p class="mt-4 mb-0"><a class="fw-bold" href="/apps">Explore every app in detail {{ icon("arrow-right", 14) }}</a></p>
+  <p class="mt-4 mb-0"><a class="fw-bold" href="/apps">Browse all {{ apps|length }} apps {{ icon("arrow-right", 14) }}</a></p>
 </section>
 
 <section class="section section-alt" id="features">
   <div class="container">
     <p class="eyebrow">The suite</p>
-    <h2 data-reveal>Everything included. Nothing bolted on.</h2>
-    <p class="section-lede">One subscription unlocks the full suite. Every app shares the same contacts, files, and activity feed — so nothing falls between tools.</p>
+    <h2 data-reveal>{{ apps|length }} apps. Nothing bolted on.</h2>
+    <p class="section-lede">One subscription unlocks the full suite — CRM, sales, invoicing, inventory, projects, HR, payroll, marketing, website, eCommerce, documents, eSign and more. Every app shares the same contacts, files, and activity, so nothing falls between tools.</p>
     <div class="row g-3 cards-snap">
       <div class="col-12 col-sm-6 col-lg-4">
         <a class="feature-card feature-card-link" data-reveal href="/apps/crm-sales">

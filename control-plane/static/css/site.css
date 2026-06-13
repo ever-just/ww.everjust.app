@@ -1365,3 +1365,113 @@ kbd {
   html { scroll-behavior: auto; }
   *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
 }
+
+/* ── App catalog (/apps) ──────────────────────────────── */
+
+.app-catalog-hero { padding-bottom: 1.5rem; }
+
+.catalog-search { max-width: 520px; margin: 1.5rem auto .25rem; }
+
+.catalog-search-box {
+  display: flex;
+  align-items: center;
+  gap: .6rem;
+  border: 1px solid #000;
+  border-radius: 999px;
+  padding: 0 1.1rem;
+  background: #fff;
+}
+
+.catalog-search-box .lucide { color: var(--ej-faint); flex-shrink: 0; }
+.catalog-search-box input {
+  border: 0;
+  outline: none;
+  width: 100%;
+  min-height: 50px;
+  font-size: 16px;
+  background: transparent;
+}
+
+.catalog-filters {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: .5rem;
+  margin-top: 1.25rem;
+}
+
+.chip {
+  border: 1px solid var(--ej-hairline);
+  background: #fff;
+  color: var(--ej-muted);
+  font-size: .8125rem;
+  font-weight: 700;
+  padding: .45rem .9rem;
+  border-radius: 999px;
+  -webkit-tap-highlight-color: transparent;
+  white-space: nowrap;
+}
+
+.chip:hover { border-color: #000; color: #000; }
+.chip.is-active { background: #000; border-color: #000; color: #fff; }
+
+.catalog-group { margin-top: 2.75rem; }
+.catalog-group:first-child { margin-top: 1rem; }
+
+.catalog-group-head {
+  display: flex;
+  align-items: center;
+  gap: .85rem;
+  margin-bottom: 1.1rem;
+  padding-bottom: .9rem;
+  border-bottom: 1px solid var(--ej-hairline);
+}
+
+.catalog-group-head h2 { font-size: 1.1875rem; font-weight: 800; letter-spacing: -.01em; margin: 0; text-align: left; }
+.catalog-group-head p { font-size: .8125rem; color: var(--ej-muted); margin: .1rem 0 0; }
+
+.catalog-card {
+  display: flex;
+  align-items: center;
+  gap: .85rem;
+  width: 100%;
+  border: 1px solid var(--ej-hairline);
+  border-radius: .875rem;
+  padding: .9rem 1rem;
+  background: #fff;
+  text-decoration: none;
+  color: inherit;
+  transition: border-color .12s ease, background .12s ease, transform .12s ease;
+}
+
+.catalog-card:hover { border-color: #000; background: var(--ej-soft); transform: translateY(-2px); }
+.catalog-card .icon-tile { flex: 0 0 42px; }
+.catalog-card-text { display: flex; flex-direction: column; min-width: 0; }
+.catalog-card-title { font-size: .9375rem; font-weight: 700; color: #000; line-height: 1.25; }
+.catalog-card-desc { font-size: .8125rem; color: var(--ej-muted); line-height: 1.35; margin-top: .1rem; overflow: hidden; text-overflow: ellipsis; }
+.catalog-card-arrow { color: var(--ej-faint); flex-shrink: 0; }
+.catalog-card:hover .catalog-card-arrow { color: #000; transform: translateX(2px); }
+
+.catalog-empty { text-align: center; color: var(--ej-muted); padding: 2rem 0; }
+
+/* "Replaces tools like" strip on app detail pages */
+.replaces-label {
+  font-size: .6875rem;
+  font-weight: 800;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--ej-faint);
+  margin-bottom: .85rem;
+}
+
+.replaces-list { display: flex; flex-wrap: wrap; gap: .5rem; justify-content: center; }
+
+.replaces-chip {
+  border: 1px solid var(--ej-hairline);
+  background: #fff;
+  border-radius: 999px;
+  padding: .4rem .9rem;
+  font-size: .8125rem;
+  font-weight: 600;
+  color: var(--ej-muted);
+}

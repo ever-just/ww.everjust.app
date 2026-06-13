@@ -26,9 +26,28 @@
 
 html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
 
+/* Slightly smaller root scale on phones so more content fits per screen
+ * ("zoomed out"). All rem-based sizing scales down proportionally; form
+ * inputs are pinned to 16px below to keep iOS from zooming on focus. */
+@media (max-width: 575.98px) { html { font-size: 15px; } }
+
 /* Nothing should ever scroll the page sideways. clip (not hidden) avoids
  * establishing a scroll container that would break position: sticky. */
 html, body { overflow-x: clip; max-width: 100%; }
+
+/* ── Scroll reveal (tasteful, opt-in via .reveal-ready) ──
+ * The .reveal-ready class is only added by an inline head script when
+ * motion is allowed, so no-JS / reduced-motion users always see content. */
+.reveal-ready [data-reveal] {
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity .7s cubic-bezier(.16, .84, .44, 1),
+              transform .7s cubic-bezier(.16, .84, .44, 1);
+  transition-delay: var(--reveal-delay, 0s);
+  will-change: opacity, transform;
+}
+
+.reveal-ready [data-reveal].is-revealed { opacity: 1; transform: none; }
 
 /* Anchored sections (e.g. /#pricing) must not scroll under the sticky header. */
 section[id] { scroll-margin-top: 72px; }
@@ -133,17 +152,13 @@ a:focus-visible {
   text-decoration: none;
 }
 
-.brand-word {
-  font-weight: 800;
-  font-size: 1.0625rem;
-  letter-spacing: -.01em;
-  color: #000;
-  line-height: 1;
+.brand-logo img {
+  display: block;
+  border-radius: 7px;
+  transition: transform .15s ease;
 }
 
-.brand-dot { color: var(--ej-faint); font-weight: 700; }
-
-.brand-logo:hover .brand-dot { color: #000; }
+.brand-logo:hover img { transform: scale(1.04); }
 
 .site-actions {
   display: flex;
@@ -259,7 +274,13 @@ a:focus-visible {
   margin: .7rem auto .2rem;
 }
 
-.menu-sheet .offcanvas-header { padding: .25rem 1rem .5rem; }
+.sheet-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: .25rem 1rem .5rem;
+}
 
 .sheet-title {
   font-size: .6875rem;
@@ -268,6 +289,21 @@ a:focus-visible {
   text-transform: uppercase;
   color: var(--ej-faint);
 }
+
+.sheet-close {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border: 0;
+  border-radius: 50%;
+  background: var(--ej-soft);
+  color: #000;
+  flex-shrink: 0;
+}
+
+.sheet-close:active { background: var(--ej-hairline); }
 
 .menu-sheet .offcanvas-body { padding: .25rem 1rem 1.25rem; }
 
@@ -661,6 +697,18 @@ a:focus-visible {
 .cta-band .eyebrow { color: rgba(255, 255, 255, .5); }
 .cta-band .eyebrow::before, .cta-band .eyebrow::after { border-color: rgba(255, 255, 255, .25); }
 
+/* Equal-sized CTA buttons: full-width stacked on phones, matched on desktop. */
+.cta-band [class*="d-flex"] { gap: .75rem; }
+
+@media (max-width: 575.98px) {
+  .cta-band [class*="d-flex"] { flex-direction: column; align-items: stretch; }
+  .cta-band [class*="d-flex"] .btn { width: 100%; }
+}
+
+@media (min-width: 576px) {
+  .cta-band .btn { min-width: 15rem; }
+}
+
 /* ── Footer ───────────────────────────────────────────── */
 
 .site-footer {
@@ -814,9 +862,11 @@ a:focus-visible {
 
 .form-control, .input-group-text {
   border-color: #000;
-  font-size: 1rem; /* ≥16px prevents iOS focus zoom */
+  font-size: 16px; /* pinned px (not rem) so iOS never zooms on focus */
   min-height: 46px;
 }
+
+.docs-search-box input { font-size: 16px; }
 
 .form-control::placeholder { color: #b5b5b5; }
 
@@ -1215,14 +1265,14 @@ a:focus-visible {
 .docs-callout .lucide { margin-top: .15rem; }
 
 .docs-feedback {
-  display: flex;
-  align-items: center;
-  gap: .45rem;
   color: var(--ej-faint);
   margin-top: 2.5rem;
   padding-top: 1rem;
   border-top: 1px solid var(--ej-hairline);
+  line-height: 1.6;
 }
+
+.docs-feedback .lucide { vertical-align: -.15em; margin-right: .3rem; }
 
 .docs-body h1 { font-weight: 800; letter-spacing: -.02em; font-size: clamp(1.75rem, 5vw, 2.25rem); margin-bottom: .75rem; }
 .docs-body h2 {
@@ -1242,21 +1292,40 @@ a:focus-visible {
 .docs-body .lead-muted { color: var(--ej-muted); font-size: 1.0625rem; line-height: 1.6; margin-bottom: 1.5rem; }
 .docs-body b { color: #000; }
 
+/* Horizontal row card: icon left, text centre, chevron right. Compact
+ * and balanced — no awkward empty space. */
 .docs-card {
-  height: 100%;
+  display: flex;
+  align-items: center;
+  gap: .9rem;
+  width: 100%;
   border: 1px solid var(--ej-hairline);
-  border-radius: var(--bs-border-radius-lg);
-  padding: 1.25rem;
+  border-radius: .875rem;
+  padding: .9rem 1rem;
   background: #fff;
   text-decoration: none;
   color: inherit;
-  display: block;
-  transition: border-color .12s ease;
+  transition: border-color .12s ease, background .12s ease;
 }
 
-.docs-card:hover { border-color: #000; }
-.docs-card h3 { font-size: .9375rem; font-weight: 700; margin: .6rem 0 .25rem; }
-.docs-card p { font-size: .8125rem; color: var(--ej-muted); margin: 0; }
+.docs-card:hover { border-color: #000; background: var(--ej-soft); }
+
+.docs-card-icon {
+  flex: 0 0 40px;
+  height: 40px;
+  border: 1px solid var(--ej-hairline);
+  border-radius: .625rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #000;
+}
+
+.docs-card-text { display: flex; flex-direction: column; min-width: 0; }
+.docs-card-title { font-size: .9375rem; font-weight: 700; color: #000; line-height: 1.3; }
+.docs-card-desc { font-size: .8125rem; color: var(--ej-muted); line-height: 1.4; margin-top: .1rem; }
+.docs-card-arrow { color: var(--ej-faint); flex-shrink: 0; }
+.docs-card:hover .docs-card-arrow { color: #000; }
 
 .docs-toc-footer {
   display: flex;

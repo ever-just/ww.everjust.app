@@ -374,17 +374,26 @@ def test_pages_use_bootstrap_and_icon_sprite(client):
     assert client.get("/static/vendor/lucide/sprite.svg").status_code == 200
 
 
-def test_header_wordmark_and_mobile_menu(client):
+def test_header_logo_and_mobile_menu(client):
     body = client.get("/").text
     header = body.split("</header>")[0]
     assert 'class="brand-logo"' in header
-    assert "brand-word" in header                 # crisp text wordmark
-    assert "icon-192x192.png" not in header       # no cramped logo PNG
+    assert "icon-192x192.png" in header           # brand logo image restored
     assert 'id="siteMenu"' in body                # bottom-sheet menu exists
     assert "offcanvas-bottom menu-sheet" in body  # ...as a bottom sheet
     assert "sheet-handle" in body                 # with a drag handle
     assert "sheet-list" in body                   # clean list, not tile grid
     assert "/static/vendor/bootstrap/bootstrap.bundle.min.js" in body
+
+
+def test_menu_links_navigate(client):
+    # Regression: data-bs-dismiss on an <a> makes Bootstrap call
+    # preventDefault, which blocked the sheet's nav links from working.
+    body = client.get("/").text
+    sheet = body.split('class="sheet-list"')[1].split("</nav>")[0]
+    assert 'href="/docs"' in sheet and 'href="/#pricing"' in sheet
+    assert "data-bs-dismiss" not in sheet         # links must navigate
+    assert "/static/js/nav.js" in body            # JS closes the sheet instead
 
 
 def test_docs_mobile_nav_collapsed(client):
@@ -416,6 +425,21 @@ def test_landing_layout_rhythm(client):
     assert "hero-points" in body                  # trust chip strip
     assert "steps-timeline" in body               # connected timeline steps
     assert "cta-band" in body and "btn-inverse" in body  # inverted closer
+
+
+def test_landing_has_more_depth_and_reveals(client):
+    body = client.get("/").text
+    assert 'id="why"' in body                      # added value section
+    assert "One workspace, not ten tabs" in body
+    assert "data-reveal" in body                   # scroll-reveal hooks
+    assert "reveal-ready" in body                  # armed only when motion ok
+    assert client.get("/static/js/nav.js").status_code == 200
+
+
+def test_zoom_and_overflow_css(client):
+    css = client.get("/static/css/site.css").text
+    assert "html { font-size: 15px; }" in css      # zoomed-out mobile root
+    assert "font-size: 16px" in css                # inputs pinned (no iOS zoom)
 
 
 def test_no_horizontal_overflow_guard(client):

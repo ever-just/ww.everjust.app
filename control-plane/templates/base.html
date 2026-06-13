@@ -29,9 +29,9 @@
   <meta property="og:image" content="https://{{ domain }}/static/img/icon-512x512.png">
   <meta name="twitter:card" content="summary">
 
-  <link rel="stylesheet" href="/static/vendor/bootstrap/bootstrap.min.css">
-  <link rel="stylesheet" href="/static/vendor/cookieconsent/cookieconsent.css">
-  <link rel="stylesheet" href="/static/css/site.css">
+  <link rel="stylesheet" href="/static/vendor/bootstrap/bootstrap.min.css?v={{ asset_v }}">
+  <link rel="stylesheet" href="/static/vendor/cookieconsent/cookieconsent.css?v={{ asset_v }}">
+  <link rel="stylesheet" href="/static/css/site.css?v={{ asset_v }}">
 
   <script type="application/ld+json">
   {
@@ -57,7 +57,7 @@
         </a>
         <div class="site-actions">
           {% block nav %}
-          <a class="nav-link-plain d-none d-lg-inline-block" href="/#features">Features</a>
+          <a class="nav-link-plain d-none d-lg-inline-block" href="/apps">Apps</a>
           <a class="nav-link-plain d-none d-lg-inline-block" href="/#pricing">Pricing</a>
           <a class="nav-link-plain d-none d-lg-inline-block" href="/docs">Docs</a>
           <a class="btn btn-outline-dark d-none d-sm-inline-flex" href="/signin">Sign in</a>
@@ -83,7 +83,7 @@
     </div>
     <div class="offcanvas-body d-flex flex-column">
       <nav class="site-menu-nav" aria-label="Mobile">
-        <a href="/#features" data-bs-dismiss="offcanvas">Features {{ icon("chevron-right", 18) }}</a>
+        <a href="/apps" data-bs-dismiss="offcanvas">Apps {{ icon("chevron-right", 18) }}</a>
         <a href="/#pricing" data-bs-dismiss="offcanvas">Pricing {{ icon("chevron-right", 18) }}</a>
         <a href="/docs" data-bs-dismiss="offcanvas">Docs {{ icon("chevron-right", 18) }}</a>
         <a href="/signin" data-bs-dismiss="offcanvas">Sign in {{ icon("chevron-right", 18) }}</a>
@@ -115,10 +115,11 @@
         <div class="col-6 col-sm-4 col-lg-2 offset-lg-2">
           <h4>Product</h4>
           <ul>
-            <li><a href="/#features">Features</a></li>
+            <li><a href="/apps">All apps</a></li>
+            <li><a href="/apps/crm-sales">CRM &amp; Sales</a></li>
+            <li><a href="/apps/documents">Documents</a></li>
             <li><a href="/#pricing">Pricing</a></li>
             <li><a href="/#faq">FAQ</a></li>
-            <li><a href="/signup">Get started</a></li>
           </ul>
         </div>
         <div class="col-6 col-sm-4 col-lg-2">
@@ -151,10 +152,10 @@
     </div>
   </footer>
 
-  <script src="/static/vendor/bootstrap/bootstrap.bundle.min.js" defer></script>
-  <script src="/static/vendor/cookieconsent/cookieconsent.umd.js" defer></script>
-  <script src="/static/js/consent.js" defer></script>
-  <script src="/static/js/pwa.js" defer></script>
+  <script src="/static/vendor/bootstrap/bootstrap.bundle.min.js?v={{ asset_v }}" defer></script>
+  <script src="/static/vendor/cookieconsent/cookieconsent.umd.js?v={{ asset_v }}" defer></script>
+  <script src="/static/js/consent.js?v={{ asset_v }}" defer></script>
+  <script src="/static/js/pwa.js?v={{ asset_v }}" defer></script>
   {% block scripts %}{% endblock %}
 </body>
 </html>

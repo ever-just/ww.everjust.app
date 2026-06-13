@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% from "_icons.html" import icon %}
+
+{% block title %}Apps — EVERJUST.APP{% endblock %}
+{% block description %}Every app included with EVERJUST.APP: CRM & sales, projects, documents, eSign, knowledge, HR & time off, payroll, calls & SMS.{% endblock %}
+
+{% block content %}
+<section class="hero container" style="padding-bottom:1rem">
+  <h1>Every app your business runs on.</h1>
+  <p class="lede">All included in one subscription, all sharing the same contacts, files, and activity — explore what each one does.</p>
+</section>
+
+<section class="section pt-3">
+  <div class="container">
+    <div class="row g-3">
+      {% for slug, a in apps.items() %}
+      <div class="col-12 col-sm-6 col-lg-4 d-flex">
+        <a class="app-card" href="/apps/{{ slug }}">
+          <span class="icon-tile">{{ icon(a.icon, 22) }}</span>
+          <h3>{{ a.name }}</h3>
+          <p>{{ a.tagline }}</p>
+          <span class="app-card-more">Learn more {{ icon("arrow-right", 14) }}</span>
+        </a>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<section class="cta-band">
+  <div class="container">
+    <h2>One subscription. All of it.</h2>
+    <div class="d-flex flex-wrap gap-2 justify-content-center">
+      <a class="btn btn-primary btn-lg" href="/signup">Create your workspace {{ icon("arrow-right", 18) }}</a>
+      <a class="btn btn-outline-dark btn-lg" href="/#pricing">See pricing</a>
+    </div>
+  </div>
+</section>
+{% endblock %}

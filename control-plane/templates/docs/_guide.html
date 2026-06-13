@@ -1,0 +1,22 @@
+{% extends "docs/_base.html" %}
+{% from "_icons.html" import icon %}
+
+{% block title %}{{ guide.title }} guide — EVERJUST.APP Docs{% endblock %}
+{% block description %}{{ guide.blurb }} Step-by-step guide for {{ guide.title }} in your EVERJUST.APP workspace.{% endblock %}
+
+{% block doc %}
+<h1>{{ icon(guide.icon, 28, "me-1") }} {{ guide.title }}</h1>
+<p class="lead-muted">{{ guide.intro }}</p>
+
+{% for heading, body in guide.sections %}
+<section>
+  <h2>{{ heading }}</h2>
+  {{ body | safe }}
+</section>
+{% endfor %}
+
+<div class="docs-callout">
+  {{ icon("layout-grid", 16) }}
+  <span>Prefer the big picture? See the <a href="/apps/{{ active | replace('guide-', '') }}">{{ guide.title }} feature overview</a>.</span>
+</div>
+{% endblock %}

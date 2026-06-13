@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 """Control-plane route tests (Stripe, Postgres, and provisioning mocked)."""
+import html
 from unittest import mock
 
 import stripe
@@ -277,18 +278,83 @@ def test_robots_and_sitemap(client):
 def test_docs_index(client):
     r = client.get("/docs")
     assert r.status_code == 200
-    for title in ("Getting started", "Invite your team", "The apps",
-                  "Billing", "Use it on your phone", "Security"):
-        assert title in r.text
+    for title in ("Getting started", "Invite your team", "Billing",
+                  "Use it on your phone", "Security", "App guides",
+                  "CRM & Sales", "Payroll"):
+        assert html.escape(title, quote=False) in r.text
+    assert 'id="docs_search"' in r.text  # docs search box
 
 
 def test_docs_pages_render_with_nav(client):
-    for slug in ("getting-started", "invite-team", "apps",
+    for slug in ("getting-started", "invite-team",
                  "billing", "mobile-app", "security"):
         r = client.get(f"/docs/{slug}")
         assert r.status_code == 200, slug
         assert "breadcrumb" in r.text, slug          # breadcrumb backlinks
         assert 'href="/docs"' in r.text, slug        # backlink to index
+
+
+def test_apps_index(client):
+    r = client.get("/apps")
+    assert r.status_code == 200
+    for slug, a in main.content.APPS.items():
+        assert f'href="/apps/{slug}"' in r.text
+        assert html.escape(a["name"], quote=False) in r.text
+
+
+def test_app_detail_pages(client):
+    for slug, a in main.content.APPS.items():
+        r = client.get(f"/apps/{slug}")
+        assert r.status_code == 200, slug
+        assert html.escape(a["tagline"], quote=False) in r.text
+        assert f'/docs/{a["guide"]}' in r.text          # backlink to its guide
+        assert "How it works" in r.text
+    assert client.get("/apps/not-an-app").status_code == 404
+
+
+def test_landing_features_link_to_app_pages(client):
+    body = client.get("/").text
+    assert 'href="/apps/crm-sales"' in body
+    assert 'href="/apps"' in body                       # explore-all link
+
+
+def test_docs_guides_render(client):
+    for slug, g in main.content.APP_GUIDES.items():
+        r = client.get(f"/docs/{slug}")
+        assert r.status_code == 200, slug
+        assert html.escape(g["title"], quote=False) in r.text
+        assert html.escape(g["sections"][0][0], quote=False) in r.text            # first section heading
+
+
+def test_docs_apps_redirects_to_apps(client):
+    r = client.get("/docs/apps", follow_redirects=False)
+    assert r.status_code == 301
+    assert r.headers["location"] == "/apps"
+
+
+def test_docs_search_index(client):
+    d = client.get("/docs/search-index.json").json()
+    slugs = {i["slug"] for i in d["items"]}
+    assert "getting-started" in slugs and "guide-payroll" in slugs
+    guide = next(i for i in d["items"] if i["slug"] == "guide-crm-sales")
+    assert guide["section"] == "App guides"
+    assert guide["headings"]                            # headings indexed
+
+
+def test_assets_are_cache_busted(client):
+    body = client.get("/").text
+    assert f"/static/css/site.css?v={main.ASSET_VERSION}" in body
+    assert f"/static/js/consent.js?v={main.ASSET_VERSION}" in body
+    # Sprite hidden Safari-safely (no display:none)
+    assert 'class="svg-sprite"' in body
+    assert 'style="display:none"' not in body
+
+
+def test_sitemap_includes_app_pages(client):
+    text = client.get("/sitemap.xml").text
+    assert "<loc>https://everjust.app/apps</loc>" in text
+    assert "<loc>https://everjust.app/apps/payroll</loc>" in text
+    assert "<loc>https://everjust.app/docs/guide-documents</loc>" in text
 
 
 def test_docs_unknown_slug_404(client):
@@ -382,7 +448,9 @@ def test_api_docs_disabled(client):
 def test_no_upstream_branding_on_any_page(client):
     paths = ["/", "/signup", "/signin", "/offline", "/welcome?subdomain=acme",
              "/privacy", "/docs", "/docs/getting-started", "/docs/invite-team",
-             "/docs/apps", "/docs/billing", "/docs/mobile-app", "/docs/security"]
+             "/docs/billing", "/docs/mobile-app", "/docs/security", "/apps"]
+    paths += [f"/apps/{slug}" for slug in main.content.APPS]
+    paths += [f"/docs/{slug}" for slug in main.content.APP_GUIDES]
     for path in paths:
         body = client.get(path).text
         assert "odoo" not in body.lower(), f"upstream branding leak on {path}"

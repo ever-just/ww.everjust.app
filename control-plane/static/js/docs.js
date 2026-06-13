@@ -6,6 +6,16 @@
   var article = document.getElementById("docs_article");
   var toc = document.getElementById("docs_toc");
 
+  // Mobile docs nav: tap the current-page label to reveal the full list.
+  var navToggle = document.getElementById("docs_nav_toggle");
+  var navList = document.getElementById("docs_nav_list");
+  if (navToggle && navList) {
+    navToggle.addEventListener("click", function () {
+      var open = navList.classList.toggle("is-open");
+      navToggle.setAttribute("aria-expanded", String(open));
+    });
+  }
+
   function slugify(text) {
     return text.toLowerCase().trim()
       .replace(/[^a-z0-9\s-]/g, "").replace(/\s+/g, "-").slice(0, 60);

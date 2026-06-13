@@ -374,15 +374,26 @@ def test_pages_use_bootstrap_and_icon_sprite(client):
     assert client.get("/static/vendor/lucide/sprite.svg").status_code == 200
 
 
-def test_header_is_logo_only_with_mobile_menu(client):
+def test_header_wordmark_and_mobile_menu(client):
     body = client.get("/").text
     header = body.split("</header>")[0]
     assert 'class="brand-logo"' in header
-    assert ">EVERJUST.APP<" not in header        # logo only, no wordmark text
-    assert 'id="siteMenu"' in body               # bottom-sheet menu exists
+    assert "brand-word" in header                 # crisp text wordmark
+    assert "icon-192x192.png" not in header       # no cramped logo PNG
+    assert 'id="siteMenu"' in body                # bottom-sheet menu exists
     assert "offcanvas-bottom menu-sheet" in body  # ...as a bottom sheet
     assert "sheet-handle" in body                 # with a drag handle
+    assert "sheet-list" in body                   # clean list, not tile grid
     assert "/static/vendor/bootstrap/bootstrap.bundle.min.js" in body
+
+
+def test_docs_mobile_nav_collapsed(client):
+    # The docs nav must be a tappable toggle (closed on mobile) so the
+    # full link list doesn't bury the content on phones.
+    body = client.get("/docs/billing").text
+    assert 'id="docs_nav_toggle"' in body
+    assert 'aria-expanded="false"' in body
+    assert 'class="docs-nav-list"' in body
 
 
 def test_mobile_tabbar(client):
@@ -403,9 +414,16 @@ def test_landing_layout_rhythm(client):
     body = client.get("/").text
     assert body.count('class="eyebrow"') >= 4     # section divider labels
     assert "hero-points" in body                  # trust chip strip
-    assert "cards-snap" in body                   # mobile snap rail
-    assert "steps-timeline" in body               # mobile timeline steps
+    assert "steps-timeline" in body               # connected timeline steps
     assert "cta-band" in body and "btn-inverse" in body  # inverted closer
+
+
+def test_no_horizontal_overflow_guard(client):
+    # Defends the fix for content being cut off / scrolling sideways on
+    # phones: the global guard and the removal of the rail's negative margins.
+    css = client.get("/static/css/site.css").text
+    assert "overflow-x: clip" in css
+    assert "margin-left: -1.25rem" not in css     # the old rail overflow source
 
 
 def test_manifest_pwa_fields(client):

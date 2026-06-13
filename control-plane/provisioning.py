@@ -30,6 +30,53 @@ def _pg_connect(dbname: str = "postgres"):
 
 EVERJUST_MODULES = "base,everjust_brand,everjust_theme,everjust_home,voip_oca,everjust_sms_gateway,document_page,document_page_partner,document_url,attachment_zipped_download,dms,payroll,sign_oca,hr_holidays,hr_timesheet"
 
+# ── Onboarding personalization: industry/goals -> Community app modules ──
+# So a new workspace lands shaped for the customer instead of empty. Values
+# are Odoo Community technical module names; only names in ALLOWED_MODULES
+# are ever installed (the captured industry/goal strings can't inject other
+# modules).
+INDUSTRY_MODULES = {
+    "Professional services / agency": ["crm", "sale_management", "account", "project", "hr_timesheet"],
+    "Retail / eCommerce": ["website", "website_sale", "stock", "point_of_sale", "account"],
+    "Software / technology": ["crm", "project", "hr_timesheet", "account"],
+    "Manufacturing": ["stock", "purchase", "mrp", "sale_management", "account"],
+    "Hospitality / food": ["point_of_sale", "stock", "purchase", "hr"],
+    "Construction / trades": ["project", "stock", "purchase", "account", "fleet"],
+    "Healthcare": ["crm", "calendar", "account", "hr"],
+    "Nonprofit": ["crm", "account", "event", "mass_mailing"],
+}
+GOAL_MODULES = {
+    "Sales & CRM": ["crm", "sale_management"],
+    "Invoicing & Finance": ["account", "hr_expense"],
+    "Projects & Operations": ["project", "hr_timesheet", "stock"],
+    "HR & Payroll": ["hr", "hr_holidays"],
+    "Marketing": ["mass_mailing", "event"],
+    "Website & Store": ["website", "website_sale"],
+}
+DEFAULT_MODULES = ["crm", "sale_management", "account", "contacts", "calendar"]
+ALLOWED_MODULES = (
+    set(DEFAULT_MODULES)
+    | {m for mods in INDUSTRY_MODULES.values() for m in mods}
+    | {m for mods in GOAL_MODULES.values() for m in mods}
+)
+
+
+def personalized_modules(industry: str = "", goals: str = "") -> list[str]:
+    """Resolve captured industry + goals into a de-duplicated, allow-listed
+    list of Community modules to switch on for a new tenant."""
+    picks = list(INDUSTRY_MODULES.get((industry or "").strip(), []))
+    for goal in (g.strip() for g in (goals or "").split(",") if g.strip()):
+        picks += GOAL_MODULES.get(goal, [])
+    if not picks:
+        picks = list(DEFAULT_MODULES)
+    seen, out = set(), []
+    for m in picks:
+        if m in ALLOWED_MODULES and m not in seen:
+            seen.add(m)
+            out.append(m)
+    return out
+
+
 SUBDOMAIN_RE = re.compile(r"^[a-z0-9][a-z0-9-]{1,38}[a-z0-9]$")
 RESERVED = {"www", "app", "api", "admin", "mail", "ftp", "staging", "test"}
 
@@ -81,6 +128,7 @@ def provision_tenant(subdomain: str, admin_login: str, admin_password: str,
     _configure_mail(subdomain)
     _configure_dms(subdomain)
     _record_personalization(subdomain, personalization or {})
+    _install_personalized_apps(subdomain, personalization or {})
     ensure_dns(subdomain)
 
     return {
@@ -88,6 +136,28 @@ def provision_tenant(subdomain: str, admin_login: str, admin_password: str,
         "url": f"https://{subdomain}.{BASE_DOMAIN}",
         "status": "active",
     }
+
+
+def _install_personalized_apps(subdomain: str, data: dict) -> None:
+    """Switch on the apps that match the captured industry/goals, so the
+    workspace lands ready to use. Best-effort and allow-listed; a failure
+    here never affects the already-provisioned base tenant."""
+    modules = personalized_modules(data.get("industry", ""), data.get("goals", ""))
+    if not modules:
+        return
+    try:
+        subprocess.run(
+            ["docker", "exec", ODOO_CONTAINER, "odoo",
+             "-d", subdomain,
+             "--db_user", DB_USER,
+             "--db_password", DB_PASSWORD,
+             "-i", ",".join(modules),
+             "--stop-after-init",
+             "--no-http"],
+            check=False, timeout=900,
+        )
+    except Exception:
+        pass
 
 
 def _record_personalization(subdomain: str, data: dict) -> None:

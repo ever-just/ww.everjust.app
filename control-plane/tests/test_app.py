@@ -630,3 +630,26 @@ def test_html_sitemap_page(client):
     for slug in main.DOCS_PAGES:
         assert f'/docs/{slug}' in body
     assert "<loc>https://everjust.app/sitemap</loc>" in client.get("/sitemap.xml").text
+
+
+# ── Onboarding stage 2: industry/goals -> apps ──────────────────────────
+
+def test_personalized_modules_by_industry():
+    mods = provisioning.personalized_modules("Manufacturing", "")
+    assert "mrp" in mods and "stock" in mods and "purchase" in mods
+
+
+def test_personalized_modules_goals_add_and_dedupe():
+    mods = provisioning.personalized_modules("Software / technology",
+                                             "Marketing, Website & Store")
+    assert "mass_mailing" in mods and "website_sale" in mods
+    assert len(mods) == len(set(mods))           # de-duplicated
+
+
+def test_personalized_modules_default_and_allowlist():
+    # No context -> a sensible default starter set.
+    assert provisioning.personalized_modules("", "") == \
+        ["crm", "sale_management", "account", "contacts", "calendar"]
+    # Unknown industry/goal can't inject arbitrary module names.
+    mods = provisioning.personalized_modules("Hacker; rm -rf", "DROP TABLE")
+    assert all(m in provisioning.ALLOWED_MODULES for m in mods)

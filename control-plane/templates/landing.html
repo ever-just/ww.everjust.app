@@ -213,6 +213,39 @@
   </div>
 </section>
 
+<section class="section" id="savings">
+  <div class="container">
+    <p class="eyebrow" data-reveal>Do the math</p>
+    <h2 data-reveal>Cut your software bill.</h2>
+    <p class="section-lede" data-reveal>Tick the tools you pay for today. See what one flat plan would save you.</p>
+    <div class="calc" data-reveal>
+      <div class="calc-tools" id="calc_tools">
+        {% for t in calculator_tools %}
+        <button type="button" class="calc-tool" data-price="{{ t.price }}" data-type="{{ t.type }}" aria-pressed="false">
+          <span class="calc-tool-check">{{ icon("check", 14) }}</span>
+          <span class="calc-tool-label">{{ t.label }}</span>
+          <span class="calc-tool-price">${{ t.price }}{% if t.type == 'user' %}<small>/user</small>{% endif %}<small>/mo</small></span>
+        </button>
+        {% endfor %}
+      </div>
+      <div class="calc-panel">
+        <label class="calc-users">
+          <span>Team size</span>
+          <input type="number" id="calc_users" min="1" max="500" value="5" inputmode="numeric">
+        </label>
+        <div class="calc-row"><span>Your current tools</span><b id="calc_current">$0/mo</b></div>
+        <div class="calc-row"><span>EVERJUST.APP</span><b id="calc_ours">$100/mo</b></div>
+        <div class="calc-savings">
+          <span>You&rsquo;d save</span>
+          <b id="calc_savings">$0<small>/year</small></b>
+        </div>
+        <a class="btn btn-primary btn-lg w-100" href="/signup">Create your workspace {{ icon("arrow-right", 18) }}</a>
+        <p class="calc-note">Estimates from typical list prices. Your stack and savings will vary.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
 <section class="section" id="faq">
   <div class="container">
     <p class="eyebrow" data-reveal>FAQ</p>
@@ -258,4 +291,8 @@
     </div>
   </div>
 </section>
+{% endblock %}
+
+{% block scripts %}
+<script src="/static/js/calc.js?v={{ asset_v }}" defer></script>
 {% endblock %}

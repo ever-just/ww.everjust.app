@@ -585,3 +585,22 @@ def apps_by_category():
     for slug, app in APPS.items():
         grouped.setdefault(app.get("category", "productivity"), []).append((slug, app))
     return grouped
+
+
+# ── "Cut your software bill" calculator ─────────────────────────────────
+# Typical list prices for the point tools EVERJUST replaces, so visitors can
+# estimate what their current stack costs vs one flat plan. Figures are
+# rounded public ballparks labelled as estimates in the UI. type: "user"
+# (per user / month) or "flat" (per month regardless of seats).
+CALCULATOR_TOOLS = [
+    {"id": "crm",      "label": "CRM (Salesforce, HubSpot)",        "price": 25, "type": "user"},
+    {"id": "account",  "label": "Accounting (QuickBooks)",          "price": 30, "type": "flat"},
+    {"id": "projects", "label": "Projects (Asana, Monday)",         "price": 12, "type": "user"},
+    {"id": "chat",     "label": "Team chat (Slack)",                "price": 8,  "type": "user"},
+    {"id": "files",    "label": "File storage (Dropbox)",           "price": 15, "type": "user"},
+    {"id": "esign",    "label": "eSignatures (DocuSign)",           "price": 25, "type": "user"},
+    {"id": "email",    "label": "Email marketing (Mailchimp)",      "price": 20, "type": "flat"},
+    {"id": "store",    "label": "Online store (Shopify)",           "price": 39, "type": "flat"},
+    {"id": "hr",       "label": "HR (BambooHR)",                    "price": 8,  "type": "user"},
+    {"id": "payroll",  "label": "Payroll (Gusto)",                  "price": 40, "type": "flat"},
+]

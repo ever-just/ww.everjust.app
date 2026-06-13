@@ -704,3 +704,13 @@ def test_enrich_refuses_private_url(monkeypatch):
     monkeypatch.setattr(we.socket, "getaddrinfo",
                         lambda h, p: [(2, 1, 6, "", ("127.0.0.1", 0))])
     assert we.enrich("http://internal.local/") == {}
+
+
+def test_savings_calculator(client):
+    body = client.get("/").text
+    assert 'id="savings"' in body and "calc-tool" in body
+    assert 'id="calc_users"' in body and 'id="calc_savings"' in body
+    assert "/static/js/calc.js" in body
+    # Every configured tool renders a toggle.
+    assert body.count('class="calc-tool"') == len(main.content.CALCULATOR_TOOLS)
+    assert client.get("/static/js/calc.js").status_code == 200

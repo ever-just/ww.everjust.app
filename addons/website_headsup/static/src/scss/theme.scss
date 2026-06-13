@@ -90,6 +90,61 @@ header .navbar .btn-primary {
     color: rgba(255,255,255,.7) !important;
 }
 
+// ── SERVICE CARDS WITH IMAGES ───────────────────────────────
+.hu-svc-card {
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid #e8e8e8;
+    transition: transform .2s, box-shadow .2s;
+    height: 100%;
+    background: #fff;
+    &:hover { transform: translateY(-4px); box-shadow: 0 8px 24px rgba(0,0,0,.1); }
+    img { width: 100%; height: 180px; object-fit: cover; }
+    .hu-svc-body { padding: 1.25rem; }
+    h3 { font-size: 1.1rem; font-weight: 700; color: $hu-green; margin-bottom: .5rem; }
+    p { font-size: .9rem; color: #666; margin-bottom: .75rem; }
+    a { font-size: .85rem; font-weight: 600; color: $hu-green; text-decoration: none; }
+    a:hover { color: $hu-green-dark; }
+}
+
+// ── MOBILE RESPONSIVE ──────────────────────────────────────
+@media (max-width: 767px) {
+    // Hero text sizing
+    .s_banner h1, .display-3 { font-size: 2rem !important; }
+    .s_banner .lead { font-size: 1rem !important; }
+    .s_banner .btn-lg { font-size: .9rem !important; padding: .6rem 1.2rem !important; }
+
+    // Service cards stack nicely
+    .hu-svc-card img { height: 150px; }
+
+    // Footer columns stack
+    #footer .col-lg-4, #footer .col-lg-3, #footer .col-lg-2 {
+        margin-bottom: 1.5rem;
+    }
+
+    // Testimonial cards
+    .o_cc1.shadow { margin-bottom: 1rem; }
+
+    // CTA section
+    .s_call_to_action h2 { font-size: 1.8rem !important; }
+    .s_call_to_action .btn-lg { width: 100%; margin-bottom: .5rem; }
+
+    // Badge pills wrap better
+    .badge { font-size: .75rem !important; }
+
+    // Sticky CTA smaller on mobile
+    .hu-sticky-cta { font-size: .85rem !important; padding: .5rem 1rem !important; bottom: 1rem; right: 1rem; }
+
+    // Rating badge hide on mobile (already d-none d-lg-block)
+    // Project photos
+    .s_image_gallery img { border-radius: 8px; }
+}
+
+@media (min-width: 768px) and (max-width: 1023px) {
+    .s_banner h1, .display-3 { font-size: 2.5rem !important; }
+    .hu-svc-card img { height: 160px; }
+}
+
 // ── STICKY CTA ─────────────────────────────────────────────
 .hu-sticky-cta {
     position: fixed; bottom: 1.5rem; right: 1.5rem; z-index: 1050;

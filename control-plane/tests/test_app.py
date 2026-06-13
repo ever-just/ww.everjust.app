@@ -442,6 +442,15 @@ def test_zoom_and_overflow_css(client):
     assert "font-size: 16px" in css                # inputs pinned (no iOS zoom)
 
 
+def test_docs_layout_keeps_horizontal_padding(client):
+    # Regression: the .docs-layout padding shorthand used to zero the
+    # container's left/right padding, flushing docs to the screen edges
+    # on mobile. It must only set vertical padding.
+    css = client.get("/static/css/site.css").text
+    assert ".docs-layout { padding-top: 1.5rem; padding-bottom: 4rem; }" in css
+    assert ".docs-layout { padding: 1.5rem 0 4rem; }" not in css
+
+
 def test_no_horizontal_overflow_guard(client):
     # Defends the fix for content being cut off / scrolling sideways on
     # phones: the global guard and the removal of the rail's negative margins.

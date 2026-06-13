@@ -55,6 +55,13 @@
     {% if app_data.guide %}<a class="btn btn-outline-dark btn-lg" href="/docs/{{ app_data.guide }}">Read the guide</a>{% endif %}
   </div>
   <p class="small text-secondary mb-0">Included with every workspace &middot; no per-app pricing</p>
+
+  <ul class="app-specs" aria-label="At a glance">
+    <li class="app-spec">{{ icon("circle-check", 16) }} Included in every plan</li>
+    {% if app_data.replaces %}<li class="app-spec">{{ icon("layers", 16) }} Replaces {{ app_data.replaces|length }}+ separate tools</li>{% endif %}
+    <li class="app-spec">{{ icon("database", 16) }} Shares one workspace &amp; database</li>
+    {% if app_data.guide %}<li class="app-spec">{{ icon("book-open", 16) }} Step-by-step guide included</li>{% endif %}
+  </ul>
 </section>
 
 {% if app_data.replaces %}
@@ -86,7 +93,7 @@
 {% endif %}
 
 {% if app_data.workflow %}
-<section class="section">
+<section class="section section-alt">
   <div class="container">
     <p class="eyebrow">How it works</p>
     <h2>The day-to-day flow</h2>
@@ -109,6 +116,31 @@
   </div>
 </section>
 {% endif %}
+
+<section class="section">
+  <div class="container">
+    <p class="eyebrow">One workspace</p>
+    <h2>{{ app_data.name }} doesn&rsquo;t work alone</h2>
+    <p class="section-lede">Every app draws on the same data layer — so {{ app_data.name }} already knows your people, files, and history. No exports, no integrations, no duplicate records.</p>
+
+    <div class="workspace-diagram" data-reveal>
+      <p class="ws-label">Shared across your whole workspace</p>
+      <ul class="ws-chips">
+        <li class="ws-chip">{{ icon("contact", 15) }} Contacts</li>
+        <li class="ws-chip">{{ icon("folder-open", 15) }} Documents</li>
+        <li class="ws-chip">{{ icon("calendar-days", 15) }} Calendar</li>
+        <li class="ws-chip">{{ icon("users", 15) }} Users &amp; rights</li>
+        <li class="ws-chip">{{ icon("refresh-cw", 15) }} Activity feed</li>
+      </ul>
+      <span class="ws-connector" aria-hidden="true"></span>
+      <div class="ws-node">
+        <span class="ws-node-icon">{{ icon(app_data.icon, 26) }}</span>
+        <span class="ws-node-name">{{ app_data.name }}</span>
+      </div>
+      <p class="ws-caption">One login, one database, one source of truth — for {{ app_data.name }} and every other app in your suite.</p>
+    </div>
+  </div>
+</section>
 
 {% set siblings = [] %}
 {% if app_data.related %}

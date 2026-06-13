@@ -312,6 +312,10 @@ def test_app_detail_pages(client):
         # Every app gets its own social card, and the file must exist on disk.
         assert f"/static/img/og/{slug}.jpg" in r.text, slug
         assert (og_dir / f"{slug}.jpg").exists(), slug
+        # Every page carries the at-a-glance spec strip and the "one connected
+        # workspace" diagram so no app page reads as thin/text-only.
+        assert "app-specs" in r.text, slug
+        assert "workspace-diagram" in r.text, slug
         # Detailed apps link their guide + show the workflow; lighter catalog
         # entries render cleanly without those sections.
         if a.get("guide"):

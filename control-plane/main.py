@@ -151,6 +151,11 @@ def privacy(request: Request):
     return render(request, "privacy.html")
 
 
+@app.get("/sitemap", response_class=HTMLResponse)
+def sitemap_page(request: Request):
+    return render(request, "sitemap.html")
+
+
 @app.get("/apps", response_class=HTMLResponse)
 def apps_index(request: Request):
     return render(request, "apps/index.html")
@@ -425,6 +430,7 @@ SITEMAP_PAGES = {
     **{f"/apps/{slug}": ("monthly", "0.8") for slug in content.APPS},
     "/docs": ("weekly", "0.8"),
     **{f"/docs/{slug}": ("monthly", "0.7") for slug in DOCS_PAGES},
+    "/sitemap": ("monthly", "0.3"),
     "/privacy": ("yearly", "0.4"),
 }
 

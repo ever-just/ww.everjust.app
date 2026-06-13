@@ -18,6 +18,24 @@
   }
 }
 </script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {"@type": "Question", "name": "How fast can we start?",
+     "acceptedAnswer": {"@type": "Answer", "text": "After checkout your workspace is provisioned automatically, usually in under 2 minutes, and you sign in with the email and password you chose at signup."}},
+    {"@type": "Question", "name": "Is our data separated from other companies?",
+     "acceptedAnswer": {"@type": "Answer", "text": "Yes. Every workspace runs on its own dedicated database. There is no shared tenancy at the data layer, and your workspace is only reachable at your own subdomain."}},
+    {"@type": "Question", "name": "Does it work on phones?",
+     "acceptedAnswer": {"@type": "Answer", "text": "Yes. The platform is responsive and installs to your home screen as an app on iPhone and Android."}},
+    {"@type": "Question", "name": "What happens when we add people?",
+     "acceptedAnswer": {"@type": "Answer", "text": "Your first 5 users are covered by the base $100 per month. Each additional user is $15 per month, prorated automatically."}},
+    {"@type": "Question", "name": "Can we cancel?",
+     "acceptedAnswer": {"@type": "Answer", "text": "Anytime, from your billing portal. Your subscription stops at the end of the billing period and you can export your data beforehand."}}
+  ]
+}
+</script>
 {% endblock %}
 
 {% block content %}

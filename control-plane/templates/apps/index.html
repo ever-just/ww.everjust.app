@@ -12,7 +12,7 @@
 
 <section class="section pt-3">
   <div class="container">
-    <div class="row g-3">
+    <div class="row g-3 cards-snap">
       {% for slug, a in apps.items() %}
       <div class="col-12 col-sm-6 col-lg-4 d-flex">
         <a class="app-card" href="/apps/{{ slug }}">
@@ -24,15 +24,18 @@
       </div>
       {% endfor %}
     </div>
+    <p class="rail-hint">Swipe to explore {{ icon("arrow-right", 11) }}</p>
   </div>
 </section>
 
 <section class="cta-band">
   <div class="container">
+    <p class="eyebrow">Get started</p>
     <h2>One subscription. All of it.</h2>
+    <p class="cta-sub">Every app on this page is included from day one — nothing to unlock later.</p>
     <div class="d-flex flex-wrap gap-2 justify-content-center">
-      <a class="btn btn-primary btn-lg" href="/signup">Create your workspace {{ icon("arrow-right", 18) }}</a>
-      <a class="btn btn-outline-dark btn-lg" href="/#pricing">See pricing</a>
+      <a class="btn btn-inverse btn-lg" href="/signup">Create your workspace {{ icon("arrow-right", 18) }}</a>
+      <a class="btn btn-ghost-light btn-lg" href="/#pricing">See pricing</a>
     </div>
   </div>
 </section>

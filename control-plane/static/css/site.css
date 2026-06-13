@@ -1079,8 +1079,11 @@ a:focus-visible {
 
 /* ── Docs ─────────────────────────────────────────────── */
 
-.docs-layout { padding: 1.5rem 0 4rem; }
-@media (min-width: 992px) { .docs-layout { padding: 2.5rem 0 4rem; } }
+/* Only set vertical padding here — the shorthand's 0 was wiping the
+ * .container's left/right padding, flushing docs content to the screen
+ * edges on mobile. */
+.docs-layout { padding-top: 1.5rem; padding-bottom: 4rem; }
+@media (min-width: 992px) { .docs-layout { padding-top: 2.5rem; } }
 
 .docs-nav { font-size: .875rem; }
 

@@ -418,7 +418,7 @@ def test_menu_links_navigate(client):
     # preventDefault, which blocked the sheet's nav links from working.
     body = client.get("/").text
     sheet = body.split('class="sheet-list"')[1].split("</nav>")[0]
-    assert 'href="/docs"' in sheet and 'href="/#pricing"' in sheet
+    assert 'href="/docs"' in sheet and 'href="/pricing"' in sheet
     assert "data-bs-dismiss" not in sheet         # links must navigate
     assert "/static/js/nav.js" in body            # JS closes the sheet instead
 
@@ -723,6 +723,22 @@ def test_savings_calculator(client):
     # Every configured tool renders a toggle.
     assert body.count('class="calc-tool"') == len(main.content.CALCULATOR_TOOLS)
     assert client.get("/static/js/calc.js").status_code == 200
+
+
+def test_pricing_page(client):
+    r = client.get("/pricing")
+    assert r.status_code == 200
+    body = r.text
+    # Plan price, team-size table, calculator, and pricing FAQ all present.
+    assert "$100" in body and "$15" in body
+    assert "price-table" in body
+    assert "$175" in body          # 10 users = 100 + 5*15
+    assert "$775" in body          # 50 users = 100 + 45*15
+    assert "calc-tool" in body and "/static/js/calc.js" in body
+    assert "Pricing questions" in body
+    # Wired into sitemap and nav.
+    assert "/pricing" in client.get("/sitemap.xml").text
+    assert 'href="/pricing"' in client.get("/").text
 
 
 def test_docs_is_help_center_not_app_catalog(client):

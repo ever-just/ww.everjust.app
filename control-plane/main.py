@@ -162,6 +162,11 @@ def apps_index(request: Request):
     return render(request, "apps/index.html")
 
 
+@app.get("/pricing", response_class=HTMLResponse)
+def pricing(request: Request):
+    return render(request, "pricing.html")
+
+
 @app.get("/apps/{slug}", response_class=HTMLResponse)
 def app_page(request: Request, slug: str):
     if slug not in content.APPS:
@@ -429,6 +434,7 @@ SITEMAP_PAGES = {
     "/signin": ("monthly", "0.8"),
     "/apps": ("weekly", "0.9"),
     **{f"/apps/{slug}": ("monthly", "0.8") for slug in content.APPS},
+    "/pricing": ("monthly", "0.9"),
     "/docs": ("weekly", "0.8"),
     **{f"/docs/{slug}": ("monthly", "0.7") for slug in DOCS_PAGES},
     "/sitemap": ("monthly", "0.3"),

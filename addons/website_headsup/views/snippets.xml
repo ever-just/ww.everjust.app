@@ -1,14 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <!--
-        Register HeadsUp sections as snippets so they appear in the
-        website builder's "Structure" panel and can be dragged onto
-        any page.
-    -->
-    <template id="hu_snippets" inherit_id="website.snippets" name="HeadsUp Snippets">
-        <xpath expr="//div[@id='snippet_structure']" position="inside">
-            <t t-snippet="website_headsup.hu_homepage"
-               t-thumbnail="/website_headsup/static/description/icon.png"/>
-        </xpath>
-    </template>
+    <!-- Snippets will be added here as custom building blocks are created.
+         For now the homepage sections are defined directly in the homepage
+         template and are editable via the website builder. -->
 </odoo>

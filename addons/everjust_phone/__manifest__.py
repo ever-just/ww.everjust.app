@@ -7,7 +7,6 @@
     "website": "https://everjust.app",
     "category": "Productivity/Phone",
     "depends": ["mail", "contacts", "crm", "sms", "phone_validation"],
-    "external_dependencies": {"python": ["twilio"]},
     "data": [
         "security/groups.xml",
         "security/ir.model.access.csv",

@@ -27,7 +27,9 @@ services:
       USER: ${POSTGRES_USER}
       PASSWORD: ${POSTGRES_PASSWORD}
       ODOO_MASTER_PASSWORD: ${ODOO_MASTER_PASSWORD}
-    command: odoo -c /etc/odoo/odoo.conf --db_user=${POSTGRES_USER} --db_password=${POSTGRES_PASSWORD} --smtp-password=${RESEND_API_KEY}
+    command: >
+      bash -c "pip install --break-system-packages twilio 2>/dev/null;
+      odoo -c /etc/odoo/odoo.conf --db_user=${POSTGRES_USER} --db_password=${POSTGRES_PASSWORD} --smtp-password=${RESEND_API_KEY}"
     restart: unless-stopped
 
   control-plane:

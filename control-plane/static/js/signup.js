@@ -1,14 +1,16 @@
-/* Signup wizard: step navigation, slug suggestion, live availability
- * check, password strength. The form is a single POST — steps are a
- * client-side progressive enhancement (without JS both steps render). */
+/* Signup wizard: 3-step navigation, slug suggestion, live availability
+ * check, password strength, and the optional "about your business" step.
+ * The form is a single POST — steps are progressive enhancement (without
+ * JS every step renders stacked and still submits). */
 (function () {
   "use strict";
 
   var form = document.getElementById("signup_form");
-  var step1 = document.getElementById("step1");
-  var step2 = document.getElementById("step2");
-  var toStep2 = document.getElementById("to_step2");
-  var backStep1 = document.getElementById("back_step1");
+  var steps = {
+    1: document.getElementById("step1"),
+    2: document.getElementById("step2"),
+    3: document.getElementById("step3"),
+  };
   var progress = document.getElementById("wizard_progress");
 
   var email = document.getElementById("email");
@@ -28,40 +30,42 @@
       var n = parseInt(el.getAttribute("data-wstep"), 10);
       el.classList.toggle("done", n < step);
       el.classList.toggle("active", n === step);
-      if (n < step) el.querySelector(".wdot").textContent = "✓";
-      else el.querySelector(".wdot").textContent = String(n);
+      el.querySelector(".wdot").textContent = n < step ? "✓" : String(n);
     });
   }
 
   function showStep(step) {
-    step1.hidden = step !== 1;
-    step2.hidden = step !== 2;
+    for (var n = 1; n <= 3; n++) steps[n].hidden = n !== step;
     setProgress(step);
-    var first = (step === 1 ? step1 : step2).querySelector("input");
+    var first = steps[step].querySelector("input, select");
     if (first) first.focus({ preventScroll: false });
   }
 
   function step1Valid() {
-    var fields = [email, pass];
-    for (var i = 0; i < fields.length; i++) {
-      if (!fields[i].checkValidity()) {
-        fields[i].reportValidity();
-        return false;
-      }
-    }
-    return true;
+    return [email, pass].every(function (f) {
+      if (f.checkValidity()) return true;
+      f.reportValidity();
+      return false;
+    });
   }
 
-  toStep2.addEventListener("click", function () {
+  function step2Valid() {
+    return [org, sub].every(function (f) {
+      if (f.checkValidity()) return true;
+      f.reportValidity();
+      return false;
+    });
+  }
+
+  document.getElementById("to_step2").addEventListener("click", function () {
     if (step1Valid()) showStep(2);
   });
-
-  backStep1.addEventListener("click", function () { showStep(1); });
-
-  // If the server re-rendered with a validation error, open the step
-  // the error belongs to so the user lands on the offending field.
-  var initialStep = parseInt(form.getAttribute("data-error-step") || "1", 10);
-  showStep(initialStep === 2 ? 2 : 1);
+  document.getElementById("to_step3").addEventListener("click", function () {
+    sub.value = slug(sub.value);
+    if (step2Valid()) showStep(3);
+  });
+  document.getElementById("back_step1").addEventListener("click", function () { showStep(1); });
+  document.getElementById("back_step2").addEventListener("click", function () { showStep(2); });
 
   // ── Slug suggestion + availability ────────────────────
 
@@ -73,10 +77,7 @@
   var subEdited = !!sub.value;
   sub.addEventListener("input", function () { subEdited = true; });
   org.addEventListener("input", function () {
-    if (!subEdited) {
-      sub.value = slug(org.value);
-      checkAvailability();
-    }
+    if (!subEdited) { sub.value = slug(org.value); checkAvailability(); }
   });
 
   var timer = null;
@@ -97,7 +98,7 @@
       fetch("/api/subdomain-check?subdomain=" + encodeURIComponent(v))
         .then(function (r) { return r.json(); })
         .then(function (d) {
-          if (slug(sub.value) !== lastChecked) return; // stale response
+          if (slug(sub.value) !== lastChecked) return;
           if (!d.valid) {
             sub.setAttribute("aria-invalid", "true");
             setStatus("bad", d.reason || "That address can’t be used.");
@@ -127,8 +128,7 @@
   });
 
   pass.addEventListener("input", function () {
-    var v = pass.value;
-    var score = 0;
+    var v = pass.value, score = 0;
     if (v.length >= 8) score++;
     if (v.length >= 12) score++;
     if (/[0-9]/.test(v) && /[a-zA-Z]/.test(v)) score++;
@@ -136,22 +136,42 @@
     strength.className = "strength s" + score;
   });
 
+  // ── Goal chips (multi-select → hidden comma-joined input) ──
+
+  var goalsInput = document.getElementById("goals");
+  var chips = Array.prototype.slice.call(document.querySelectorAll(".goal-chip"));
+  function syncGoals() {
+    goalsInput.value = chips
+      .filter(function (c) { return c.classList.contains("is-active"); })
+      .map(function (c) { return c.getAttribute("data-goal"); })
+      .join(", ");
+  }
+  chips.forEach(function (c) {
+    c.setAttribute("aria-pressed", "false");
+    c.addEventListener("click", function () {
+      var on = c.classList.toggle("is-active");
+      c.setAttribute("aria-pressed", String(on));
+      syncGoals();
+    });
+  });
+
   // ── Submit ────────────────────────────────────────────
 
   form.addEventListener("submit", function (e) {
     sub.value = slug(sub.value);
-    if (!step1Valid()) {
-      e.preventDefault();
-      showStep(1);
-      return;
-    }
+    if (!step1Valid()) { e.preventDefault(); showStep(1); return; }
+    if (!step2Valid()) { e.preventDefault(); showStep(2); return; }
     if (!form.checkValidity()) {
       e.preventDefault();
-      showStep(2);
+      showStep(3);
       form.reportValidity();
       return;
     }
     submitBtn.disabled = true;
     submitBtn.textContent = "Redirecting to checkout…";
   });
+
+  // Open the step the server flagged (errors are step 1 or 2).
+  var initialStep = parseInt(form.getAttribute("data-error-step") || "1", 10);
+  showStep(initialStep === 2 ? 2 : 1);
 })();

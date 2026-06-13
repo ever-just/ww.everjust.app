@@ -30,13 +30,14 @@ def client(monkeypatch, existing_dbs):
 
     pending = {}
 
-    def fake_create(org_name, subdomain, admin_email, admin_password):
+    def fake_create(org_name, subdomain, admin_email, admin_password, **extra):
         token = f"tok_{len(pending)}"
         pending[token] = {
             "org_name": org_name,
             "subdomain": subdomain,
             "admin_email": admin_email,
             "admin_password": admin_password,
+            **extra,
         }
         return token
 

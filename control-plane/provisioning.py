@@ -50,8 +50,15 @@ def database_exists(name: str) -> bool:
         conn.close()
 
 
-def provision_tenant(subdomain: str, admin_login: str, admin_password: str) -> dict:
-    """Create and initialize a new tenant database."""
+def provision_tenant(subdomain: str, admin_login: str, admin_password: str,
+                     personalization: dict | None = None) -> dict:
+    """Create and initialize a new tenant database.
+
+    ``personalization`` (industry, website, team_size, goals) is captured at
+    signup. Stage 1 records it so it travels with provisioning; later stages
+    use it to install the industry/goal app set and apply branding from the
+    website. It is always best-effort and never blocks base provisioning.
+    """
     if not validate_subdomain(subdomain):
         raise ValueError(f"Invalid or reserved subdomain: {subdomain}")
     if database_exists(subdomain):
@@ -73,6 +80,7 @@ def provision_tenant(subdomain: str, admin_login: str, admin_password: str) -> d
     _set_admin_credentials(subdomain, admin_login, admin_password)
     _configure_mail(subdomain)
     _configure_dms(subdomain)
+    _record_personalization(subdomain, personalization or {})
     ensure_dns(subdomain)
 
     return {
@@ -80,6 +88,33 @@ def provision_tenant(subdomain: str, admin_login: str, admin_password: str) -> d
         "url": f"https://{subdomain}.{BASE_DOMAIN}",
         "status": "active",
     }
+
+
+def _record_personalization(subdomain: str, data: dict) -> None:
+    """Persist the onboarding context as company config params on the tenant.
+
+    Stage 1: store the captured signals (industry, website, team size, goals)
+    as ir.config_parameter values so a later configuration pass can read them.
+    Best-effort; failures never affect the base tenant.
+    """
+    if not any(data.values()):
+        return
+    py = (
+        "P = env['ir.config_parameter'].sudo()\n"
+        "for k, v in %r.items():\n"
+        "    if v:\n"
+        "        P.set_param('everjust.onboarding.' + k, v)\n"
+        "env.cr.commit()\n" % {k: str(v) for k, v in data.items()}
+    )
+    try:
+        subprocess.run(
+            ["docker", "exec", "-i", ODOO_CONTAINER, "odoo", "shell",
+             "-d", subdomain, "--db_user", DB_USER,
+             "--db_password", DB_PASSWORD, "--no-http"],
+            input=py, text=True, check=False, timeout=120,
+        )
+    except Exception:
+        pass
 
 
 def _set_admin_credentials(db: str, login: str, password: str) -> None:

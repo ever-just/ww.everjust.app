@@ -40,7 +40,6 @@ class PhoneCall(models.Model):
     transcription = fields.Text(readonly=True)
 
     partner_id = fields.Many2one("res.partner", string="Contact", readonly=True)
-    lead_id = fields.Many2one("crm.lead", string="Opportunity", readonly=True)
     user_id = fields.Many2one("res.users", string="User", readonly=True,
                               default=lambda self: self.env.user)
 

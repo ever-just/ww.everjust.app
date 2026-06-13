@@ -36,7 +36,6 @@
                         </group>
                         <group string="Links">
                             <field name="partner_id"/>
-                            <field name="lead_id"/>
                             <field name="user_id"/>
                             <field name="recording_url" widget="url"/>
                             <field name="call_sid"/>

@@ -6,7 +6,7 @@
     "author": "EVERJUST",
     "website": "https://everjust.app",
     "category": "Productivity/Phone",
-    "depends": ["mail", "contacts", "crm", "sms", "phone_validation"],
+    "depends": ["mail", "contacts", "sms", "phone_validation"],
     "data": [
         "security/groups.xml",
         "security/ir.model.access.csv",

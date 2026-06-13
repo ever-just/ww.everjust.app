@@ -1719,3 +1719,26 @@ kbd {
 .calc-savings small { font-size: .8125rem; font-weight: 500; opacity: .7; }
 
 .calc-note { font-size: .75rem; color: var(--ej-faint); margin: .75rem 0 0; text-align: center; }
+
+/* ── Docs "every app" cross-link list ─────────────────── */
+.docs-applist-cat {
+  font-size: .6875rem; font-weight: 800; letter-spacing: .08em; text-transform: uppercase;
+  color: var(--ej-faint); margin: 1.4rem 0 .5rem; display: flex; align-items: center; gap: .4rem;
+}
+.docs-applist {
+  list-style: none; margin: 0 0 .5rem; padding: 0;
+  display: grid; grid-template-columns: 1fr; gap: .1rem;
+}
+@media (min-width: 560px) { .docs-applist { grid-template-columns: 1fr 1fr; gap: .1rem 1.5rem; } }
+.docs-applist li {
+  display: flex; align-items: center; gap: .6rem;
+  padding: .4rem 0; border-bottom: 1px solid var(--ej-hairline);
+}
+.docs-applist li > a:first-child { font-weight: 600; color: var(--ej-ink); text-decoration: none; }
+.docs-applist li > a:first-child:hover { text-decoration: underline; }
+.docs-applist-guide {
+  margin-left: auto; display: inline-flex; align-items: center; gap: .25rem;
+  font-size: .75rem; font-weight: 700; color: var(--ej-muted); text-decoration: none;
+  border: 1px solid var(--ej-hairline); border-radius: 999px; padding: .15rem .55rem;
+}
+.docs-applist-guide:hover { border-color: var(--ej-ink); color: var(--ej-ink); }

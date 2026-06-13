@@ -714,3 +714,20 @@ def test_savings_calculator(client):
     # Every configured tool renders a toggle.
     assert body.count('class="calc-tool"') == len(main.content.CALCULATOR_TOOLS)
     assert client.get("/static/js/calc.js").status_code == 200
+
+
+def test_docs_lists_every_app_and_links_subpages(client):
+    body = client.get("/docs").text
+    assert 'id="every-app"' in body
+    # Every app appears and links to its /apps subpage (docs <-> apps cross-link).
+    for slug, a in main.content.APPS.items():
+        assert f'href="/apps/{slug}"' in body
+    # The detailed apps surface their guide link too.
+    assert "docs-applist-guide" in body
+    assert 'href="/docs#every-app"' in body          # sidebar entry
+
+
+def test_pwa_auto_reload_on_new_version(client):
+    js = client.get("/static/js/pwa.js").text
+    assert "controllerchange" in js                  # deploys auto-refresh
+    assert "everjust-v5" in client.get("/sw.js").text

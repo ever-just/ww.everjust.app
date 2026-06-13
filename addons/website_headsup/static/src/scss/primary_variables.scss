@@ -1,4 +1,45 @@
-// HeadsUp brand colors — scalar overrides only.
-// No map-merge, no functions — these must compile before everything else.
-$o-brand-primary: #166A0B;
-$o-brand-secondary: #8EA58D;
+// HeadsUp brand palette — injected before Bootstrap compilation.
+// These override Odoo's default website colors so the builder
+// palette picker and all components use HeadsUp green.
+
+$o-website-values-palettes: (
+    (
+        'color-palettes-name': 'HeadsUp',
+        'o-color-1': #ffffff,
+        'o-color-2': #f5f7f5,
+        'o-color-3': #166A0B,
+        'o-color-4': #0E4507,
+        'o-color-5': #8EA58D,
+
+        'o-color-1-text': #1a1a1a,
+        'o-color-2-text': #1a1a1a,
+        'o-color-3-text': #ffffff,
+        'o-color-4-text': #ffffff,
+        'o-color-5-text': #ffffff,
+
+        'menu': 3,
+        'footer': 4,
+
+        'font': 'Inter',
+        'headings-font': 'Inter',
+        'font-size-base': 1rem,
+        'headings-font-weight': 700,
+
+        'btn-primary-bg': #166A0B,
+        'btn-primary-color': #ffffff,
+        'btn-secondary-bg': #ffffff,
+        'btn-secondary-color': #166A0B,
+    ),
+);
+
+// Register Inter for the website builder font picker.
+// Direct assignment — no map-merge at prepend stage.
+$o-theme-font-configs: (
+    'Inter': (
+        'family': ('Inter', sans-serif),
+        'url': 'Inter:wght@400;500;600;700;800',
+        'properties': (
+            'base': ('font-size-base': 1rem),
+        ),
+    ),
+);

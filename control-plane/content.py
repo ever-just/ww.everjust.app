@@ -604,3 +604,265 @@ CALCULATOR_TOOLS = [
     {"id": "hr",       "label": "HR (BambooHR)",                    "price": 8,  "type": "user"},
     {"id": "payroll",  "label": "Payroll (Gusto)",                  "price": 40, "type": "flat"},
 ]
+
+
+# ── Depth for the catalog apps (features + day-to-day flow) ─────────────
+# Merged into APPS so every app page has the same substance as the eight
+# original guides. Icons are all already in the sprite.
+APP_DEPTH = {
+    "sales": {
+        "features": [
+            ("file-text", "Quotes that close themselves", "Build a quote, send a link, and let the customer review, accept, and pay online — no PDF ping-pong."),
+            ("layers", "Pricelists and bundles", "Set prices per customer, region, or quantity, and add optional products and upsells to any quote."),
+            ("refresh-cw", "Quote to order to invoice", "An accepted quote becomes a confirmed order and a draft invoice automatically — nothing retyped."),
+        ],
+        "workflow": [
+            "Build a quotation from your catalog, with discounts and optional extras.",
+            "Send it; the customer reviews, accepts, and pays online.",
+            "It rolls into a sales order and invoice without re-entry.",
+        ],
+    },
+    "pos": {
+        "features": [
+            ("credit-card", "Built for speed", "A touch screen that scans, takes payment, and prints or emails the receipt in seconds."),
+            ("package", "Stock stays accurate", "Every sale updates inventory in real time, from the same catalog as the rest of your workspace."),
+            ("wifi-off", "Works offline", "Keep selling if the connection drops; orders sync the moment you're back online."),
+        ],
+        "workflow": [
+            "Open a register session and ring up products by scan, search, or favorites.",
+            "Take cash or card and hand over a printed or emailed receipt.",
+            "Close the session — sales, stock, and cash reconcile automatically.",
+        ],
+    },
+    "invoicing": {
+        "features": [
+            ("receipt", "Send and get paid", "Email branded invoices with an online pay button; customers settle by card or bank transfer."),
+            ("clock", "Reminders that chase for you", "Overdue invoices follow up automatically on a schedule you set."),
+            ("chart-column", "Know what you're owed", "Outstanding balances, aging, and cash position at a glance."),
+        ],
+        "workflow": [
+            "Create an invoice from an order or from scratch.",
+            "Send it with an online payment link; reminders go out on their own.",
+            "Match payments and watch what's owed update live.",
+        ],
+    },
+    "expenses": {
+        "features": [
+            ("smartphone", "Snap and submit", "Employees photograph a receipt and submit an expense in seconds, from their phone."),
+            ("check", "Approve from your inbox", "Managers approve or reject with one tap; approved expenses flow to accounting."),
+            ("banknote", "Reimburse and reconcile", "Approved expenses become bills to pay and reconcile against company cards."),
+        ],
+        "workflow": [
+            "An employee photographs a receipt and submits the expense.",
+            "Their manager approves it from the activity inbox.",
+            "It posts to accounting and is queued for reimbursement.",
+        ],
+    },
+    "inventory": {
+        "features": [
+            ("package", "Real-time stock", "Quantities update on every sale, purchase, and transfer, across all your locations."),
+            ("search", "Barcodes everywhere", "Receive, pick, pack, and count with a scanner or your phone camera."),
+            ("refresh-cw", "Replenish automatically", "Set reordering rules and let the system raise purchase or production orders when stock runs low."),
+        ],
+        "workflow": [
+            "Set up your warehouses, locations, and products.",
+            "Receive deliveries and fulfill orders with barcode scanning.",
+            "Let reordering rules keep stock topped up automatically.",
+        ],
+    },
+    "purchase": {
+        "features": [
+            ("shopping-cart", "Requests to orders", "Turn needs into requests for quotation, compare vendor prices, and issue purchase orders."),
+            ("package", "Wired to stock and bills", "Confirmed orders update incoming inventory and create draft vendor bills to check."),
+            ("badge-check", "Vendor terms remembered", "Per-vendor pricing, lead times, and minimum quantities apply automatically."),
+        ],
+        "workflow": [
+            "Raise a request for quotation, or let low stock raise it for you.",
+            "Compare vendor responses and confirm a purchase order.",
+            "Receive the goods; the vendor bill is ready to reconcile.",
+        ],
+    },
+    "manufacturing": {
+        "features": [
+            ("factory", "Production orders", "Plan and track manufacturing from bill of materials to finished goods."),
+            ("layers", "Bills of materials", "Define what goes into each product, including sub-assemblies and by-products."),
+            ("package", "Stock stays in sync", "Components are consumed and finished goods added as you build, so inventory is always right."),
+        ],
+        "workflow": [
+            "Define the bill of materials and work centers for a product.",
+            "Launch a manufacturing order and track each work step.",
+            "Mark it done; components and finished stock update automatically.",
+        ],
+    },
+    "maintenance": {
+        "features": [
+            ("wrench", "Preventive schedules", "Plan recurring maintenance so equipment gets serviced before it breaks."),
+            ("clipboard-list", "Breakdown requests", "Anyone can log a fault against a machine; the team triages from one board."),
+            ("chart-column", "Equipment history", "Every request and service stays on the asset's record, so patterns are obvious."),
+        ],
+        "workflow": [
+            "Register your equipment and set preventive schedules.",
+            "Staff log breakdowns; the team triages and assigns them.",
+            "Close requests and build a service history per machine.",
+        ],
+    },
+    "recruitment": {
+        "features": [
+            ("user-plus", "One hiring pipeline", "Publish openings and move every applicant through the stages you define."),
+            ("calendar-days", "Interviews, organized", "Book interviews, share feedback, and keep the team aligned on each candidate."),
+            ("folder-open", "Resumes in one place", "Applications, CVs, and notes live on the candidate record, not in someone's inbox."),
+        ],
+        "workflow": [
+            "Post a job and collect applications into your pipeline.",
+            "Screen, interview, and score candidates as a team.",
+            "Hire, and move the new starter into onboarding.",
+        ],
+    },
+    "fleet": {
+        "features": [
+            ("truck", "Every vehicle tracked", "Drivers, models, plates, and assignments in one register."),
+            ("receipt", "Costs and contracts", "Track leases, insurance, services, and fuel against each vehicle."),
+            ("clock", "Renewals on time", "Get ahead of contract and service due dates instead of chasing them."),
+        ],
+        "workflow": [
+            "Add your vehicles and assign drivers.",
+            "Log services, fuel, and contracts as they happen.",
+            "Watch upcoming renewals and costs per vehicle.",
+        ],
+    },
+    "email-marketing": {
+        "features": [
+            ("mail", "Drag-and-drop emails", "Design campaigns with blocks and your branding — no HTML required."),
+            ("users", "Segment from real data", "Target lists built from your actual contacts, customers, and activity."),
+            ("chart-column", "See what worked", "Opens, clicks, and conversions tracked back to revenue."),
+        ],
+        "workflow": [
+            "Build an email with the drag-and-drop editor.",
+            "Pick a segment of your contacts and send or schedule it.",
+            "Track opens and clicks, then refine the next one.",
+        ],
+    },
+    "events": {
+        "features": [
+            ("calendar-days", "Pages and tickets", "Publish an event page and sell or register attendees online."),
+            ("mail", "Reminders that show up", "Automated confirmations and reminders cut no-shows."),
+            ("clipboard-list", "Easy check-in", "Scan tickets at the door; attendance flows back to your CRM."),
+        ],
+        "workflow": [
+            "Create the event, set tickets, and publish the page.",
+            "Attendees register or buy; reminders go out automatically.",
+            "Check them in at the door and follow up afterward.",
+        ],
+    },
+    "surveys": {
+        "features": [
+            ("clipboard-list", "Build any survey", "Questionnaires, quizzes, and feedback forms with logic and scoring."),
+            ("globe", "Share anywhere", "Send by email or drop a link; collect responses from anyone."),
+            ("chart-column", "Read the results", "Live charts and per-question breakdowns, exportable for deeper analysis."),
+        ],
+        "workflow": [
+            "Build your survey with the question types you need.",
+            "Share it by email or public link.",
+            "Watch responses come in and analyze the results.",
+        ],
+    },
+    "website": {
+        "features": [
+            ("globe", "Drag-and-drop pages", "Build pages from blocks with your fonts and colors — no developer."),
+            ("search", "SEO built in", "Titles, metadata, sitemaps, and clean URLs handled for you."),
+            ("layers", "Connected to your data", "Forms, products, and content share the same database as the rest of your apps."),
+        ],
+        "workflow": [
+            "Pick a starting layout and edit blocks in place.",
+            "Add pages, forms, and your branding.",
+            "Publish — mobile and SEO are handled.",
+        ],
+    },
+    "ecommerce": {
+        "features": [
+            ("shopping-bag", "A real storefront", "Sell online with product pages, variants, and a checkout that converts."),
+            ("package", "Stock-aware", "The store shares inventory and pricing with your workspace; orders flow straight in."),
+            ("credit-card", "Pay your way", "Connect the payment providers you already use."),
+        ],
+        "workflow": [
+            "Add products — they share your catalog and stock.",
+            "Design the store and set shipping and payment.",
+            "Orders arrive in your workspace, ready to fulfill.",
+        ],
+    },
+    "blog": {
+        "features": [
+            ("file-text", "Write and publish", "A clean editor with your brand's look, right beside your website."),
+            ("search", "Built to rank", "SEO controls, tags, and clean URLs on every post."),
+            ("users", "Grow an audience", "Comments, subscriptions, and social sharing built in."),
+        ],
+        "workflow": [
+            "Write a post with images and formatting.",
+            "Set its SEO and publish or schedule it.",
+            "Readers subscribe, comment, and share.",
+        ],
+    },
+    "elearning": {
+        "features": [
+            ("graduation-cap", "Courses that teach", "Build courses from videos, documents, and quizzes."),
+            ("badge-check", "Certificates and progress", "Track who completed what and issue certificates automatically."),
+            ("users", "For customers or staff", "Use it for customer education or internal training, public or private."),
+        ],
+        "workflow": [
+            "Create a course and add lessons and quizzes.",
+            "Invite learners — customers or your team.",
+            "Track completion and award certificates.",
+        ],
+    },
+    "livechat": {
+        "features": [
+            ("message-circle", "Chat on your site", "A widget that lets visitors talk to your team in real time."),
+            ("users", "Routed to the right person", "Conversations go to the right team, with canned responses to move fast."),
+            ("contact", "Logged on the contact", "Every chat is saved against the visitor's record for context next time."),
+        ],
+        "workflow": [
+            "Add the chat widget to your site pages.",
+            "Your team answers visitor questions live.",
+            "Each conversation is saved against the contact.",
+        ],
+    },
+    "calendar": {
+        "features": [
+            ("calendar-days", "One shared calendar", "See your team's schedule, meetings, and time off in one view."),
+            ("users", "Book without the back-and-forth", "Share availability and let people pick a slot."),
+            ("refresh-cw", "Tied to your work", "Meetings link to CRM activities, projects, and contacts."),
+        ],
+        "workflow": [
+            "Connect calendars and set your availability.",
+            "Book meetings or share a link for others to book.",
+            "Everything links back to the related record.",
+        ],
+    },
+    "discuss": {
+        "features": [
+            ("message-square", "Channels and DMs", "Team chat built into the workspace, organized by channel."),
+            ("layers", "Next to the work", "Conversations sit beside the records they're about, not in a separate app."),
+            ("mail", "Notifications that matter", "Follow what you care about and mute the rest."),
+        ],
+        "workflow": [
+            "Create channels for teams and topics.",
+            "Chat, share files, and mention teammates.",
+            "Discussions stay linked to the records they touch.",
+        ],
+    },
+    "contacts": {
+        "features": [
+            ("contact", "One address book", "Customers, vendors, and people every app draws from."),
+            ("search", "Find anyone fast", "Search and filter by company, tag, or activity."),
+            ("layers", "Shared everywhere", "The same contact powers CRM, invoicing, projects, and more — no duplicates."),
+        ],
+        "workflow": [
+            "Add companies and the people inside them.",
+            "Tag and organize them for easy filtering.",
+            "Every app uses the same records automatically.",
+        ],
+    },
+}
+for _slug, _depth in APP_DEPTH.items():
+    if _slug in APPS:
+        APPS[_slug].update(_depth)

@@ -1682,8 +1682,12 @@ kbd {
   border-radius: 1rem;
   background: #fff;
   padding: 1.5rem;
-  position: sticky;
-  top: 80px;
+}
+
+/* Result panel follows the tool list only on desktop (where it's side-by-
+ * side); on mobile it sits below in normal flow. */
+@media (min-width: 768px) {
+  .calc-panel { position: sticky; top: 80px; }
 }
 
 .calc-users { display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin-bottom: 1rem; font-weight: 700; }

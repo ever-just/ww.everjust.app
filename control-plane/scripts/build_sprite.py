@@ -23,6 +23,9 @@ ICONS = [
     "layout-grid", "file-text", "refresh-cw", "badge-check", "clock",
     "server", "house", "chevron-right", "wallet", "party-popper",
     "menu", "x", "cookie", "layers",
+    "credit-card", "receipt", "package", "shopping-cart", "factory", "wrench",
+    "truck", "clipboard-list", "shopping-bag", "graduation-cap", "message-circle",
+    "contact",
 ]
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]

@@ -22,15 +22,16 @@
 
 {% block content %}
 <section class="hero container">
-  <h1>Run your entire business in one workspace.</h1>
+  <span class="hero-kicker"><span class="dotpulse"></span> All-in-one workspace</span>
+  <h1>Run your entire business in one place.</h1>
   <p class="lede">
-    EVERJUST.APP gives your organization a private, fully-branded workspace at
-    <b class="text-anywhere">your&#8209;org.{{ domain }}</b> — CRM, projects, documents,
-    e&#8209;signatures, HR, payroll, calls and SMS, all in one place. No per-app pricing, no setup calls.
+    {{ apps|length }} apps — CRM, invoicing, projects, inventory, HR, payroll, marketing,
+    website and more — sharing one set of contacts, files, and history. Your own private
+    workspace at <b class="text-anywhere">your&#8209;org.{{ domain }}</b>, live in two minutes.
   </p>
   <div class="hero-cta d-flex flex-wrap gap-2 justify-content-center mb-3">
     <a class="btn btn-primary btn-lg" href="/signup">Create your workspace {{ icon("arrow-right", 18) }}</a>
-    <a class="btn btn-outline-dark btn-lg" href="/signin">Sign in</a>
+    <a class="btn btn-outline-dark btn-lg" href="/apps">See all {{ apps|length }} apps</a>
   </div>
   <ul class="hero-points">
     <li>{{ icon("zap", 13) }} Live in ~2 minutes</li>
@@ -39,92 +40,113 @@
     <li>{{ icon("circle-check", 13) }} Cancel anytime</li>
   </ul>
 
-  <div class="hero-mock" aria-hidden="true">
-    <div class="bar">
-      <span class="dot"></span><span class="dot"></span><span class="dot"></span>
-      <span class="urlbox"><b>your-org</b>.{{ domain }}</span>
-    </div>
-    <div class="mock-grid">
-      <div class="mock-app"><span class="tile">{{ icon("chart-column", 22) }}</span>CRM</div>
-      <div class="mock-app"><span class="tile">{{ icon("hand-coins", 22) }}</span>Sales</div>
-      <div class="mock-app"><span class="tile">{{ icon("kanban", 22) }}</span>Projects</div>
-      <div class="mock-app"><span class="tile">{{ icon("folder-open", 22) }}</span>Documents</div>
-      <div class="mock-app"><span class="tile">{{ icon("signature", 22) }}</span>eSign</div>
-      <div class="mock-app"><span class="tile">{{ icon("users", 22) }}</span>HR</div>
-      <div class="mock-app"><span class="tile">{{ icon("banknote", 22) }}</span>Payroll</div>
-      <div class="mock-app"><span class="tile">{{ icon("phone", 22) }}</span>Calls</div>
-      <div class="mock-app"><span class="tile">{{ icon("message-square", 22) }}</span>SMS</div>
-      <div class="mock-app"><span class="tile">{{ icon("book-open", 22) }}</span>Knowledge</div>
-      <div class="mock-app"><span class="tile">{{ icon("calendar-days", 22) }}</span>Time Off</div>
-      <div class="mock-app"><span class="tile">{{ icon("timer", 22) }}</span>Timesheets</div>
+  <div class="app-marquee" aria-hidden="true">
+    <div class="app-marquee-track">
+      {% for _ in range(2) %}
+        <span class="marq-set">
+        {% for slug, a in apps.items() %}
+        <span class="app-chip">{{ icon(a.icon, 16) }} {{ a.name }}</span>
+        {% endfor %}
+        </span>
+      {% endfor %}
     </div>
   </div>
-  <p class="mt-4 mb-0"><a class="fw-bold" href="/apps">Explore every app in detail {{ icon("arrow-right", 14) }}</a></p>
 </section>
 
-<section class="section section-alt" id="features">
+<section class="section section-alt py-5">
+  <div class="container replaces-strip">
+    <p class="replaces-label">Replaces the patchwork you pay for today</p>
+    <div class="replaces-list">
+      <span class="replaces-chip">Salesforce</span>
+      <span class="replaces-chip">QuickBooks</span>
+      <span class="replaces-chip">Asana</span>
+      <span class="replaces-chip">Slack</span>
+      <span class="replaces-chip">Dropbox</span>
+      <span class="replaces-chip">DocuSign</span>
+      <span class="replaces-chip">Mailchimp</span>
+      <span class="replaces-chip">Shopify</span>
+      <span class="replaces-chip">BambooHR</span>
+      <span class="replaces-chip">Gusto</span>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="features">
   <div class="container">
-    <p class="eyebrow">The suite</p>
-    <h2 data-reveal>Everything included. Nothing bolted on.</h2>
-    <p class="section-lede">One subscription unlocks the full suite. Every app shares the same contacts, files, and activity feed — so nothing falls between tools.</p>
-    <div class="row g-3 cards-snap">
-      <div class="col-12 col-sm-6 col-lg-4">
-        <a class="feature-card feature-card-link" data-reveal href="/apps/crm-sales">
-          <span class="icon-tile">{{ icon("chart-column", 20) }}</span>
-          <h3>CRM &amp; Sales</h3>
-          <p>Track leads, pipelines, and quotes. Every email, call, and meeting logged against the customer automatically.</p>
-          <span class="app-card-more mt-3">Learn more {{ icon("arrow-right", 14) }}</span>
-        </a>
+    <p class="eyebrow" data-reveal>What you can run</p>
+    <h2 data-reveal>One workspace for the whole company.</h2>
+    <p class="section-lede" data-reveal>Not a bundle of disconnected tools — one system where every app shares the same customers, files, and activity.</p>
+
+    <div class="pillar" data-reveal>
+      <div class="pillar-text">
+        <p class="pillar-eyebrow">Sell &amp; get paid</p>
+        <h3>Win customers and collect the cash.</h3>
+        <p>Capture leads, move deals across a pipeline, send quotes that turn into orders, and invoice — every customer touch on one timeline, online or at the counter.</p>
+        <a class="pillar-link" href="/apps/crm-sales">Explore CRM &amp; Sales {{ icon("arrow-right", 16) }}</a>
       </div>
-      <div class="col-12 col-sm-6 col-lg-4">
-        <a class="feature-card feature-card-link" data-reveal href="/apps/projects">
-          <span class="icon-tile">{{ icon("kanban", 20) }}</span>
-          <h3>Projects &amp; Timesheets</h3>
-          <p>Plan work on kanban boards, log hours as you go, and see exactly where every project stands.</p>
-          <span class="app-card-more mt-3">Learn more {{ icon("arrow-right", 14) }}</span>
-        </a>
-      </div>
-      <div class="col-12 col-sm-6 col-lg-4">
-        <a class="feature-card feature-card-link" data-reveal href="/apps/esign">
-          <span class="icon-tile">{{ icon("signature", 20) }}</span>
-          <h3>Documents &amp; eSign</h3>
-          <p>A real document management system with folders, permissions, and legally-binding electronic signatures built in.</p>
-          <span class="app-card-more mt-3">Learn more {{ icon("arrow-right", 14) }}</span>
-        </a>
-      </div>
-      <div class="col-12 col-sm-6 col-lg-4">
-        <a class="feature-card feature-card-link" data-reveal href="/apps/hr-time-off">
-          <span class="icon-tile">{{ icon("users", 20) }}</span>
-          <h3>HR, Time Off &amp; Payroll</h3>
-          <p>Employee records, leave requests, attendance, and payslips computed from actual clock-in/out data.</p>
-          <span class="app-card-more mt-3">Learn more {{ icon("arrow-right", 14) }}</span>
-        </a>
-      </div>
-      <div class="col-12 col-sm-6 col-lg-4">
-        <a class="feature-card feature-card-link" data-reveal href="/apps/calls-sms">
-          <span class="icon-tile">{{ icon("phone", 20) }}</span>
-          <h3>Calls &amp; SMS</h3>
-          <p>Click-to-dial from any contact, call logging, and two-way SMS — right inside your workspace.</p>
-          <span class="app-card-more mt-3">Learn more {{ icon("arrow-right", 14) }}</span>
-        </a>
-      </div>
-      <div class="col-12 col-sm-6 col-lg-4">
-        <a class="feature-card feature-card-link" data-reveal href="/docs/security">
-          <span class="icon-tile">{{ icon("shield-check", 20) }}</span>
-          <h3>Private by design</h3>
-          <p>Your workspace runs on its own isolated database. Your data is never pooled, mined, or shared.</p>
-          <span class="app-card-more mt-3">Learn more {{ icon("arrow-right", 14) }}</span>
-        </a>
+      <div class="pillar-visual">
+        <span class="pillar-app">{{ icon("chart-column", 18) }} CRM</span>
+        <span class="pillar-app">{{ icon("hand-coins", 18) }} Sales</span>
+        <span class="pillar-app">{{ icon("receipt", 18) }} Invoicing</span>
+        <span class="pillar-app">{{ icon("credit-card", 18) }} Point of Sale</span>
       </div>
     </div>
+
+    <div class="pillar reverse" data-reveal>
+      <div class="pillar-text">
+        <p class="pillar-eyebrow">Deliver the work</p>
+        <h3>Plan it, build it, ship it.</h3>
+        <p>Run projects and timesheets, track stock across locations, raise purchase orders, and manage production — without bolting on a second system that never quite syncs.</p>
+        <a class="pillar-link" href="/apps/projects">Explore Projects {{ icon("arrow-right", 16) }}</a>
+      </div>
+      <div class="pillar-visual">
+        <span class="pillar-app">{{ icon("kanban", 18) }} Projects</span>
+        <span class="pillar-app">{{ icon("package", 18) }} Inventory</span>
+        <span class="pillar-app">{{ icon("shopping-cart", 18) }} Purchase</span>
+        <span class="pillar-app">{{ icon("factory", 18) }} Manufacturing</span>
+      </div>
+    </div>
+
+    <div class="pillar" data-reveal>
+      <div class="pillar-text">
+        <p class="pillar-eyebrow">Team &amp; back office</p>
+        <h3>Hire, pay, sign, and remember.</h3>
+        <p>Bring on staff, run payroll from real attendance, store and e-sign documents, and keep everything your company knows in one searchable place — permissions and all.</p>
+        <a class="pillar-link" href="/apps/hr-time-off">Explore HR &amp; People {{ icon("arrow-right", 16) }}</a>
+      </div>
+      <div class="pillar-visual">
+        <span class="pillar-app">{{ icon("users", 18) }} HR</span>
+        <span class="pillar-app">{{ icon("banknote", 18) }} Payroll</span>
+        <span class="pillar-app">{{ icon("signature", 18) }} eSign</span>
+        <span class="pillar-app">{{ icon("book-open", 18) }} Knowledge</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section section-alt" id="catalog">
+  <div class="container">
+    <p class="eyebrow" data-reveal>The full suite</p>
+    <h2 data-reveal>{{ apps|length }} apps, eight categories.</h2>
+    <p class="section-lede" data-reveal>Every app is included in your plan — switch on the ones you need, whenever you need them. Nothing to buy separately.</p>
+    <nav class="cat-teaser" aria-label="App categories">
+      {% for slug, cat in categories.items() %}
+      <a href="/apps#{{ slug }}">
+        {{ icon(cat.icon, 20) }}
+        <span><span class="cat-name">{{ cat.name }}</span><span class="cat-blurb">{{ cat.blurb }}</span></span>
+        {{ icon("arrow-right", 16) }}
+      </a>
+      {% endfor %}
+    </nav>
+    <p class="text-center mt-4 mb-0"><a class="fw-bold" href="/apps">Browse all {{ apps|length }} apps {{ icon("arrow-right", 14) }}</a></p>
   </div>
 </section>
 
 <section class="section" id="how">
   <div class="container">
-    <p class="eyebrow">How it works</p>
-    <h2 data-reveal>Up and running in three steps</h2>
-    <p class="section-lede">No sales call, no onboarding fee, no migration project. Claim an address and start working.</p>
+    <p class="eyebrow" data-reveal>How it works</p>
+    <h2 data-reveal>Up and running in three steps.</h2>
+    <p class="section-lede" data-reveal>No sales call, no onboarding fee, no migration project. Claim an address and start working.</p>
     <div class="row g-3 steps-timeline">
       <div class="col-12 col-md-4">
         <div class="step-card" data-reveal>
@@ -151,54 +173,16 @@
   </div>
 </section>
 
-<section class="section" id="why">
-  <div class="container">
-    <p class="eyebrow" data-reveal>Why everything-in-one</p>
-    <h2 data-reveal>One workspace, not ten tabs.</h2>
-    <p class="section-lede" data-reveal>Most teams stitch together a CRM, a project tool, a file store, an e-sign service, an HR app, and a phone system. EVERJUST.APP is all of it — sharing one set of contacts, files, and history.</p>
-    <div class="row g-3">
-      <div class="col-12 col-sm-6 col-lg-3">
-        <div class="feature-card" data-reveal>
-          <span class="icon-tile">{{ icon("layers", 20) }}</span>
-          <h3>Replace the patchwork</h3>
-          <p>Stop paying for and switching between six separate tools. Everything your team needs lives in one place.</p>
-        </div>
-      </div>
-      <div class="col-12 col-sm-6 col-lg-3">
-        <div class="feature-card" data-reveal style="--reveal-delay:.06s">
-          <span class="icon-tile">{{ icon("database", 20) }}</span>
-          <h3>One source of truth</h3>
-          <p>Contacts, files, and activity are shared across every app, so your reports actually connect.</p>
-        </div>
-      </div>
-      <div class="col-12 col-sm-6 col-lg-3">
-        <div class="feature-card" data-reveal style="--reveal-delay:.12s">
-          <span class="icon-tile">{{ icon("wallet", 20) }}</span>
-          <h3>One bill, one login</h3>
-          <p>A single subscription and one place your team learns — no integrations to wire up or maintain.</p>
-        </div>
-      </div>
-      <div class="col-12 col-sm-6 col-lg-3">
-        <div class="feature-card" data-reveal style="--reveal-delay:.18s">
-          <span class="icon-tile">{{ icon("shield-check", 20) }}</span>
-          <h3>Private and yours</h3>
-          <p>Your workspace runs on its own database at your own address. Your data is never pooled or mined.</p>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
 <section class="section section-alt" id="pricing">
   <div class="container">
-    <p class="eyebrow">Pricing</p>
-    <h2 data-reveal>Simple, flat pricing</h2>
-    <p class="section-lede">One plan. Every app. No add-ons, no tiers to compare, no surprises on the invoice.</p>
+    <p class="eyebrow" data-reveal>Pricing</p>
+    <h2 data-reveal>One flat price. Every app.</h2>
+    <p class="section-lede" data-reveal>No per-app invoices, no tiers to compare, no surprises. The whole suite, one bill.</p>
     <div class="price-card" data-reveal>
       <div class="amount">$100<span>/month</span></div>
       <p class="text-secondary small mb-4">includes 5 users &middot; $15/user/month after that</p>
       <ul class="check-list">
-        <li>{{ icon("check", 16) }}<span>All apps included — CRM, projects, documents, eSign, HR, payroll, calls &amp; SMS</span></li>
+        <li>{{ icon("check", 16) }}<span>All {{ apps|length }} apps included — CRM, invoicing, projects, HR, payroll, marketing &amp; more</span></li>
         <li>{{ icon("check", 16) }}<span>Your own address: <b class="text-anywhere">your&#8209;org.{{ domain }}</b></span></li>
         <li>{{ icon("check", 16) }}<span>Isolated database — your data stays yours</span></li>
         <li>{{ icon("check", 16) }}<span>Unlimited records, automatic backups</span></li>
@@ -213,9 +197,9 @@
 
 <section class="section" id="faq">
   <div class="container">
-    <p class="eyebrow">FAQ</p>
-    <h2 data-reveal>Questions, answered</h2>
-    <p class="section-lede">More detail in the <a href="/docs">documentation</a>.</p>
+    <p class="eyebrow" data-reveal>FAQ</p>
+    <h2 data-reveal>Questions, answered.</h2>
+    <p class="section-lede" data-reveal>More detail in the <a href="/docs">documentation</a>.</p>
     <div class="faq">
       <details data-reveal>
         <summary>How fast can we start?</summary>

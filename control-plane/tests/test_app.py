@@ -306,10 +306,28 @@ def test_app_detail_pages(client):
     for slug, a in main.content.APPS.items():
         r = client.get(f"/apps/{slug}")
         assert r.status_code == 200, slug
-        assert html.escape(a["tagline"], quote=False) in r.text
-        assert f'/docs/{a["guide"]}' in r.text          # backlink to its guide
-        assert "How it works" in r.text
+        assert html.escape(a["name"], quote=False) in r.text
+        # Detailed apps link their guide + show the workflow; lighter catalog
+        # entries render cleanly without those sections.
+        if a.get("guide"):
+            assert f'/docs/{a["guide"]}' in r.text
+            assert "How it works" in r.text
+        if a.get("replaces"):
+            assert "Replaces tools like" in r.text
     assert client.get("/apps/not-an-app").status_code == 404
+
+
+def test_app_catalog_breadth_and_filter(client):
+    body = client.get("/apps").text
+    # The catalog must surface the full suite, not just 8 apps.
+    assert len(main.content.APPS) >= 25
+    assert "Point of Sale" in body and "Inventory" in body and "Manufacturing" in body
+    # Category groups + search + filter chips are present.
+    for cat in main.content.CATEGORIES.values():
+        assert cat["name"] in body
+    assert 'id="app_search"' in body
+    assert 'id="catalog_filters"' in body
+    assert "/static/js/catalog.js" in body
 
 
 def test_landing_features_link_to_app_pages(client):
@@ -427,13 +445,25 @@ def test_landing_layout_rhythm(client):
     assert "cta-band" in body and "btn-inverse" in body  # inverted closer
 
 
-def test_landing_has_more_depth_and_reveals(client):
+def test_landing_redesign_structure(client):
     body = client.get("/").text
-    assert 'id="why"' in body                      # added value section
-    assert "One workspace, not ten tabs" in body
-    assert "data-reveal" in body                   # scroll-reveal hooks
-    assert "reveal-ready" in body                  # armed only when motion ok
+    assert "hero-kicker" in body                   # redesigned hero
+    assert "app-marquee" in body                   # breadth marquee (not a card)
+    assert body.count('class="pillar') >= 3        # alternating feature pillars
+    assert "replaces-strip" in body                # "replaces your stack"
+    assert "cat-teaser" in body                    # category teaser (not cards)
+    assert "data-reveal" in body and "reveal-ready" in body
     assert client.get("/static/js/nav.js").status_code == 200
+
+
+def test_intentional_fonts_loaded(client):
+    body = client.get("/").text
+    assert "/static/fonts/space-grotesk.woff2" in body   # display face preloaded
+    assert "/static/fonts/geist.woff2" in body           # body face preloaded
+    css = client.get("/static/css/site.css").text
+    assert "Space Grotesk" in css and "Geist" in css
+    assert "Arial, sans-serif" not in css.split("--ej-body")[0]  # not the default stack
+    assert client.get("/static/fonts/space-grotesk.woff2").status_code == 200
 
 
 def test_zoom_and_overflow_css(client):

@@ -414,3 +414,174 @@ APP_GUIDES = {
         ],
     },
 }
+
+
+# ── App catalog taxonomy ────────────────────────────────────────────────
+# Ordered categories for the /apps catalog and the home app grid.
+
+CATEGORIES = {
+    "sales":         {"name": "Sales",           "icon": "chart-column", "blurb": "Win deals and sell, online and in person."},
+    "finance":       {"name": "Finance",         "icon": "banknote",     "blurb": "Invoice, get paid, and track every cost."},
+    "operations":    {"name": "Operations",      "icon": "kanban",       "blurb": "Run projects, stock, purchasing, and production."},
+    "hr":            {"name": "Human Resources", "icon": "users",        "blurb": "Hire, manage, and pay your team."},
+    "marketing":     {"name": "Marketing",       "icon": "sparkles",     "blurb": "Reach your audience and measure what works."},
+    "website":       {"name": "Website",         "icon": "globe",        "blurb": "Build a site, sell online, and publish content."},
+    "productivity":  {"name": "Productivity",    "icon": "layout-grid",  "blurb": "Documents, signatures, knowledge, and chat."},
+    "communication": {"name": "Communication",   "icon": "phone",        "blurb": "Calls, SMS, and a shared address book."},
+}
+
+# Category + "what it replaces" for the 8 detailed apps (kept out of their
+# entries above to keep those readable). 'replaces' powers the pricing
+# savings calculator.
+_APP_META = {
+    "crm-sales":   {"category": "sales",         "replaces": ["Salesforce", "HubSpot CRM", "Pipedrive"]},
+    "projects":    {"category": "operations",    "replaces": ["Asana", "Monday.com", "Trello", "Jira"]},
+    "documents":   {"category": "productivity",  "replaces": ["Dropbox", "Google Drive", "SharePoint"]},
+    "esign":       {"category": "productivity",  "replaces": ["DocuSign", "Dropbox Sign", "Adobe Acrobat Sign"]},
+    "knowledge":   {"category": "productivity",  "replaces": ["Notion", "Confluence"]},
+    "hr-time-off": {"category": "hr",            "replaces": ["BambooHR", "Rippling"]},
+    "payroll":     {"category": "hr",            "replaces": ["Gusto", "ADP"]},
+    "calls-sms":   {"category": "communication", "replaces": ["RingCentral", "Aircall", "Twilio"]},
+}
+for _slug, _meta in _APP_META.items():
+    APPS[_slug].update(_meta)
+
+# Lighter catalog entries for the rest of the suite. Each tenant's workspace
+# includes these out of the box; detailed pages can be deepened over time.
+_MORE_APPS = {
+    "sales": {
+        "name": "Sales", "icon": "hand-coins", "category": "sales",
+        "tagline": "Quotes to orders, without the back-and-forth.",
+        "summary": "Build quotations, send them for online acceptance, and turn them into confirmed orders and invoices — pricelists, discounts, and upsells included.",
+        "replaces": ["PandaDoc", "Qwilr"],
+    },
+    "pos": {
+        "name": "Point of Sale", "icon": "credit-card", "category": "sales",
+        "tagline": "Ring up sales in-store and online — one catalog.",
+        "summary": "A touch-friendly point of sale for shops and counters that shares products, customers, and stock with the rest of your workspace, online or off.",
+        "replaces": ["Square", "Shopify POS", "Lightspeed"],
+    },
+    "invoicing": {
+        "name": "Invoicing", "icon": "receipt", "category": "finance",
+        "tagline": "Send invoices, get paid, see the cash.",
+        "summary": "Create and send branded invoices, track payments, automate reminders, and watch what's owed — wired to your sales and contacts.",
+        "replaces": ["QuickBooks", "FreshBooks", "Wave"],
+    },
+    "expenses": {
+        "name": "Expenses", "icon": "wallet", "category": "finance",
+        "tagline": "Snap a receipt, get reimbursed.",
+        "summary": "Employees submit expenses with a photo; managers approve from their inbox; approved expenses flow to accounting and payroll.",
+        "replaces": ["Expensify", "SAP Concur"],
+    },
+    "inventory": {
+        "name": "Inventory", "icon": "package", "category": "operations",
+        "tagline": "Know what you have, everywhere.",
+        "summary": "Real-time stock across locations with barcode receiving, deliveries, and replenishment — updated by every sale, purchase, and transfer.",
+        "replaces": ["Fishbowl", "Cin7"],
+    },
+    "purchase": {
+        "name": "Purchase", "icon": "shopping-cart", "category": "operations",
+        "tagline": "Turn needs into purchase orders.",
+        "summary": "Request quotes from vendors, compare them, and issue purchase orders that update inventory and vendor bills automatically.",
+        "replaces": ["Coupa", "Procurify"],
+    },
+    "manufacturing": {
+        "name": "Manufacturing", "icon": "factory", "category": "operations",
+        "tagline": "From bill of materials to finished goods.",
+        "summary": "Plan and track production orders, manage bills of materials and work centers, and keep stock accurate as you build.",
+        "replaces": ["Katana", "MRPeasy"],
+    },
+    "maintenance": {
+        "name": "Maintenance", "icon": "wrench", "category": "operations",
+        "tagline": "Keep equipment running, not broken.",
+        "summary": "Schedule preventive maintenance, log breakdowns, and track requests against every machine and asset.",
+        "replaces": ["UpKeep", "Fiix"],
+    },
+    "recruitment": {
+        "name": "Recruitment", "icon": "user-plus", "category": "hr",
+        "tagline": "From job post to hire, organized.",
+        "summary": "Publish openings, collect applications into a hiring pipeline, schedule interviews, and move candidates to onboarding.",
+        "replaces": ["Greenhouse", "Lever", "Workable"],
+    },
+    "fleet": {
+        "name": "Fleet", "icon": "truck", "category": "hr",
+        "tagline": "Every vehicle, cost, and contract tracked.",
+        "summary": "Manage company vehicles, drivers, leases, services, and fuel costs in one register.",
+        "replaces": ["Fleetio"],
+    },
+    "email-marketing": {
+        "name": "Email Marketing", "icon": "mail", "category": "marketing",
+        "tagline": "Design, send, and measure campaigns.",
+        "summary": "Build emails with a drag-and-drop editor, segment from your real contacts, and track opens, clicks, and conversions.",
+        "replaces": ["Mailchimp", "Campaign Monitor"],
+    },
+    "events": {
+        "name": "Events", "icon": "calendar-days", "category": "marketing",
+        "tagline": "Run events people actually attend.",
+        "summary": "Create event pages, register or sell tickets, send reminders, and check attendees in — all tied to your CRM.",
+        "replaces": ["Eventbrite", "Cvent"],
+    },
+    "surveys": {
+        "name": "Surveys", "icon": "clipboard-list", "category": "marketing",
+        "tagline": "Ask, measure, improve.",
+        "summary": "Build surveys and quizzes, share them anywhere, and analyze responses — for feedback, NPS, or assessments.",
+        "replaces": ["SurveyMonkey", "Typeform"],
+    },
+    "website": {
+        "name": "Website Builder", "icon": "globe", "category": "website",
+        "tagline": "A real website, no developer required.",
+        "summary": "Drag-and-drop pages with built-in SEO, forms, and blocks — connected to the same data as the rest of your apps.",
+        "replaces": ["Wix", "Squarespace", "WordPress"],
+    },
+    "ecommerce": {
+        "name": "eCommerce", "icon": "shopping-bag", "category": "website",
+        "tagline": "An online store wired to your stock.",
+        "summary": "Sell online with a storefront that shares products, pricing, and inventory with your workspace — orders flow straight in.",
+        "replaces": ["Shopify", "BigCommerce"],
+    },
+    "blog": {
+        "name": "Blog", "icon": "file-text", "category": "website",
+        "tagline": "Publish content that ranks.",
+        "summary": "Write and publish posts with SEO controls and your brand's look, right alongside your website.",
+        "replaces": ["Medium", "Ghost"],
+    },
+    "elearning": {
+        "name": "eLearning", "icon": "graduation-cap", "category": "website",
+        "tagline": "Courses for customers or staff.",
+        "summary": "Build courses with videos, quizzes, and certificates — for customer education or internal training.",
+        "replaces": ["Teachable", "Thinkific"],
+    },
+    "livechat": {
+        "name": "Live Chat", "icon": "message-circle", "category": "website",
+        "tagline": "Talk to visitors while they're interested.",
+        "summary": "A live-chat widget for your site that routes conversations to your team and logs them against the contact.",
+        "replaces": ["Intercom", "Drift", "Tidio"],
+    },
+    "calendar": {
+        "name": "Calendar", "icon": "calendar-days", "category": "productivity",
+        "tagline": "Everyone's schedule, shared.",
+        "summary": "Shared calendars, meeting scheduling, and reminders that connect to CRM activities, projects, and time off.",
+        "replaces": ["Google Calendar", "Calendly"],
+    },
+    "discuss": {
+        "name": "Discuss", "icon": "message-square", "category": "productivity",
+        "tagline": "Team chat where the work is.",
+        "summary": "Channels and direct messages built into the workspace, so conversations sit next to the records they're about.",
+        "replaces": ["Slack", "Microsoft Teams"],
+    },
+    "contacts": {
+        "name": "Contacts", "icon": "contact", "category": "communication",
+        "tagline": "One address book for everything.",
+        "summary": "The shared directory of customers, vendors, and people that every app draws from — no more duplicate lists.",
+        "replaces": ["Google Contacts"],
+    },
+}
+APPS.update(_MORE_APPS)
+
+
+def apps_by_category():
+    """Return an ordered {category_slug: [(app_slug, app), ...]} mapping."""
+    grouped = {cat: [] for cat in CATEGORIES}
+    for slug, app in APPS.items():
+        grouped.setdefault(app.get("category", "productivity"), []).append((slug, app))
+    return grouped

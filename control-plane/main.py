@@ -90,6 +90,8 @@ def render(request: Request, name: str, status_code: int = 200, **ctx) -> HTMLRe
     ctx.setdefault("docs_pages", DOCS_PAGES)
     ctx.setdefault("docs_sections", DOCS_SECTIONS)
     ctx.setdefault("apps", content.APPS)
+    ctx.setdefault("categories", content.CATEGORIES)
+    ctx.setdefault("apps_by_category", content.apps_by_category())
     ctx.setdefault("asset_v", ASSET_VERSION)
     return templates.TemplateResponse(
         request=request, name=name, context=ctx, status_code=status_code

@@ -8,6 +8,7 @@ provisioning. Runs at everjust.app (root); tenant workspaces live at
 import datetime
 import os
 import pathlib
+import time
 
 import stripe
 from fastapi import FastAPI, Form, Request
@@ -15,6 +16,7 @@ from fastapi.responses import FileResponse, HTMLResponse, JSONResponse, Redirect
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 
+import content
 import provisioning
 import signup_store
 
@@ -26,15 +28,22 @@ BASE_DOMAIN = os.environ.get("BASE_DOMAIN", "everjust.app")
 BASE_DIR = pathlib.Path(__file__).resolve().parent
 STATIC_DIR = BASE_DIR / "static"
 
+# Cache-busting token appended to static asset URLs (?v=...). A new value
+# per process start means every deploy invalidates stale service-worker
+# and browser caches — fixes phones pinning old CSS/JS after a release.
+ASSET_VERSION = os.environ.get("ASSET_VERSION") or str(int(time.time()))
+
 app = FastAPI(title="EVERJUST.APP", docs_url=None, redoc_url=None, openapi_url=None)
 app.mount("/static", StaticFiles(directory=str(STATIC_DIR)), name="static")
 
 templates = Jinja2Templates(directory=str(BASE_DIR / "templates"))
 
 
-# Documentation pages: slug -> sidebar metadata. Order defines the
-# sidebar and prev/next links. Each has a template at templates/docs/.
-DOCS_PAGES = {
+# Documentation pages: slug -> sidebar metadata, grouped into sections.
+# Order defines the sidebar and prev/next links. Static pages have a
+# template at templates/docs/<slug>.html; guide-* pages render from
+# content.APP_GUIDES via templates/docs/_guide.html.
+_STATIC_DOCS = {
     "getting-started": {
         "title": "Getting started", "icon": "rocket",
         "blurb": "Create your workspace, sign in, and find your way around.",
@@ -43,17 +52,13 @@ DOCS_PAGES = {
         "title": "Invite your team", "icon": "user-plus",
         "blurb": "Add users, set per-app access rights, manage seats.",
     },
-    "apps": {
-        "title": "The apps", "icon": "layout-grid",
-        "blurb": "CRM, projects, documents, eSign, HR, payroll, calls & SMS.",
+    "mobile-app": {
+        "title": "Use it on your phone", "icon": "smartphone",
+        "blurb": "Install the workspace on iPhone or Android.",
     },
     "billing": {
         "title": "Billing", "icon": "credit-card",
         "blurb": "Pricing, promo codes, invoices, and cancellation.",
-    },
-    "mobile-app": {
-        "title": "Use it on your phone", "icon": "smartphone",
-        "blurb": "Install the workspace on iPhone or Android.",
     },
     "security": {
         "title": "Security & data", "icon": "shield-check",
@@ -61,11 +66,31 @@ DOCS_PAGES = {
     },
 }
 
+_GUIDE_DOCS = {
+    slug: {"title": g["title"], "icon": g["icon"], "blurb": g["blurb"]}
+    for slug, g in content.APP_GUIDES.items()
+}
+
+DOCS_SECTIONS = [
+    ("Start here", ["getting-started", "invite-team", "mobile-app"]),
+    ("App guides", list(content.APP_GUIDES.keys())),
+    ("Account", ["billing", "security"]),
+]
+
+# Flat, ordered map used for prev/next links and the sitemap.
+DOCS_PAGES = {}
+for _title, _slugs in DOCS_SECTIONS:
+    for _slug in _slugs:
+        DOCS_PAGES[_slug] = {**_STATIC_DOCS, **_GUIDE_DOCS}[_slug]
+
 
 def render(request: Request, name: str, status_code: int = 200, **ctx) -> HTMLResponse:
     ctx.setdefault("domain", BASE_DOMAIN)
     ctx.setdefault("year", datetime.date.today().year)
     ctx.setdefault("docs_pages", DOCS_PAGES)
+    ctx.setdefault("docs_sections", DOCS_SECTIONS)
+    ctx.setdefault("apps", content.APPS)
+    ctx.setdefault("asset_v", ASSET_VERSION)
     return templates.TemplateResponse(
         request=request, name=name, context=ctx, status_code=status_code
     )
@@ -115,13 +140,52 @@ def privacy(request: Request):
     return render(request, "privacy.html")
 
 
+@app.get("/apps", response_class=HTMLResponse)
+def apps_index(request: Request):
+    return render(request, "apps/index.html")
+
+
+@app.get("/apps/{slug}", response_class=HTMLResponse)
+def app_page(request: Request, slug: str):
+    if slug not in content.APPS:
+        return render(
+            request, "error.html", status_code=404,
+            message="That app page doesn’t exist.",
+            back_url="/apps", back_label="Browse all apps",
+        )
+    return render(request, "apps/detail.html", slug=slug, app_data=content.APPS[slug])
+
+
 @app.get("/docs", response_class=HTMLResponse)
 def docs_index(request: Request):
     return render(request, "docs/index.html", active="index")
 
 
+@app.get("/docs/search-index.json")
+def docs_search_index():
+    items = [{"slug": "", "title": "Docs overview",
+              "blurb": "All EVERJUST.APP documentation.", "section": "Docs"}]
+    for section_title, slugs in DOCS_SECTIONS:
+        for slug in slugs:
+            meta = DOCS_PAGES[slug]
+            headings = [h for h, _ in content.APP_GUIDES.get(slug, {}).get("sections", [])]
+            items.append({
+                "slug": slug,
+                "title": meta["title"],
+                "blurb": meta["blurb"],
+                "section": section_title,
+                "headings": headings,
+            })
+    return {"items": items}
+
+
 @app.get("/docs/{slug}", response_class=HTMLResponse)
 def docs_page(request: Request, slug: str):
+    if slug == "apps":  # pre-restructure URL; content now lives at /apps
+        return RedirectResponse("/apps", status_code=301)
+    if slug in content.APP_GUIDES:
+        return render(request, "docs/_guide.html", active=slug,
+                      guide=content.APP_GUIDES[slug])
     if slug not in DOCS_PAGES:
         return render(
             request, "error.html", status_code=404,
@@ -330,6 +394,8 @@ SITEMAP_PAGES = {
     "/": ("weekly", "1.0"),
     "/signup": ("monthly", "0.9"),
     "/signin": ("monthly", "0.8"),
+    "/apps": ("weekly", "0.9"),
+    **{f"/apps/{slug}": ("monthly", "0.8") for slug in content.APPS},
     "/docs": ("weekly", "0.8"),
     **{f"/docs/{slug}": ("monthly", "0.7") for slug in DOCS_PAGES},
     "/privacy": ("yearly", "0.4"),

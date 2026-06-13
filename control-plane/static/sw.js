@@ -1,8 +1,9 @@
-/* EVERJUST.APP service worker — precache the shell, cache-first for static
- * assets, network-first for pages with an offline fallback. */
+/* EVERJUST.APP service worker — precache the shell, stale-while-revalidate
+ * for static assets (so deploys propagate without users pinning old CSS/JS),
+ * network-first for pages with an offline fallback. */
 "use strict";
 
-const CACHE = "everjust-v3";
+const CACHE = "everjust-v4";
 const OFFLINE_URL = "/offline";
 
 const PRECACHE = [
@@ -13,6 +14,7 @@ const PRECACHE = [
   "/static/vendor/cookieconsent/cookieconsent.umd.js",
   "/static/css/site.css",
   "/static/js/consent.js",
+  "/static/js/docs.js",
   "/static/js/pwa.js",
   "/static/img/icon-192x192.png",
   "/static/img/icon-512x512.png",
@@ -48,16 +50,21 @@ self.addEventListener("fetch", (event) => {
     return;
   }
 
-  // Static assets: cache-first.
+  // Static assets: stale-while-revalidate. Serve from cache for speed but
+  // always refresh in the background so a deploy can't strand stale CSS/JS
+  // on installed PWAs. Versioned URLs (?v=) make updates immediate.
   if (url.pathname.startsWith("/static/")) {
     event.respondWith(
-      caches.match(req).then(
-        (hit) => hit ||
-          fetch(req).then((res) => {
-            const copy = res.clone();
-            caches.open(CACHE).then((cache) => cache.put(req, copy));
-            return res;
-          })
+      caches.open(CACHE).then((cache) =>
+        cache.match(req).then((hit) => {
+          const refresh = fetch(req)
+            .then((res) => {
+              if (res && res.ok) cache.put(req, res.clone());
+              return res;
+            })
+            .catch(() => hit);
+          return hit || refresh;
+        })
       )
     );
     return;

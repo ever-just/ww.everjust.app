@@ -3,18 +3,40 @@
 
 {% block content %}
 <div class="docs-layout container">
-  <div class="row g-4">
+  <div class="row g-4 g-lg-5">
+
     <aside class="col-12 col-lg-3">
-      <nav class="docs-nav" aria-label="Documentation">
-        <div class="list-group list-group-flush">
-          <a class="list-group-item {{ 'active' if active == 'index' }}" href="/docs">{{ icon("book-open", 16) }} Overview</a>
-          {% for slug, page in docs_pages.items() %}
-          <a class="list-group-item {{ 'active' if active == slug }}" href="/docs/{{ slug }}">{{ icon(page.icon, 16) }} {{ page.title }}</a>
-          {% endfor %}
+      <div class="docs-nav">
+        <div class="docs-search mb-3">
+          <label class="visually-hidden" for="docs_search">Search docs</label>
+          <div class="docs-search-box">
+            {{ icon("search", 16) }}
+            <input id="docs_search" type="search" placeholder="Search docs…"
+                   autocomplete="off" spellcheck="false">
+          </div>
+          <div class="docs-search-results" id="docs_search_results" hidden></div>
         </div>
-      </nav>
+
+        <details class="docs-nav-collapse" {% if True %}open{% endif %}>
+          <summary class="d-lg-none">Browse documentation {{ icon("chevron-right", 16) }}</summary>
+          <nav aria-label="Documentation">
+            <a class="docs-nav-item {{ 'active' if active == 'index' }}" href="/docs">
+              {{ icon("book-open", 16) }} Overview
+            </a>
+            {% for section_title, slugs in docs_sections %}
+            <p class="docs-nav-section">{{ section_title }}</p>
+            {% for slug in slugs %}
+            <a class="docs-nav-item {{ 'active' if active == slug }}" href="/docs/{{ slug }}">
+              {{ icon(docs_pages[slug].icon, 16) }} {{ docs_pages[slug].title }}
+            </a>
+            {% endfor %}
+            {% endfor %}
+          </nav>
+        </details>
+      </div>
     </aside>
-    <article class="col-12 col-lg-8 offset-lg-1 docs-body">
+
+    <article class="col-12 col-lg-6 docs-body" id="docs_article">
       <nav aria-label="breadcrumb">
         <ol class="breadcrumb small">
           <li class="breadcrumb-item"><a href="/">Home</a></li>
@@ -41,7 +63,23 @@
         </span>
       </div>
       {% endif %}
+      <p class="docs-feedback small">
+        {{ icon("life-buoy", 14) }} Need a hand with this?
+        <a href="mailto:company@everjust.co">company@everjust.co</a> — a human answers.
+      </p>
     </article>
+
+    <aside class="col-lg-3 d-none d-lg-block">
+      <nav class="docs-toc" id="docs_toc" aria-label="On this page" hidden>
+        <p class="docs-nav-section">On this page</p>
+        <ul></ul>
+      </nav>
+    </aside>
+
   </div>
 </div>
+{% endblock %}
+
+{% block scripts %}
+<script src="/static/js/docs.js?v={{ asset_v }}" defer></script>
 {% endblock %}

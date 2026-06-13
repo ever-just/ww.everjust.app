@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+{% from "_icons.html" import icon %}
+
+{% block title %}{{ app_data.name }} — EVERJUST.APP{% endblock %}
+{% block description %}{{ app_data.summary }}{% endblock %}
+
+{% block content %}
+<section class="hero container app-hero">
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb small justify-content-center">
+      <li class="breadcrumb-item"><a href="/">Home</a></li>
+      <li class="breadcrumb-item"><a href="/apps">Apps</a></li>
+      <li class="breadcrumb-item active" aria-current="page">{{ app_data.name }}</li>
+    </ol>
+  </nav>
+  <span class="icon-tile icon-tile-lg">{{ icon(app_data.icon, 30) }}</span>
+  <h1>{{ app_data.tagline }}</h1>
+  <p class="lede">{{ app_data.summary }}</p>
+  <div class="d-flex flex-wrap gap-2 justify-content-center mb-2">
+    <a class="btn btn-primary btn-lg" href="/signup">Get {{ app_data.name }} — included {{ icon("arrow-right", 18) }}</a>
+    <a class="btn btn-outline-dark btn-lg" href="/docs/{{ app_data.guide }}">Read the guide</a>
+  </div>
+  <p class="small text-secondary mb-0">Included with every workspace &middot; no per-app pricing</p>
+</section>
+
+<section class="section section-alt">
+  <div class="container">
+    <div class="row g-3">
+      {% for ficon, ftitle, fdesc in app_data.features %}
+      <div class="col-12 col-sm-6">
+        <div class="feature-card">
+          <span class="icon-tile">{{ icon(ficon, 20) }}</span>
+          <h3>{{ ftitle }}</h3>
+          <p>{{ fdesc }}</p>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <h2>How it works</h2>
+    <p class="section-lede">The day-to-day flow, in {{ app_data.workflow | length }} steps.</p>
+    <div class="row g-3 justify-content-center">
+      {% for step in app_data.workflow %}
+      <div class="col-12 col-md-4">
+        <div class="step-card">
+          <span class="step-n">{{ loop.index }}</span>
+          <p class="mb-0">{{ step }}</p>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    <p class="text-center mt-4 mb-0">
+      <a class="fw-bold" href="/docs/{{ app_data.guide }}">Step-by-step guide: {{ app_data.name }} {{ icon("arrow-right", 14) }}</a>
+    </p>
+  </div>
+</section>
+
+<section class="section section-alt">
+  <div class="container">
+    <h2>Works hand-in-hand with</h2>
+    <p class="section-lede">Same contacts, same files, same activity feed — these apps complete the picture.</p>
+    <div class="row g-3 justify-content-center">
+      {% for rslug in app_data.related %}
+      {% set r = apps[rslug] %}
+      <div class="col-12 col-sm-6 col-lg-4 d-flex">
+        <a class="app-card" href="/apps/{{ rslug }}">
+          <span class="icon-tile">{{ icon(r.icon, 22) }}</span>
+          <h3>{{ r.name }}</h3>
+          <p>{{ r.tagline }}</p>
+          <span class="app-card-more">Learn more {{ icon("arrow-right", 14) }}</span>
+        </a>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<section class="cta-band">
+  <div class="container">
+    <h2>{{ app_data.name }} is two minutes away.</h2>
+    <a class="btn btn-primary btn-lg" href="/signup">Create your workspace {{ icon("arrow-right", 18) }}</a>
+  </div>
+</section>
+{% endblock %}

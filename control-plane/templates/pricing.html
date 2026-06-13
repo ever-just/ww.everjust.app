@@ -1,0 +1,194 @@
+{% extends "base.html" %}
+{% from "_icons.html" import icon %}
+
+{% block title %}Pricing — one flat price for every app | EVERJUST.APP{% endblock %}
+{% block description %}EVERJUST.APP pricing: $100/month including 5 users, then $15 per additional user. Every one of the {{ apps|length }} apps included — no tiers, no add-ons, no per-app invoices. Cancel anytime.{% endblock %}
+
+{% block head %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Product",
+  "name": "EVERJUST.APP",
+  "description": "One workspace with all {{ apps|length }} business apps included.",
+  "offers": {
+    "@type": "Offer",
+    "price": "100",
+    "priceCurrency": "USD",
+    "url": "https://{{ domain }}/pricing",
+    "description": "$100/month including 5 users, then $15 per additional user per month."
+  }
+}
+</script>
+{% endblock %}
+
+{% block content %}
+<section class="hero container">
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb small justify-content-center">
+      <li class="breadcrumb-item"><a href="/">Home</a></li>
+      <li class="breadcrumb-item active" aria-current="page">Pricing</li>
+    </ol>
+  </nav>
+  <p class="eyebrow">Pricing</p>
+  <h1>One flat price. Every app.</h1>
+  <p class="lede">No tiers to compare, no per-app invoices, no add-ons to unlock. The whole suite — {{ apps|length }} apps — in a single bill that only moves when your team grows.</p>
+  <ul class="app-specs" aria-label="At a glance">
+    <li class="app-spec">{{ icon("circle-check", 16) }} All {{ apps|length }} apps included</li>
+    <li class="app-spec">{{ icon("users", 16) }} 5 users in the base price</li>
+    <li class="app-spec">{{ icon("database", 16) }} Isolated database</li>
+    <li class="app-spec">{{ icon("refresh-cw", 16) }} Cancel anytime</li>
+  </ul>
+</section>
+
+<section class="section pt-0">
+  <div class="container">
+    <div class="price-card" data-reveal>
+      <div class="amount">$100<span>/month</span></div>
+      <p class="text-secondary small mb-4">includes 5 users &middot; $15/user/month after that</p>
+      <ul class="check-list">
+        <li>{{ icon("check", 16) }}<span>All {{ apps|length }} apps included — CRM, invoicing, projects, HR, payroll, marketing &amp; more</span></li>
+        <li>{{ icon("check", 16) }}<span>Your own address: <b class="text-anywhere">your&#8209;org.{{ domain }}</b></span></li>
+        <li>{{ icon("check", 16) }}<span>Isolated database — your data stays yours</span></li>
+        <li>{{ icon("check", 16) }}<span>Unlimited records, automatic backups</span></li>
+        <li>{{ icon("check", 16) }}<span>Works on desktop and mobile — installable as an app</span></li>
+        <li>{{ icon("check", 16) }}<span>Promo codes accepted at checkout</span></li>
+        <li>{{ icon("check", 16) }}<span>Cancel anytime — no contract, no lock-in</span></li>
+      </ul>
+      <a class="btn btn-primary btn-lg w-100" href="/signup">Create your workspace {{ icon("arrow-right", 18) }}</a>
+      <p class="calc-note mt-3 mb-0">No card required for a 100%-off promo code.</p>
+    </div>
+  </div>
+</section>
+
+<section class="section section-alt">
+  <div class="container">
+    <p class="eyebrow" data-reveal>What it costs as you grow</p>
+    <h2 data-reveal>Predictable at every size</h2>
+    <p class="section-lede" data-reveal>The base covers your first 5 users. Every user after that is a flat $15/month — that&rsquo;s the whole formula.</p>
+    <div class="price-table-wrap" data-reveal>
+      <table class="price-table">
+        <thead>
+          <tr><th>Team size</th><th>Monthly</th><th>Per user</th></tr>
+        </thead>
+        <tbody>
+          {% for n in [3, 5, 10, 25, 50] %}
+          {% set monthly = 100 + (((n - 5) if n > 5 else 0) * 15) %}
+          <tr{% if n == 10 %} class="is-featured"{% endif %}>
+            <td>{{ n }} {{ "user" if n == 1 else "users" }}{% if n <= 5 %} <span class="pt-tag">base</span>{% endif %}</td>
+            <td><b>${{ monthly }}</b><span class="pt-per">/mo</span></td>
+            <td class="pt-muted">${{ "%.0f"|format(monthly / n) }}/user</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      <p class="calc-note">Billing is prorated automatically as you add or remove people.</p>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <p class="eyebrow" data-reveal>Do the math</p>
+    <h2 data-reveal>See what one flat plan would save you</h2>
+    <p class="section-lede" data-reveal>Tick the tools you pay for today and set your team size. The difference is what you stop paying every year.</p>
+    <div class="calc" data-reveal>
+      <div class="calc-tools" id="calc_tools">
+        {% for t in calculator_tools %}
+        <button type="button" class="calc-tool" data-price="{{ t.price }}" data-type="{{ t.type }}" aria-pressed="false">
+          <span class="calc-tool-check">{{ icon("check", 14) }}</span>
+          <span class="calc-tool-label">{{ t.label }}</span>
+          <span class="calc-tool-price">${{ t.price }}{% if t.type == 'user' %}<small>/user</small>{% endif %}<small>/mo</small></span>
+        </button>
+        {% endfor %}
+      </div>
+      <div class="calc-panel">
+        <label class="calc-users">
+          <span>Team size</span>
+          <input type="number" id="calc_users" min="1" max="500" value="5" inputmode="numeric">
+        </label>
+        <div class="calc-row"><span>Your current tools</span><b id="calc_current">$0/mo</b></div>
+        <div class="calc-row"><span>EVERJUST.APP</span><b id="calc_ours">$100/mo</b></div>
+        <div class="calc-savings">
+          <span>You&rsquo;d save</span>
+          <b id="calc_savings">$0<small>/year</small></b>
+        </div>
+        <a class="btn btn-primary btn-lg w-100" href="/signup">Create your workspace {{ icon("arrow-right", 18) }}</a>
+        <p class="calc-note">Estimates from typical list prices. Your stack and savings will vary.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section section-alt">
+  <div class="container">
+    <p class="eyebrow" data-reveal>No asterisks</p>
+    <h2 data-reveal>Everything is in the price</h2>
+    <p class="section-lede" data-reveal>The things other vendors charge extra for are simply included here.</p>
+    <div class="row g-3">
+      {% set included = [
+        ("layout-grid", "Every app", "All " ~ apps|length ~ " apps switch on whenever you need them — nothing sold separately."),
+        ("database", "Your own database", "An isolated database per workspace, not shared tenancy. Your data stays yours."),
+        ("refresh-cw", "Automatic backups", "Backed up continuously, with no add-on storage or backup tier to buy."),
+        ("smartphone", "Desktop &amp; mobile", "Responsive everywhere and installable as an app on iPhone and Android."),
+        ("shield-check", "Security included", "Encryption, isolation, and per-app access rights at no extra cost."),
+        ("life-buoy", "Human support", "Email a real person at company@everjust.co — no paid support plan.")
+      ] %}
+      {% for ic, title, desc in included %}
+      <div class="col-12 col-sm-6 col-lg-4">
+        <div class="feature-card" data-reveal>
+          <h3>{{ icon(ic, 18) }} {{ title }}</h3>
+          <p>{{ desc }}</p>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <p class="eyebrow" data-reveal>Pricing questions</p>
+    <h2 data-reveal>The fine print, in plain words</h2>
+    <p class="section-lede" data-reveal>More in the <a href="/docs/billing">billing guide</a>.</p>
+    <div class="faq">
+      <details data-reveal>
+        <summary>What counts as a user?</summary>
+        <p>Anyone with their own login. Your first 5 are covered by the $100 base; each additional active user is $15/month, prorated automatically. Remove someone and the next bill drops.</p>
+      </details>
+      <details data-reveal>
+        <summary>Are all the apps really included?</summary>
+        <p>Yes. There are no per-app charges and no feature tiers — every one of the {{ apps|length }} apps is available on the one plan. <a href="/apps">Browse the catalog</a> to see them all.</p>
+      </details>
+      <details data-reveal>
+        <summary>Do you take promo codes?</summary>
+        <p>Codes are entered on the Stripe checkout page when you create your workspace. A 100%-off code brings the total to $0 with no card required.</p>
+      </details>
+      <details data-reveal>
+        <summary>How does billing work?</summary>
+        <p>Stripe handles payment and emails a receipt each cycle — we never see or store your card details. See <a href="/docs/billing">Billing</a> for invoices, failed payments, and changing the billing email.</p>
+      </details>
+      <details data-reveal>
+        <summary>Can we cancel?</summary>
+        <p>Anytime, from your billing portal. Your subscription runs to the end of the paid period and you can export your data beforehand — no contract, no cancellation fee.</p>
+      </details>
+    </div>
+  </div>
+</section>
+
+<section class="cta-band">
+  <div class="container">
+    <p class="eyebrow">Get started</p>
+    <h2>One price. Two minutes. Every app.</h2>
+    <p class="cta-sub">Claim your address, check out with Stripe, and sign in. That&rsquo;s the whole setup.</p>
+    <div class="d-flex flex-wrap gap-2 justify-content-center">
+      <a class="btn btn-inverse btn-lg" href="/signup">Create your workspace {{ icon("arrow-right", 18) }}</a>
+      <a class="btn btn-ghost-light btn-lg" href="/apps">Browse all apps</a>
+    </div>
+  </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script src="/static/js/calc.js?v={{ asset_v }}" defer></script>
+{% endblock %}

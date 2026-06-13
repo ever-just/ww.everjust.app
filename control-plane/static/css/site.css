@@ -587,6 +587,34 @@ a:focus-visible {
 .check-list li:last-child { border-bottom: 0; }
 .check-list .lucide { margin-top: .15em; }
 
+/* Pricing-by-team-size table */
+.price-table-wrap { max-width: 560px; margin: 0 auto; }
+.price-table {
+  width: 100%; border-collapse: collapse;
+  border: 1px solid var(--ej-hairline); border-radius: 1rem; overflow: hidden;
+  background: #fff;
+}
+.price-table th, .price-table td { padding: .85rem 1.1rem; text-align: left; }
+.price-table thead th {
+  font-size: .6875rem; font-weight: 800; letter-spacing: .07em; text-transform: uppercase;
+  color: var(--ej-faint); background: var(--ej-soft); border-bottom: 1px solid var(--ej-hairline);
+}
+.price-table tbody tr { border-bottom: 1px solid var(--ej-hairline); }
+.price-table tbody tr:last-child { border-bottom: 0; }
+.price-table td b { font-size: 1.0625rem; }
+.price-table .pt-per { font-size: .8125rem; color: var(--ej-muted); margin-left: .15rem; }
+.price-table .pt-muted { color: var(--ej-muted); }
+.price-table .pt-tag {
+  display: inline-block; font-size: .625rem; font-weight: 800; letter-spacing: .05em;
+  text-transform: uppercase; color: var(--ej-muted);
+  border: 1px solid var(--ej-hairline); border-radius: 999px; padding: .05rem .4rem; margin-left: .35rem;
+  vertical-align: middle;
+}
+.price-table tr.is-featured { background: #000; }
+.price-table tr.is-featured td, .price-table tr.is-featured td b,
+.price-table tr.is-featured .pt-per, .price-table tr.is-featured .pt-muted { color: #fff; }
+.price-table tr.is-featured .pt-per, .price-table tr.is-featured .pt-muted { color: rgba(255,255,255,.7); }
+
 /* FAQ — native <details>, no JS */
 .faq { max-width: 720px; margin: 0 auto; }
 

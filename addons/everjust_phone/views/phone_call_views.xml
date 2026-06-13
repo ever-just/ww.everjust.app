@@ -42,7 +42,7 @@
                             <field name="call_sid"/>
                         </group>
                     </group>
-                    <group t-if="record.transcription.raw_value" string="Transcription">
+                    <group string="Transcription" invisible="not transcription">
                         <field name="transcription" nolabel="1"/>
                     </group>
                 </sheet>

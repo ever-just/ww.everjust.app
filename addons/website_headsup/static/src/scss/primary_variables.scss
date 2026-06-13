@@ -1,20 +1,4 @@
-// HeadsUp brand — simple variable overrides only.
-// Do NOT use $o-website-values-palettes (complex, breaks easily).
-// Instead, override the individual Bootstrap/Odoo variables directly.
-
+// HeadsUp brand colors — scalar overrides only.
+// No map-merge, no functions — these must compile before everything else.
 $o-brand-primary: #166A0B;
 $o-brand-secondary: #8EA58D;
-
-// Safe font registration via map-merge
-$o-theme-font-configs: map-merge(
-    if(global-variable-exists('o-theme-font-configs'), $o-theme-font-configs, ()),
-    (
-        'Inter': (
-            'family': ('Inter', sans-serif),
-            'url': 'Inter:wght@400;500;600;700;800',
-            'properties': (
-                'base': ('font-size-base': 1rem),
-            ),
-        ),
-    )
-);

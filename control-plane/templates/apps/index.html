@@ -15,7 +15,7 @@
     <div class="row g-3 cards-snap">
       {% for slug, a in apps.items() %}
       <div class="col-12 col-sm-6 col-lg-4 d-flex">
-        <a class="app-card" href="/apps/{{ slug }}">
+        <a class="app-card" data-reveal href="/apps/{{ slug }}">
           <span class="icon-tile">{{ icon(a.icon, 22) }}</span>
           <h3>{{ a.name }}</h3>
           <p>{{ a.tagline }}</p>

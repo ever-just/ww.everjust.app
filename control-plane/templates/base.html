@@ -33,6 +33,15 @@
   <link rel="stylesheet" href="/static/vendor/cookieconsent/cookieconsent.css?v={{ asset_v }}">
   <link rel="stylesheet" href="/static/css/site.css?v={{ asset_v }}">
 
+  {# Arm scroll reveals only when motion is allowed; no-JS/reduced-motion
+     users keep content fully visible. Runs before paint to avoid a flash. #}
+  <script>
+    (function () {
+      var m = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)");
+      if (!m || !m.matches) document.documentElement.classList.add("reveal-ready");
+    })();
+  </script>
+
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -53,7 +62,7 @@
     <div class="container">
       <nav class="navbar px-0" aria-label="Main">
         <a class="brand-logo" href="/" aria-label="EVERJUST.APP home">
-          <span class="brand-word">EVERJUST<span class="brand-dot">.app</span></span>
+          <img src="/static/img/icon-192x192.png" alt="EVERJUST.APP" width="34" height="34">
         </a>
         <div class="site-actions">
           {% block nav %}
@@ -68,25 +77,28 @@
     </div>
   </header>
 
-  {# App-style bottom sheet menu (phones) — opened from the tab bar. #}
+  {# App-style bottom sheet menu (phones) — opened from the tab bar.
+     Nav links must NOT use data-bs-dismiss: Bootstrap calls preventDefault
+     on <a> dismiss triggers, which would block navigation. nav.js closes
+     the sheet on tap instead. #}
   <div class="offcanvas offcanvas-bottom menu-sheet" tabindex="-1" id="siteMenu" aria-labelledby="siteMenuLabel">
     <div class="sheet-handle" aria-hidden="true"></div>
-    <div class="offcanvas-header pt-0 pb-2">
+    <div class="sheet-head">
       <span class="sheet-title" id="siteMenuLabel">Menu</span>
-      <button type="button" class="menu-toggle" data-bs-dismiss="offcanvas" aria-label="Close menu">
+      <button type="button" class="sheet-close" data-bs-dismiss="offcanvas" aria-label="Close menu">
         {{ icon("x", 20) }}
       </button>
     </div>
-    <div class="offcanvas-body pt-1">
+    <div class="offcanvas-body">
       <nav class="sheet-list" aria-label="Menu">
-        <a href="/apps" data-bs-dismiss="offcanvas">{{ icon("layout-grid", 20) }}<span>Apps</span>{{ icon("chevron-right", 18, "ms-auto") }}</a>
-        <a href="/docs" data-bs-dismiss="offcanvas">{{ icon("book-open", 20) }}<span>Documentation</span>{{ icon("chevron-right", 18, "ms-auto") }}</a>
-        <a href="/#pricing" data-bs-dismiss="offcanvas">{{ icon("wallet", 20) }}<span>Pricing</span>{{ icon("chevron-right", 18, "ms-auto") }}</a>
+        <a href="/apps">{{ icon("layout-grid", 20) }}<span>Apps</span>{{ icon("chevron-right", 18, "ms-auto") }}</a>
+        <a href="/docs">{{ icon("book-open", 20) }}<span>Documentation</span>{{ icon("chevron-right", 18, "ms-auto") }}</a>
+        <a href="/#pricing">{{ icon("wallet", 20) }}<span>Pricing</span>{{ icon("chevron-right", 18, "ms-auto") }}</a>
         <a href="mailto:company@everjust.co">{{ icon("mail", 20) }}<span>Contact us</span>{{ icon("chevron-right", 18, "ms-auto") }}</a>
       </nav>
       <div class="sheet-cta">
         <a class="btn btn-primary btn-lg w-100 mb-2" href="/signup">Create your workspace {{ icon("arrow-right", 18) }}</a>
-        <a class="btn btn-outline-dark w-100" href="/signin">Sign in to your workspace</a>
+        <a class="btn btn-outline-dark btn-lg w-100" href="/signin">Sign in to your workspace</a>
       </div>
     </div>
   </div>
@@ -100,7 +112,7 @@
       <div class="row gy-4 align-items-start">
         <div class="col-12 col-lg-4 pe-lg-5">
           <a class="brand-logo mb-3 d-inline-flex" href="/" aria-label="EVERJUST.APP home">
-            <span class="brand-word">EVERJUST<span class="brand-dot">.app</span></span>
+            <img src="/static/img/icon-192x192.png" alt="EVERJUST.APP" width="38" height="38">
           </a>
           <p class="footer-tagline">Run your entire business in one private, fully-branded workspace.</p>
           <a class="footer-cta" href="/signup">Create your workspace {{ icon("arrow-right", 14) }}</a>
@@ -169,6 +181,7 @@
   <script src="/static/vendor/bootstrap/bootstrap.bundle.min.js?v={{ asset_v }}" defer></script>
   <script src="/static/vendor/cookieconsent/cookieconsent.umd.js?v={{ asset_v }}" defer></script>
   <script src="/static/js/consent.js?v={{ asset_v }}" defer></script>
+  <script src="/static/js/nav.js?v={{ asset_v }}" defer></script>
   <script src="/static/js/pwa.js?v={{ asset_v }}" defer></script>
   {% block scripts %}{% endblock %}
 </body>

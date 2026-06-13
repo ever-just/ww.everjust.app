@@ -65,11 +65,11 @@
 <section class="section section-alt" id="features">
   <div class="container">
     <p class="eyebrow">The suite</p>
-    <h2>Everything included. Nothing bolted on.</h2>
+    <h2 data-reveal>Everything included. Nothing bolted on.</h2>
     <p class="section-lede">One subscription unlocks the full suite. Every app shares the same contacts, files, and activity feed — so nothing falls between tools.</p>
     <div class="row g-3 cards-snap">
       <div class="col-12 col-sm-6 col-lg-4">
-        <a class="feature-card feature-card-link" href="/apps/crm-sales">
+        <a class="feature-card feature-card-link" data-reveal href="/apps/crm-sales">
           <span class="icon-tile">{{ icon("chart-column", 20) }}</span>
           <h3>CRM &amp; Sales</h3>
           <p>Track leads, pipelines, and quotes. Every email, call, and meeting logged against the customer automatically.</p>
@@ -77,7 +77,7 @@
         </a>
       </div>
       <div class="col-12 col-sm-6 col-lg-4">
-        <a class="feature-card feature-card-link" href="/apps/projects">
+        <a class="feature-card feature-card-link" data-reveal href="/apps/projects">
           <span class="icon-tile">{{ icon("kanban", 20) }}</span>
           <h3>Projects &amp; Timesheets</h3>
           <p>Plan work on kanban boards, log hours as you go, and see exactly where every project stands.</p>
@@ -85,7 +85,7 @@
         </a>
       </div>
       <div class="col-12 col-sm-6 col-lg-4">
-        <a class="feature-card feature-card-link" href="/apps/esign">
+        <a class="feature-card feature-card-link" data-reveal href="/apps/esign">
           <span class="icon-tile">{{ icon("signature", 20) }}</span>
           <h3>Documents &amp; eSign</h3>
           <p>A real document management system with folders, permissions, and legally-binding electronic signatures built in.</p>
@@ -93,7 +93,7 @@
         </a>
       </div>
       <div class="col-12 col-sm-6 col-lg-4">
-        <a class="feature-card feature-card-link" href="/apps/hr-time-off">
+        <a class="feature-card feature-card-link" data-reveal href="/apps/hr-time-off">
           <span class="icon-tile">{{ icon("users", 20) }}</span>
           <h3>HR, Time Off &amp; Payroll</h3>
           <p>Employee records, leave requests, attendance, and payslips computed from actual clock-in/out data.</p>
@@ -101,7 +101,7 @@
         </a>
       </div>
       <div class="col-12 col-sm-6 col-lg-4">
-        <a class="feature-card feature-card-link" href="/apps/calls-sms">
+        <a class="feature-card feature-card-link" data-reveal href="/apps/calls-sms">
           <span class="icon-tile">{{ icon("phone", 20) }}</span>
           <h3>Calls &amp; SMS</h3>
           <p>Click-to-dial from any contact, call logging, and two-way SMS — right inside your workspace.</p>
@@ -109,7 +109,7 @@
         </a>
       </div>
       <div class="col-12 col-sm-6 col-lg-4">
-        <a class="feature-card feature-card-link" href="/docs/security">
+        <a class="feature-card feature-card-link" data-reveal href="/docs/security">
           <span class="icon-tile">{{ icon("shield-check", 20) }}</span>
           <h3>Private by design</h3>
           <p>Your workspace runs on its own isolated database. Your data is never pooled, mined, or shared.</p>
@@ -123,25 +123,25 @@
 <section class="section" id="how">
   <div class="container">
     <p class="eyebrow">How it works</p>
-    <h2>Up and running in three steps</h2>
+    <h2 data-reveal>Up and running in three steps</h2>
     <p class="section-lede">No sales call, no onboarding fee, no migration project. Claim an address and start working.</p>
     <div class="row g-3 steps-timeline">
       <div class="col-12 col-md-4">
-        <div class="step-card">
+        <div class="step-card" data-reveal>
           <span class="step-n">1</span>
           <h3>Claim your workspace</h3>
           <p>Pick your address — <b class="text-anywhere">your&#8209;org.{{ domain }}</b> — and create your admin account. Checkout takes a minute.</p>
         </div>
       </div>
       <div class="col-12 col-md-4">
-        <div class="step-card">
+        <div class="step-card" data-reveal>
           <span class="step-n">2</span>
           <h3>We build it while you watch</h3>
           <p>Your private workspace is provisioned automatically in about 2 minutes, pre-configured and ready to use.</p>
         </div>
       </div>
       <div class="col-12 col-md-4">
-        <div class="step-card">
+        <div class="step-card" data-reveal>
           <span class="step-n">3</span>
           <h3>Invite your team</h3>
           <p>Add teammates from Settings. Your first 5 users are included; more are just $15 each per month.</p>
@@ -151,12 +151,50 @@
   </div>
 </section>
 
+<section class="section" id="why">
+  <div class="container">
+    <p class="eyebrow" data-reveal>Why everything-in-one</p>
+    <h2 data-reveal>One workspace, not ten tabs.</h2>
+    <p class="section-lede" data-reveal>Most teams stitch together a CRM, a project tool, a file store, an e-sign service, an HR app, and a phone system. EVERJUST.APP is all of it — sharing one set of contacts, files, and history.</p>
+    <div class="row g-3">
+      <div class="col-12 col-sm-6 col-lg-3">
+        <div class="feature-card" data-reveal>
+          <span class="icon-tile">{{ icon("layers", 20) }}</span>
+          <h3>Replace the patchwork</h3>
+          <p>Stop paying for and switching between six separate tools. Everything your team needs lives in one place.</p>
+        </div>
+      </div>
+      <div class="col-12 col-sm-6 col-lg-3">
+        <div class="feature-card" data-reveal style="--reveal-delay:.06s">
+          <span class="icon-tile">{{ icon("database", 20) }}</span>
+          <h3>One source of truth</h3>
+          <p>Contacts, files, and activity are shared across every app, so your reports actually connect.</p>
+        </div>
+      </div>
+      <div class="col-12 col-sm-6 col-lg-3">
+        <div class="feature-card" data-reveal style="--reveal-delay:.12s">
+          <span class="icon-tile">{{ icon("wallet", 20) }}</span>
+          <h3>One bill, one login</h3>
+          <p>A single subscription and one place your team learns — no integrations to wire up or maintain.</p>
+        </div>
+      </div>
+      <div class="col-12 col-sm-6 col-lg-3">
+        <div class="feature-card" data-reveal style="--reveal-delay:.18s">
+          <span class="icon-tile">{{ icon("shield-check", 20) }}</span>
+          <h3>Private and yours</h3>
+          <p>Your workspace runs on its own database at your own address. Your data is never pooled or mined.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
 <section class="section section-alt" id="pricing">
   <div class="container">
     <p class="eyebrow">Pricing</p>
-    <h2>Simple, flat pricing</h2>
+    <h2 data-reveal>Simple, flat pricing</h2>
     <p class="section-lede">One plan. Every app. No add-ons, no tiers to compare, no surprises on the invoice.</p>
-    <div class="price-card">
+    <div class="price-card" data-reveal>
       <div class="amount">$100<span>/month</span></div>
       <p class="text-secondary small mb-4">includes 5 users &middot; $15/user/month after that</p>
       <ul class="check-list">
@@ -176,30 +214,30 @@
 <section class="section" id="faq">
   <div class="container">
     <p class="eyebrow">FAQ</p>
-    <h2>Questions, answered</h2>
+    <h2 data-reveal>Questions, answered</h2>
     <p class="section-lede">More detail in the <a href="/docs">documentation</a>.</p>
     <div class="faq">
-      <details>
+      <details data-reveal>
         <summary>How fast can we start?</summary>
         <p>Immediately. After checkout your workspace is provisioned automatically — usually in under 2 minutes — and you sign in with the email and password you chose at signup. See <a href="/docs/getting-started">Getting started</a>.</p>
       </details>
-      <details>
+      <details data-reveal>
         <summary>Is our data separated from other companies?</summary>
         <p>Yes. Every workspace runs on its own dedicated database. There is no shared tenancy at the data layer, and your workspace is only reachable at your own subdomain. More in <a href="/docs/security">Security &amp; data</a>.</p>
       </details>
-      <details>
+      <details data-reveal>
         <summary>Does it work on phones?</summary>
         <p>Yes. The whole platform is responsive, and you can install it to your home screen as an app. Step-by-step instructions are in <a href="/docs/mobile-app">Use it on your phone</a>.</p>
       </details>
-      <details>
+      <details data-reveal>
         <summary>What happens when we add people?</summary>
         <p>Your first 5 users are covered by the base $100/month. Each additional user is $15/month, prorated automatically — see <a href="/docs/billing">Billing</a>.</p>
       </details>
-      <details>
+      <details data-reveal>
         <summary>Can we cancel?</summary>
         <p>Anytime, from your billing portal. Your subscription stops at the end of the billing period and you can export your data beforehand.</p>
       </details>
-      <details>
+      <details data-reveal>
         <summary>I already have a workspace — where do I sign in?</summary>
         <p>Go to <a href="/signin">everjust.app/signin</a> and enter your workspace name, or visit <b class="text-anywhere">your&#8209;org.{{ domain }}</b> directly and bookmark it.</p>
       </details>

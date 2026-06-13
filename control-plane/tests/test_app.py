@@ -609,3 +609,24 @@ def test_signup_page_has_business_step(client):
     assert 'id="step3"' in body and 'name="industry"' in body
     assert 'name="website"' in body and 'name="goals"' in body
     assert "goal-chip" in body and "Business" in body  # 4-step progress
+
+
+def test_social_card_and_structured_data(client):
+    body = client.get("/").text
+    assert "/static/img/og-card.jpg" in body            # social/OG card wired
+    assert 'name="twitter:card" content="summary_large_image"' in body
+    assert '"@type": "WebSite"' in body
+    assert '"@type": "FAQPage"' in body                  # landing FAQ schema
+    assert client.get("/static/img/og-card.jpg").status_code == 200
+
+
+def test_html_sitemap_page(client):
+    r = client.get("/sitemap")
+    assert r.status_code == 200
+    body = r.text
+    # Real internal-linking depth: every app + every doc page linked.
+    for slug in main.content.APPS:
+        assert f'/apps/{slug}' in body
+    for slug in main.DOCS_PAGES:
+        assert f'/docs/{slug}' in body
+    assert "<loc>https://everjust.app/sitemap</loc>" in client.get("/sitemap.xml").text

@@ -565,3 +565,16 @@ def test_no_upstream_branding_on_any_page(client):
     for path in paths:
         body = client.get(path).text
         assert "odoo" not in body.lower(), f"upstream branding leak on {path}"
+
+
+def test_static_assets_are_compressed_and_cacheable(client):
+    # Perf: text assets must gzip (Bootstrap CSS ~233KB -> ~31KB) and the
+    # versioned static files must be long-cacheable.
+    r = client.get("/static/vendor/bootstrap/bootstrap.min.css",
+                   headers={"Accept-Encoding": "gzip"})
+    assert r.headers.get("content-encoding") == "gzip"
+    assert "max-age=31536000" in r.headers.get("cache-control", "")
+
+    # HTML pages compress too.
+    h = client.get("/", headers={"Accept-Encoding": "gzip"})
+    assert h.headers.get("content-encoding") == "gzip"

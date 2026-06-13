@@ -15,6 +15,7 @@ from fastapi import FastAPI, Form, Request
 from fastapi.responses import FileResponse, HTMLResponse, JSONResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
+from starlette.middleware.gzip import GZipMiddleware
 
 import content
 import provisioning
@@ -34,6 +35,9 @@ STATIC_DIR = BASE_DIR / "static"
 ASSET_VERSION = os.environ.get("ASSET_VERSION") or str(int(time.time()))
 
 app = FastAPI(title="EVERJUST.APP", docs_url=None, redoc_url=None, openapi_url=None)
+# Compress text responses (HTML/CSS/JS/SVG/JSON) for clients that accept it.
+# Cuts the homepage's CSS+JS transfer ~75% (e.g. Bootstrap CSS 233KB -> ~30KB).
+app.add_middleware(GZipMiddleware, minimum_size=512, compresslevel=6)
 app.mount("/static", StaticFiles(directory=str(STATIC_DIR)), name="static")
 
 templates = Jinja2Templates(directory=str(BASE_DIR / "templates"))
@@ -107,6 +111,11 @@ async def security_headers(request: Request, call_next):
     response.headers.setdefault(
         "Permissions-Policy", "camera=(), microphone=(), geolocation=()"
     )
+    # Static assets are content-addressed via the ?v= cache-buster, so they
+    # can be cached aggressively. sw.js/manifest set their own headers.
+    path = request.url.path
+    if path.startswith("/static/"):
+        response.headers.setdefault("Cache-Control", "public, max-age=31536000, immutable")
     return response
 
 

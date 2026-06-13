@@ -41,9 +41,10 @@
 
 <section class="section">
   <div class="container">
-    <h2>How it works</h2>
-    <p class="section-lede">The day-to-day flow, in {{ app_data.workflow | length }} steps.</p>
-    <div class="row g-3 justify-content-center">
+    <p class="eyebrow">How it works</p>
+    <h2>The day-to-day flow</h2>
+    <p class="section-lede">What using {{ app_data.name }} actually looks like, in {{ app_data.workflow | length }} steps.</p>
+    <div class="row g-3 justify-content-center steps-timeline">
       {% for step in app_data.workflow %}
       <div class="col-12 col-md-4">
         <div class="step-card">
@@ -61,9 +62,10 @@
 
 <section class="section section-alt">
   <div class="container">
+    <p class="eyebrow">Better together</p>
     <h2>Works hand-in-hand with</h2>
     <p class="section-lede">Same contacts, same files, same activity feed — these apps complete the picture.</p>
-    <div class="row g-3 justify-content-center">
+    <div class="row g-3 justify-content-center cards-snap">
       {% for rslug in app_data.related %}
       {% set r = apps[rslug] %}
       <div class="col-12 col-sm-6 col-lg-4 d-flex">
@@ -81,8 +83,13 @@
 
 <section class="cta-band">
   <div class="container">
+    <p class="eyebrow">Get started</p>
     <h2>{{ app_data.name }} is two minutes away.</h2>
-    <a class="btn btn-primary btn-lg" href="/signup">Create your workspace {{ icon("arrow-right", 18) }}</a>
+    <p class="cta-sub">Included with every workspace — no per-app pricing, no setup calls.</p>
+    <div class="d-flex flex-wrap gap-2 justify-content-center">
+      <a class="btn btn-inverse btn-lg" href="/signup">Create your workspace {{ icon("arrow-right", 18) }}</a>
+      <a class="btn btn-ghost-light btn-lg" href="/docs/{{ app_data.guide }}">Read the guide</a>
+    </div>
   </div>
 </section>
 {% endblock %}

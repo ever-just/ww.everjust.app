@@ -18,7 +18,7 @@
 
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="EVERJUST">
 
   <meta property="og:site_name" content="EVERJUST.APP">
@@ -63,37 +63,44 @@
           <a class="btn btn-outline-dark d-none d-sm-inline-flex" href="/signin">Sign in</a>
           <a class="btn btn-primary" href="/signup">Get started</a>
           {% endblock %}
-          <button class="menu-toggle d-lg-none" type="button" data-bs-toggle="offcanvas"
-                  data-bs-target="#siteMenu" aria-controls="siteMenu" aria-label="Open menu">
-            {{ icon("menu", 22) }}
-          </button>
         </div>
       </nav>
     </div>
   </header>
 
-  <div class="offcanvas offcanvas-end site-menu" tabindex="-1" id="siteMenu" aria-labelledby="siteMenuLabel">
-    <div class="offcanvas-header">
-      <a class="brand-logo" href="/" id="siteMenuLabel" aria-label="EVERJUST.APP home">
-        <img src="/static/img/icon-192x192.png" alt="EVERJUST.APP" width="30" height="30">
-      </a>
+  {# App-style bottom sheet menu (phones) — opened from the tab bar. #}
+  <div class="offcanvas offcanvas-bottom menu-sheet" tabindex="-1" id="siteMenu" aria-labelledby="siteMenuLabel">
+    <div class="sheet-handle" aria-hidden="true"></div>
+    <div class="offcanvas-header pt-0 pb-2">
+      <span class="sheet-title" id="siteMenuLabel">Menu</span>
       <button type="button" class="menu-toggle" data-bs-dismiss="offcanvas" aria-label="Close menu">
-        {{ icon("x", 22) }}
+        {{ icon("x", 20) }}
       </button>
     </div>
-    <div class="offcanvas-body d-flex flex-column">
-      <nav class="site-menu-nav" aria-label="Mobile">
-        <a href="/apps" data-bs-dismiss="offcanvas">Apps {{ icon("chevron-right", 18) }}</a>
-        <a href="/#pricing" data-bs-dismiss="offcanvas">Pricing {{ icon("chevron-right", 18) }}</a>
-        <a href="/docs" data-bs-dismiss="offcanvas">Docs {{ icon("chevron-right", 18) }}</a>
-        <a href="/signin" data-bs-dismiss="offcanvas">Sign in {{ icon("chevron-right", 18) }}</a>
-      </nav>
-      <div class="mt-auto pt-4">
+    <div class="offcanvas-body pt-1">
+      <div class="sheet-grid">
+        <a class="sheet-tile" href="/apps" data-bs-dismiss="offcanvas">
+          {{ icon("layout-grid", 22) }}<span>Apps</span>
+        </a>
+        <a class="sheet-tile" href="/#pricing" data-bs-dismiss="offcanvas">
+          {{ icon("wallet", 22) }}<span>Pricing</span>
+        </a>
+        <a class="sheet-tile" href="/docs" data-bs-dismiss="offcanvas">
+          {{ icon("book-open", 22) }}<span>Docs</span>
+        </a>
+        <a class="sheet-tile" href="/#faq" data-bs-dismiss="offcanvas">
+          {{ icon("life-buoy", 22) }}<span>FAQ</span>
+        </a>
+        <a class="sheet-tile" href="/privacy" data-bs-dismiss="offcanvas">
+          {{ icon("shield-check", 22) }}<span>Privacy</span>
+        </a>
+        <a class="sheet-tile" href="mailto:company@everjust.co">
+          {{ icon("mail", 22) }}<span>Contact</span>
+        </a>
+      </div>
+      <div class="sheet-cta">
         <a class="btn btn-primary btn-lg w-100 mb-2" href="/signup">Create your workspace {{ icon("arrow-right", 18) }}</a>
         <a class="btn btn-outline-dark w-100" href="/signin">Sign in to your workspace</a>
-        <p class="small text-secondary text-center mt-3 mb-0">
-          Questions? <a href="mailto:company@everjust.co">company@everjust.co</a>
-        </p>
       </div>
     </div>
   </div>
@@ -151,6 +158,27 @@
       </div>
     </div>
   </footer>
+
+  {# App-style bottom tab bar (phones only). #}
+  {% set path = request.url.path %}
+  <nav class="mobile-tabbar d-lg-none" aria-label="Quick navigation">
+    <a class="tab-item{{ ' active' if path == '/' }}" href="/" {% if path == '/' %}aria-current="page"{% endif %}>
+      {{ icon("house", 22) }}<span>Home</span>
+    </a>
+    <a class="tab-item{{ ' active' if path.startswith('/apps') }}" href="/apps" {% if path.startswith('/apps') %}aria-current="page"{% endif %}>
+      {{ icon("layout-grid", 22) }}<span>Apps</span>
+    </a>
+    <a class="tab-item tab-cta" href="/signup" aria-label="Create your workspace">
+      <span class="tab-cta-circle">{{ icon("rocket", 22) }}</span><span>Start</span>
+    </a>
+    <a class="tab-item{{ ' active' if path.startswith('/docs') }}" href="/docs" {% if path.startswith('/docs') %}aria-current="page"{% endif %}>
+      {{ icon("book-open", 22) }}<span>Docs</span>
+    </a>
+    <button class="tab-item" type="button" data-bs-toggle="offcanvas" data-bs-target="#siteMenu"
+            aria-controls="siteMenu" aria-label="Open menu">
+      {{ icon("menu", 22) }}<span>Menu</span>
+    </button>
+  </nav>
 
   <script src="/static/vendor/bootstrap/bootstrap.bundle.min.js?v={{ asset_v }}" defer></script>
   <script src="/static/vendor/cookieconsent/cookieconsent.umd.js?v={{ asset_v }}" defer></script>

@@ -110,6 +110,8 @@ a:focus-visible {
   -webkit-backdrop-filter: blur(10px);
   backdrop-filter: blur(10px);
   border-bottom: 1px solid var(--ej-hairline);
+  /* Keep content clear of the notch in installed/standalone mode. */
+  padding-top: env(safe-area-inset-top);
 }
 
 .site-header .navbar {
@@ -162,41 +164,126 @@ a:focus-visible {
   .site-actions .btn { font-size: .8125rem; padding: .4rem .7rem; }
 }
 
-/* ── Mobile menu (offcanvas) ──────────────────────────── */
+/* ── Bottom tab bar (app-style mobile navigation) ─────── */
 
-.site-menu {
-  --bs-offcanvas-width: min(330px, 88vw);
-  border-left: 1px solid #000;
+.mobile-tabbar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 1035;
+  display: flex;
+  align-items: stretch;
+  justify-content: space-around;
+  background: rgba(255, 255, 255, .96);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  border-top: 1px solid var(--ej-hairline);
+  padding: .3rem .25rem calc(.3rem + env(safe-area-inset-bottom));
 }
 
-.site-menu .offcanvas-header {
-  padding: 1rem 1.25rem;
-  border-bottom: 1px solid var(--ej-hairline);
+.tab-item {
+  flex: 1;
   display: flex;
-  justify-content: space-between;
+  flex-direction: column;
   align-items: center;
-}
-
-.site-menu .offcanvas-body { padding: 1.25rem; }
-
-.site-menu-nav { display: flex; flex-direction: column; }
-
-.site-menu-nav a {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-  padding: .95rem .25rem;
-  font-size: 1.0625rem;
+  justify-content: center;
+  gap: .15rem;
+  min-height: 52px;
+  border: 0;
+  background: none;
+  font-size: .65rem;
   font-weight: 700;
-  color: #000;
+  letter-spacing: .02em;
+  color: var(--ej-faint);
   text-decoration: none;
-  border-bottom: 1px solid var(--ej-hairline);
+  border-radius: .6rem;
+  -webkit-tap-highlight-color: transparent;
 }
 
-.site-menu-nav a .lucide { color: var(--ej-faint); }
-.site-menu-nav a:hover .lucide { color: #000; transform: translateX(2px); }
-.site-menu-nav a .lucide { transition: transform .12s ease, color .12s ease; }
+.tab-item .lucide { transition: transform .12s ease; }
+.tab-item:active .lucide { transform: scale(.88); }
+.tab-item.active { color: #000; }
+.tab-item.active .lucide { stroke-width: 2.4; }
+
+/* Raised center action — the one bold element in the bar. */
+.tab-cta { color: #000; }
+
+.tab-cta-circle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  margin-top: -22px;
+  border-radius: 50%;
+  background: #000;
+  color: #fff;
+  border: 3px solid #fff;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, .25);
+}
+
+.tab-cta:active .tab-cta-circle { transform: scale(.94); }
+
+/* Reserve room for the tab bar so content never hides behind it. */
+@media (max-width: 991.98px) {
+  body { padding-bottom: calc(64px + env(safe-area-inset-bottom)); }
+}
+
+/* ── Bottom sheet menu ────────────────────────────────── */
+
+.menu-sheet {
+  --bs-offcanvas-height: auto;
+  max-height: 86dvh;
+  border: 1px solid #000;
+  border-bottom: 0;
+  border-radius: 1.25rem 1.25rem 0 0;
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+.sheet-handle {
+  width: 42px;
+  height: 4px;
+  border-radius: 2px;
+  background: var(--ej-hairline);
+  margin: .6rem auto .4rem;
+}
+
+.menu-sheet .offcanvas-header { padding: 0 1.25rem; }
+
+.sheet-title {
+  font-size: .6875rem;
+  font-weight: 800;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--ej-faint);
+}
+
+.sheet-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: .6rem;
+  margin-bottom: 1.1rem;
+}
+
+.sheet-tile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: .45rem;
+  min-height: 76px;
+  border: 1px solid var(--ej-hairline);
+  border-radius: .875rem;
+  background: var(--ej-soft);
+  color: #000;
+  font-size: .78125rem;
+  font-weight: 700;
+  text-decoration: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.sheet-tile:active { border-color: #000; transform: scale(.97); }
 
 .nav-link-plain {
   color: var(--ej-muted);
@@ -308,9 +395,55 @@ a:focus-visible {
   color: #000;
 }
 
+/* Trust strip: icon chips under the hero CTAs. */
+.hero-points {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: .4rem .5rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.hero-points li {
+  display: inline-flex;
+  align-items: center;
+  gap: .35rem;
+  font-size: .75rem;
+  font-weight: 600;
+  color: var(--ej-muted);
+  border: 1px solid var(--ej-hairline);
+  border-radius: 999px;
+  background: var(--ej-soft);
+  padding: .3rem .7rem;
+  white-space: nowrap;
+}
+
 /* ── Sections ─────────────────────────────────────────── */
 
-.section { padding: 4rem 0; }
+.section { padding: clamp(3rem, 8vw, 4.5rem) 0; }
+
+/* Eyebrow: small labelled divider above each section heading. */
+.eyebrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: .75rem;
+  font-size: .6875rem;
+  font-weight: 800;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--ej-faint);
+  margin-bottom: .9rem;
+}
+
+.eyebrow::before,
+.eyebrow::after {
+  content: "";
+  width: 34px;
+  border-top: 1px solid var(--ej-hairline);
+}
 
 .section-alt {
   background: var(--ej-soft);
@@ -381,6 +514,76 @@ a:focus-visible {
 .step-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: .35rem; }
 .step-card p { font-size: .875rem; color: var(--ej-muted); margin: 0; }
 
+/* On phones, steps become a connected vertical timeline. */
+@media (max-width: 767.98px) {
+  .steps-timeline { position: relative; }
+  .steps-timeline > [class*="col-"] { padding-bottom: 0; }
+
+  .steps-timeline .step-card {
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    position: relative;
+    padding: 0 0 1.6rem 3rem;
+  }
+
+  .steps-timeline .step-card .step-n {
+    position: absolute;
+    left: 0;
+    top: 0;
+    margin: 0;
+  }
+
+  /* Connector line between the numbered dots. */
+  .steps-timeline .step-card::before {
+    content: "";
+    position: absolute;
+    left: 14.5px;
+    top: 34px;
+    bottom: .35rem;
+    border-left: 2px solid var(--ej-hairline);
+  }
+
+  .steps-timeline > div:last-child .step-card::before { display: none; }
+  .steps-timeline > div:last-child .step-card { padding-bottom: 0; }
+}
+
+/* ── Mobile snap rails: card rows glide sideways on phones ── */
+
+@media (max-width: 575.98px) {
+  .cards-snap {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    margin-left: -1.25rem;
+    margin-right: -1.25rem;
+    padding: 0 1.25rem .5rem;
+    scrollbar-width: none;
+  }
+
+  .cards-snap::-webkit-scrollbar { display: none; }
+
+  .cards-snap > [class*="col-"] {
+    flex: 0 0 82%;
+    max-width: 82%;
+    scroll-snap-align: center;
+  }
+
+  .cards-snap .feature-card,
+  .cards-snap .app-card { height: 100%; }
+}
+
+.rail-hint {
+  display: none;
+  text-align: center;
+  font-size: .71875rem;
+  color: var(--ej-faint);
+  margin: .4rem 0 0;
+}
+
+@media (max-width: 575.98px) { .rail-hint { display: block; } }
+
 /* Pricing */
 .price-card {
   max-width: 480px;
@@ -438,8 +641,41 @@ a:focus-visible {
 .faq details[open] summary::after { content: "–"; }
 .faq details p { margin: 0 0 1rem; color: var(--ej-muted); font-size: .90625rem; }
 
-.cta-band { text-align: center; padding: 4.5rem 0; }
-.cta-band h2 { font-size: clamp(1.6rem, 4vw, 2.375rem); font-weight: 800; letter-spacing: -.02em; margin-bottom: 1.5rem; }
+/* Inverted closing band — the page's full-stop. */
+.cta-band {
+  text-align: center;
+  padding: clamp(3.5rem, 9vw, 5rem) 0;
+  background: #000;
+  color: #fff;
+}
+
+.cta-band h2 {
+  font-size: clamp(1.6rem, 4vw, 2.375rem);
+  font-weight: 800;
+  letter-spacing: -.02em;
+  margin-bottom: .6rem;
+}
+
+.cta-band .cta-sub { color: rgba(255, 255, 255, .65); font-size: .9375rem; margin: 0 0 1.6rem; }
+
+.cta-band .btn-inverse {
+  background: #fff;
+  color: #000;
+  border-color: #fff;
+}
+
+.cta-band .btn-inverse:hover { background: #e9e9e9; border-color: #e9e9e9; color: #000; }
+
+.cta-band .btn-ghost-light {
+  background: transparent;
+  color: #fff;
+  border-color: rgba(255, 255, 255, .55);
+}
+
+.cta-band .btn-ghost-light:hover { border-color: #fff; color: #fff; }
+
+.cta-band .eyebrow { color: rgba(255, 255, 255, .5); }
+.cta-band .eyebrow::before, .cta-band .eyebrow::after { border-color: rgba(255, 255, 255, .25); }
 
 /* ── Footer ───────────────────────────────────────────── */
 

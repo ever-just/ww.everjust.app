@@ -32,7 +32,12 @@
     <a class="btn btn-primary btn-lg" href="/signup">Create your workspace {{ icon("arrow-right", 18) }}</a>
     <a class="btn btn-outline-dark btn-lg" href="/signin">Sign in</a>
   </div>
-  <p class="small text-secondary mb-0">Live in about 2 minutes &middot; $100/mo for your first 5 users &middot; cancel anytime</p>
+  <ul class="hero-points">
+    <li>{{ icon("zap", 13) }} Live in ~2 minutes</li>
+    <li>{{ icon("users", 13) }} 5 users included</li>
+    <li>{{ icon("wallet", 13) }} $100/mo flat</li>
+    <li>{{ icon("circle-check", 13) }} Cancel anytime</li>
+  </ul>
 
   <div class="hero-mock" aria-hidden="true">
     <div class="bar">
@@ -59,9 +64,10 @@
 
 <section class="section section-alt" id="features">
   <div class="container">
+    <p class="eyebrow">The suite</p>
     <h2>Everything included. Nothing bolted on.</h2>
     <p class="section-lede">One subscription unlocks the full suite. Every app shares the same contacts, files, and activity feed — so nothing falls between tools.</p>
-    <div class="row g-3">
+    <div class="row g-3 cards-snap">
       <div class="col-12 col-sm-6 col-lg-4">
         <a class="feature-card feature-card-link" href="/apps/crm-sales">
           <span class="icon-tile">{{ icon("chart-column", 20) }}</span>
@@ -111,14 +117,16 @@
         </a>
       </div>
     </div>
+    <p class="rail-hint">Swipe to explore {{ icon("arrow-right", 11) }}</p>
   </div>
 </section>
 
 <section class="section" id="how">
   <div class="container">
+    <p class="eyebrow">How it works</p>
     <h2>Up and running in three steps</h2>
     <p class="section-lede">No sales call, no onboarding fee, no migration project. Claim an address and start working.</p>
-    <div class="row g-3">
+    <div class="row g-3 steps-timeline">
       <div class="col-12 col-md-4">
         <div class="step-card">
           <span class="step-n">1</span>
@@ -146,6 +154,7 @@
 
 <section class="section section-alt" id="pricing">
   <div class="container">
+    <p class="eyebrow">Pricing</p>
     <h2>Simple, flat pricing</h2>
     <p class="section-lede">One plan. Every app. No add-ons, no tiers to compare, no surprises on the invoice.</p>
     <div class="price-card">
@@ -167,6 +176,7 @@
 
 <section class="section" id="faq">
   <div class="container">
+    <p class="eyebrow">FAQ</p>
     <h2>Questions, answered</h2>
     <p class="section-lede">More detail in the <a href="/docs">documentation</a>.</p>
     <div class="faq">
@@ -200,8 +210,13 @@
 
 <section class="cta-band">
   <div class="container">
+    <p class="eyebrow">Get started</p>
     <h2>Your workspace is two minutes away.</h2>
-    <a class="btn btn-primary btn-lg" href="/signup">Create your workspace {{ icon("arrow-right", 18) }}</a>
+    <p class="cta-sub">Claim your address, check out with Stripe, and sign in. That&rsquo;s the whole setup.</p>
+    <div class="d-flex flex-wrap gap-2 justify-content-center">
+      <a class="btn btn-inverse btn-lg" href="/signup">Create your workspace {{ icon("arrow-right", 18) }}</a>
+      <a class="btn btn-ghost-light btn-lg" href="/apps">Explore the apps</a>
+    </div>
   </div>
 </section>
 {% endblock %}

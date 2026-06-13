@@ -379,9 +379,39 @@ def test_header_is_logo_only_with_mobile_menu(client):
     header = body.split("</header>")[0]
     assert 'class="brand-logo"' in header
     assert ">EVERJUST.APP<" not in header        # logo only, no wordmark text
-    assert 'data-bs-target="#siteMenu"' in header  # mobile menu trigger
-    assert 'id="siteMenu"' in body                 # offcanvas menu exists
+    assert 'id="siteMenu"' in body               # bottom-sheet menu exists
+    assert "offcanvas-bottom menu-sheet" in body  # ...as a bottom sheet
+    assert "sheet-handle" in body                 # with a drag handle
     assert "/static/vendor/bootstrap/bootstrap.bundle.min.js" in body
+
+
+def test_mobile_tabbar(client):
+    body = client.get("/").text
+    assert 'class="mobile-tabbar d-lg-none"' in body
+    assert 'data-bs-target="#siteMenu"' in body   # Menu tab opens the sheet
+    assert "tab-cta-circle" in body               # raised Start action
+    # Active state follows the current path.
+    home_tab = body.split('aria-label="Quick navigation"')[1]
+    assert 'class="tab-item active" href="/"' in home_tab
+    apps_body = client.get("/apps").text
+    assert 'class="tab-item active" href="/apps"' in apps_body
+    docs_body = client.get("/docs").text
+    assert 'class="tab-item active" href="/docs"' in docs_body
+
+
+def test_landing_layout_rhythm(client):
+    body = client.get("/").text
+    assert body.count('class="eyebrow"') >= 4     # section divider labels
+    assert "hero-points" in body                  # trust chip strip
+    assert "cards-snap" in body                   # mobile snap rail
+    assert "steps-timeline" in body               # mobile timeline steps
+    assert "cta-band" in body and "btn-inverse" in body  # inverted closer
+
+
+def test_manifest_pwa_fields(client):
+    data = client.get("/manifest.webmanifest").json()
+    assert data["display_override"] == ["standalone", "minimal-ui"]
+    assert "business" in data["categories"]
 
 
 def test_consent_banner_wiring(client):

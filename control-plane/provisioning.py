@@ -28,7 +28,7 @@ def _pg_connect(dbname: str = "postgres"):
         password=DB_PASSWORD, dbname=dbname, connect_timeout=10,
     )
 
-EVERJUST_MODULES = "base,everjust_brand,everjust_theme,everjust_home,voip_oca,everjust_sms_gateway,document_page,document_page_partner,document_url,attachment_zipped_download,dms,payroll,sign_oca,hr_holidays,hr_timesheet"
+EVERJUST_MODULES = "base,everjust_brand,everjust_theme,everjust_home,voip_oca,everjust_sms_gateway,everjust_phone,document_page,document_page_partner,document_url,attachment_zipped_download,dms,payroll,sign_oca,hr_holidays,hr_timesheet"
 
 # ── Onboarding personalization: industry/goals -> Community app modules ──
 # So a new workspace lands shaped for the customer instead of empty. Values

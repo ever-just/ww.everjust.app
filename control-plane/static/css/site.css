@@ -1633,3 +1633,85 @@ kbd {
   font-size: .6875rem; font-weight: 800; letter-spacing: .08em; text-transform: uppercase;
   color: var(--ej-faint); margin: 0 0 .35rem;
 }
+
+/* ── "Cut your software bill" calculator ──────────────── */
+
+.calc { display: grid; grid-template-columns: 1fr; gap: 1.25rem; max-width: 880px; margin: 0 auto; }
+@media (min-width: 768px) { .calc { grid-template-columns: 1.2fr .8fr; gap: 1.5rem; align-items: start; } }
+
+.calc-tools { display: flex; flex-direction: column; gap: .5rem; }
+
+.calc-tool {
+  display: flex;
+  align-items: center;
+  gap: .75rem;
+  width: 100%;
+  text-align: left;
+  border: 1px solid var(--ej-hairline);
+  border-radius: .75rem;
+  background: #fff;
+  padding: .8rem 1rem;
+  font-size: .9375rem;
+  font-weight: 600;
+  color: var(--ej-ink);
+  -webkit-tap-highlight-color: transparent;
+  transition: border-color .12s ease, background .12s ease;
+}
+
+.calc-tool-check {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border: 1.5px solid var(--ej-hairline);
+  border-radius: 6px;
+  color: transparent;
+  flex-shrink: 0;
+}
+
+.calc-tool-label { flex: 1; min-width: 0; }
+.calc-tool-price { color: var(--ej-faint); font-weight: 600; font-size: .8125rem; white-space: nowrap; }
+.calc-tool-price small { font-size: .6875rem; }
+
+.calc-tool.is-active { border-color: var(--ej-ink); background: var(--ej-soft); }
+.calc-tool.is-active .calc-tool-check { background: var(--ej-ink); border-color: var(--ej-ink); color: #fff; }
+
+.calc-panel {
+  border: 1px solid var(--ej-ink);
+  border-radius: 1rem;
+  background: #fff;
+  padding: 1.5rem;
+  position: sticky;
+  top: 80px;
+}
+
+.calc-users { display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin-bottom: 1rem; font-weight: 700; }
+.calc-users input {
+  width: 90px;
+  border: 1px solid var(--ej-ink);
+  border-radius: .5rem;
+  padding: .5rem .6rem;
+  font: inherit;
+  font-size: 16px;
+  text-align: center;
+}
+
+.calc-row { display: flex; justify-content: space-between; align-items: baseline; padding: .6rem 0; border-bottom: 1px solid var(--ej-hairline); font-size: .9375rem; color: var(--ej-muted); }
+.calc-row b { color: var(--ej-ink); font-size: 1.0625rem; }
+
+.calc-savings {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin: 1rem 0;
+  padding: 1rem;
+  border-radius: .75rem;
+  background: var(--ej-ink);
+  color: #fff;
+  font-weight: 700;
+}
+.calc-savings b { font-family: var(--ej-display); font-size: 1.75rem; letter-spacing: -.02em; }
+.calc-savings small { font-size: .8125rem; font-weight: 500; opacity: .7; }
+
+.calc-note { font-size: .75rem; color: var(--ej-faint); margin: .75rem 0 0; text-align: center; }

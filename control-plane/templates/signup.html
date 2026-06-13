@@ -2,7 +2,7 @@
 {% from "_icons.html" import icon %}
 
 {% block title %}Create your workspace — EVERJUST.APP{% endblock %}
-{% block description %}Claim your-org.{{ domain }} and get a private, fully-branded workspace with every app included. Live in about 2 minutes.{% endblock %}
+{% block description %}Claim your-org.{{ domain }} and get a private workspace set up for your business. Live in about two minutes.{% endblock %}
 
 {% block nav %}
 <a class="nav-link-plain d-none d-md-inline-block" href="/#pricing">Pricing</a>
@@ -14,17 +14,17 @@
 <div class="auth-wrap container">
   <div class="row g-5 align-items-start">
     <aside class="col-12 col-lg-5 auth-aside order-lg-1 order-2">
-      <h1>Create your workspace</h1>
-      <p class="text-secondary">Two quick steps, then secure checkout. You&rsquo;re live in about 2 minutes.</p>
+      <h1>Set up your workspace</h1>
+      <p class="text-secondary">Answer a few questions and we&rsquo;ll switch on the right apps and brand it for you. You sign in about two minutes after you pay.</p>
       <ul class="check-list">
-        <li>{{ icon("check", 16) }}<span><b>All apps included</b> — CRM, projects, documents, eSign, HR, payroll, calls &amp; SMS</span></li>
-        <li>{{ icon("check", 16) }}<span><b>$100/month</b> for your first 5 users, then $15/user</span></li>
-        <li>{{ icon("check", 16) }}<span><b>Private database</b> — isolated from every other workspace</span></li>
-        <li>{{ icon("check", 16) }}<span><b>No email confirmation</b> — sign in the moment it&rsquo;s ready</span></li>
+        <li>{{ icon("check", 16) }}<span><b>Every app, one plan</b> — CRM, invoicing, projects, HR, payroll, marketing and more</span></li>
+        <li>{{ icon("check", 16) }}<span><b>$100/month</b> for your first 5 users, then $15 each</span></li>
+        <li>{{ icon("check", 16) }}<span><b>Your own database</b> — separate from every other company</span></li>
+        <li>{{ icon("check", 16) }}<span><b>Set up for your business</b> — the apps you need, on from day one</span></li>
         <li>{{ icon("check", 16) }}<span><b>Cancel anytime</b> from your billing portal</span></li>
       </ul>
       <p class="small text-secondary mt-3 mb-0">
-        {{ icon("badge-check", 16) }} Have a promo or access code? Enter it on the checkout page.
+        {{ icon("badge-check", 16) }} Have a promo or access code? Enter it at checkout.
       </p>
     </aside>
 
@@ -35,7 +35,9 @@
           <li class="wsep" aria-hidden="true">—</li>
           <li class="wstep" data-wstep="2"><span class="wdot">2</span> Workspace</li>
           <li class="wsep" aria-hidden="true">—</li>
-          <li class="wstep"><span class="wdot">3</span> Checkout</li>
+          <li class="wstep" data-wstep="3"><span class="wdot">3</span> Business</li>
+          <li class="wsep" aria-hidden="true">—</li>
+          <li class="wstep"><span class="wdot">4</span> Checkout</li>
         </ol>
 
         {% if error %}
@@ -48,13 +50,13 @@
         <form method="post" action="/signup" id="signup_form" data-error-step="{{ error_step or 1 }}" novalidate>
           <fieldset class="wizard-step" id="step1" data-step="1">
             <legend class="h5 fw-bold mb-1">Your account</legend>
-            <p class="text-secondary small mb-3">This becomes the admin sign-in for your workspace.</p>
+            <p class="text-secondary small mb-3">This is your admin sign-in for the workspace.</p>
 
             <div class="mb-3">
               <label class="form-label" for="email">Work email</label>
               <input class="form-control" name="email" id="email" type="email" autocomplete="email"
                      required value="{{ email or '' }}" placeholder="you@acme.com">
-              <div class="form-text">We&rsquo;ll send your receipt here. No confirmation email required.</div>
+              <div class="form-text">Your receipt goes here. No confirmation email to chase.</div>
             </div>
 
             <div class="mb-3">
@@ -65,7 +67,7 @@
                 <button type="button" class="toggle-pass" id="toggle_pass" aria-pressed="false" aria-label="Show password">Show</button>
               </div>
               <div class="strength" id="strength" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
-              <div class="form-text" id="password_hint">At least 8 characters. Mix words, numbers, and symbols.</div>
+              <div class="form-text" id="password_hint">At least 8 characters.</div>
             </div>
 
             <button type="button" class="btn btn-primary btn-lg w-100" id="to_step2">
@@ -73,13 +75,13 @@
             </button>
           </fieldset>
 
-          {# step visibility is managed by signup.js; without JS both steps render stacked #}
+          {# step visibility is managed by signup.js; without JS all steps render stacked #}
           <fieldset class="wizard-step" id="step2" data-step="2">
             <legend class="h5 fw-bold mb-1">Your workspace</legend>
-            <p class="text-secondary small mb-3">Name your organization and claim your team&rsquo;s address.</p>
+            <p class="text-secondary small mb-3">Name your company and claim your address.</p>
 
             <div class="mb-3">
-              <label class="form-label" for="org_name">Organization name</label>
+              <label class="form-label" for="org_name">Company name</label>
               <input class="form-control" name="org_name" id="org_name" autocomplete="organization"
                      maxlength="80" required value="{{ org_name or '' }}" placeholder="Acme Inc.">
             </div>
@@ -94,11 +96,73 @@
                 <span class="input-group-text">.{{ domain }}</span>
               </div>
               <p class="availability mb-0" id="availability" aria-live="polite"></p>
-              <div class="form-text">Lowercase letters, numbers, and dashes. This becomes your team&rsquo;s sign-in address.</div>
+              <div class="form-text">Lowercase letters, numbers, and dashes. This is where your team signs in.</div>
             </div>
 
             <div class="d-flex gap-2">
               <button type="button" class="btn btn-outline-dark btn-lg" id="back_step1" aria-label="Back to account step">
+                {{ icon("arrow-left", 18) }}
+              </button>
+              <button type="button" class="btn btn-primary btn-lg flex-grow-1" id="to_step3">
+                Continue {{ icon("arrow-right", 18) }}
+              </button>
+            </div>
+          </fieldset>
+
+          <fieldset class="wizard-step" id="step3" data-step="3">
+            <legend class="h5 fw-bold mb-1">About your business</legend>
+            <p class="text-secondary small mb-3">We use this to switch on the right apps and brand your workspace. Skip any of it.</p>
+
+            <div class="mb-3">
+              <label class="form-label" for="industry">What kind of business?</label>
+              <select class="form-select form-control" name="industry" id="industry">
+                <option value="" selected>Choose one (optional)</option>
+                <option>Professional services / agency</option>
+                <option>Retail / eCommerce</option>
+                <option>Software / technology</option>
+                <option>Manufacturing</option>
+                <option>Hospitality / food</option>
+                <option>Construction / trades</option>
+                <option>Healthcare</option>
+                <option>Nonprofit</option>
+                <option>Other</option>
+              </select>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label" for="website">Company website</label>
+              <input class="form-control" name="website" id="website" type="url"
+                     inputmode="url" autocomplete="url" maxlength="200" placeholder="acme.com">
+              <div class="form-text">{{ icon("sparkles", 13) }} We&rsquo;ll pull your name, logo, and colors from it to brand your workspace.</div>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label" for="team_size">How many people?</label>
+              <select class="form-select form-control" name="team_size" id="team_size">
+                <option value="" selected>Choose one (optional)</option>
+                <option>Just me</option>
+                <option>2–5</option>
+                <option>6–20</option>
+                <option>21–50</option>
+                <option>50+</option>
+              </select>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label d-block">What do you want to run first?</label>
+              <div class="goal-chips" id="goal_chips" role="group" aria-label="Primary goals">
+                <button type="button" class="goal-chip" data-goal="Sales & CRM">Sales &amp; CRM</button>
+                <button type="button" class="goal-chip" data-goal="Invoicing & Finance">Invoicing &amp; finance</button>
+                <button type="button" class="goal-chip" data-goal="Projects & Operations">Projects &amp; operations</button>
+                <button type="button" class="goal-chip" data-goal="HR & Payroll">HR &amp; payroll</button>
+                <button type="button" class="goal-chip" data-goal="Marketing">Marketing</button>
+                <button type="button" class="goal-chip" data-goal="Website & Store">Website &amp; store</button>
+              </div>
+              <input type="hidden" name="goals" id="goals" value="">
+            </div>
+
+            <div class="d-flex gap-2">
+              <button type="button" class="btn btn-outline-dark btn-lg" id="back_step2" aria-label="Back to workspace step">
                 {{ icon("arrow-left", 18) }}
               </button>
               <button type="submit" class="btn btn-primary btn-lg flex-grow-1" id="submit_btn">
@@ -108,7 +172,7 @@
 
             <p class="d-flex gap-2 align-items-start small text-secondary mt-3 mb-0">
               {{ icon("lock", 14, "mt-1") }}
-              <span>Payments are processed by Stripe. You&rsquo;ll review the $100/month plan (5 users included) before anything is charged.</span>
+              <span>Stripe handles payment. You review the $100/month plan (5 users included) before anything is charged.</span>
             </p>
           </fieldset>
         </form>

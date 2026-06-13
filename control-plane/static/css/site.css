@@ -1593,3 +1593,33 @@ kbd {
 
 /* Replace the side-tab callout border (an "AI tell") with a top accent. */
 .docs-callout { border-left: 1px solid var(--ej-hairline); border-top: 2px solid var(--ej-ink); }
+
+/* ── Signup: "about your business" step ───────────────── */
+
+.form-select.form-control {
+  font-size: 16px;
+  min-height: 46px;
+  border-color: #000;
+  background-position: right .9rem center;
+}
+
+.goal-chips { display: flex; flex-wrap: wrap; gap: .5rem; }
+
+.goal-chip {
+  border: 1px solid var(--ej-hairline);
+  background: #fff;
+  color: var(--ej-muted);
+  font-size: .875rem;
+  font-weight: 600;
+  padding: .5rem .9rem;
+  border-radius: 999px;
+  -webkit-tap-highlight-color: transparent;
+  transition: border-color .12s ease, background .12s ease, color .12s ease;
+}
+
+.goal-chip:hover { border-color: #000; color: var(--ej-ink); }
+.goal-chip.is-active {
+  background: var(--ej-ink);
+  border-color: var(--ej-ink);
+  color: #fff;
+}

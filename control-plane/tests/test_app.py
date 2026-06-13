@@ -178,7 +178,7 @@ def test_webhook_rejects_bad_signature(client):
 def test_webhook_checkout_completed_provisions_from_token(client, monkeypatch):
     provisioned = {}
 
-    def fake_provision(subdomain, admin_login, admin_password):
+    def fake_provision(subdomain, admin_login, admin_password, **extra):
         provisioned.update(sub=subdomain, login=admin_login, pw=admin_password)
         return {"subdomain": subdomain}
 
@@ -203,7 +203,7 @@ def test_webhook_checkout_completed_legacy_metadata(client, monkeypatch):
     seen = {}
     monkeypatch.setattr(
         provisioning, "provision_tenant",
-        lambda subdomain, admin_login, admin_password: seen.update(sub=subdomain),
+        lambda subdomain, admin_login, admin_password, **extra: seen.update(sub=subdomain),
     )
     event = _event("checkout.session.completed", {"metadata": {
         "subdomain": "oldco", "admin_email": "o@oldco.com", "admin_password": "pw12345678",
@@ -565,3 +565,47 @@ def test_no_upstream_branding_on_any_page(client):
     for path in paths:
         body = client.get(path).text
         assert "odoo" not in body.lower(), f"upstream branding leak on {path}"
+
+
+def test_static_assets_are_compressed_and_cacheable(client):
+    # Perf: text assets must gzip (Bootstrap CSS ~233KB -> ~31KB) and the
+    # versioned static files must be long-cacheable.
+    r = client.get("/static/vendor/bootstrap/bootstrap.min.css",
+                   headers={"Accept-Encoding": "gzip"})
+    assert r.headers.get("content-encoding") == "gzip"
+    assert "max-age=31536000" in r.headers.get("cache-control", "")
+
+    # HTML pages compress too.
+    h = client.get("/", headers={"Accept-Encoding": "gzip"})
+    assert h.headers.get("content-encoding") == "gzip"
+
+
+def test_signup_captures_personalization(client):
+    form = dict(VALID_FORM, industry="Software / technology",
+                website="acme.com", team_size="6–20",
+                goals="Sales & CRM, Marketing")
+    fake_session = mock.Mock(url="https://checkout.stripe.com/c/pay/cs_x")
+    with mock.patch.object(stripe.checkout.Session, "create", return_value=fake_session):
+        r = client.post("/signup", data=form, follow_redirects=False)
+    assert r.status_code == 303
+    # The optional onboarding context is stored server-side under the token.
+    rec = next(iter(client.pending_signups.values()))
+    assert rec["industry"] == "Software / technology"
+    assert rec["website"] == "acme.com"
+    assert rec["team_size"] == "6–20"
+    assert rec["goals"] == "Sales & CRM, Marketing"
+
+
+def test_signup_personalization_optional(client):
+    # Signup still works with no business context (all optional).
+    fake_session = mock.Mock(url="https://checkout.stripe.com/c/pay/cs_y")
+    with mock.patch.object(stripe.checkout.Session, "create", return_value=fake_session):
+        r = client.post("/signup", data=VALID_FORM, follow_redirects=False)
+    assert r.status_code == 303
+
+
+def test_signup_page_has_business_step(client):
+    body = client.get("/signup").text
+    assert 'id="step3"' in body and 'name="industry"' in body
+    assert 'name="website"' in body and 'name="goals"' in body
+    assert "goal-chip" in body and "Business" in body  # 4-step progress

@@ -15,6 +15,7 @@ from fastapi import FastAPI, Form, Request
 from fastapi.responses import FileResponse, HTMLResponse, JSONResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
+from starlette.middleware.gzip import GZipMiddleware
 
 import content
 import provisioning
@@ -34,6 +35,9 @@ STATIC_DIR = BASE_DIR / "static"
 ASSET_VERSION = os.environ.get("ASSET_VERSION") or str(int(time.time()))
 
 app = FastAPI(title="EVERJUST.APP", docs_url=None, redoc_url=None, openapi_url=None)
+# Compress text responses (HTML/CSS/JS/SVG/JSON) for clients that accept it.
+# Cuts the homepage's CSS+JS transfer ~75% (e.g. Bootstrap CSS 233KB -> ~30KB).
+app.add_middleware(GZipMiddleware, minimum_size=512, compresslevel=6)
 app.mount("/static", StaticFiles(directory=str(STATIC_DIR)), name="static")
 
 templates = Jinja2Templates(directory=str(BASE_DIR / "templates"))
@@ -107,6 +111,11 @@ async def security_headers(request: Request, call_next):
     response.headers.setdefault(
         "Permissions-Policy", "camera=(), microphone=(), geolocation=()"
     )
+    # Static assets are content-addressed via the ?v= cache-buster, so they
+    # can be cached aggressively. sw.js/manifest set their own headers.
+    path = request.url.path
+    if path.startswith("/static/"):
+        response.headers.setdefault("Cache-Control", "public, max-age=31536000, immutable")
     return response
 
 
@@ -216,10 +225,18 @@ def _signup_error(request: Request, message: str, step: int = 1, **form_values) 
 @app.post("/signup")
 def signup(request: Request,
            org_name: str = Form(...), subdomain: str = Form(...),
-           email: str = Form(...), password: str = Form(...)):
+           email: str = Form(...), password: str = Form(...),
+           industry: str = Form(""), website: str = Form(""),
+           team_size: str = Form(""), goals: str = Form("")):
     org_name = org_name.strip()
     subdomain = subdomain.lower().strip()
     email = email.strip()
+    # Optional onboarding context — used later to personalize the workspace.
+    # Capped and sanitised; never required, never blocks checkout.
+    industry = (industry or "").strip()[:60]
+    website = (website or "").strip()[:200]
+    team_size = (team_size or "").strip()[:20]
+    goals = (goals or "").strip()[:200]
     keep = {"org_name": org_name, "subdomain": subdomain, "email": email}
 
     if "@" not in email or "." not in email.split("@")[-1]:
@@ -245,7 +262,9 @@ def signup(request: Request,
 
     # Keep signup details (incl. the tenant admin password) server-side;
     # only an opaque token travels through Stripe metadata.
-    token = signup_store.create(org_name, subdomain, email, password)
+    token = signup_store.create(org_name, subdomain, email, password,
+                                industry=industry, website=website,
+                                team_size=team_size, goals=goals)
     meta = {"signup_token": token, "subdomain": subdomain, "org_name": org_name}
 
     try:
@@ -334,6 +353,12 @@ async def stripe_webhook(request: Request):
                 subdomain=pending["subdomain"],
                 admin_login=pending["admin_email"],
                 admin_password=pending["admin_password"],
+                personalization={
+                    "industry": pending.get("industry", ""),
+                    "website": pending.get("website", ""),
+                    "team_size": pending.get("team_size", ""),
+                    "goals": pending.get("goals", ""),
+                },
             )
         except Exception as e:
             return JSONResponse({"provisioned": False, "error": str(e)}, status_code=500)

@@ -653,3 +653,54 @@ def test_personalized_modules_default_and_allowlist():
     # Unknown industry/goal can't inject arbitrary module names.
     mods = provisioning.personalized_modules("Hacker; rm -rf", "DROP TABLE")
     assert all(m in provisioning.ALLOWED_MODULES for m in mods)
+
+
+# ── Onboarding stage 3: website enrichment + SSRF guard ─────────────────
+
+import website_enrichment as we
+
+
+def test_ssrf_ip_blocklist():
+    for bad in ("127.0.0.1", "10.0.0.1", "192.168.1.5", "172.16.0.1",
+                "169.254.169.254", "0.0.0.0", "::1", "fc00::1", "224.0.0.1"):
+        assert we._ip_blocked(bad), bad
+    for ok in ("8.8.8.8", "1.1.1.1", "93.184.216.34"):
+        assert not we._ip_blocked(ok), ok
+
+
+def test_ssrf_host_and_url_guards(monkeypatch):
+    assert we._host_allowed("localhost") is False
+    # Hostname resolving to a private IP is rejected (DNS-based SSRF).
+    monkeypatch.setattr(we.socket, "getaddrinfo",
+                        lambda h, p: [(2, 1, 6, "", ("10.1.2.3", 0))])
+    assert we._host_allowed("evil.internal") is False
+    assert we._url_allowed("http://evil.internal/") is False
+    # Public resolution is allowed.
+    monkeypatch.setattr(we.socket, "getaddrinfo",
+                        lambda h, p: [(2, 1, 6, "", ("93.184.216.34", 0))])
+    assert we._host_allowed("example.com") is True
+    # Non-http schemes are refused outright.
+    assert we._url_allowed("file:///etc/passwd") is False
+    assert we._url_allowed("ftp://example.com/") is False
+
+
+def test_extract_brand():
+    html = (
+        '<html><head><title>Acme Tools | Hardware</title>'
+        '<meta name="description" content="We sell great hardware.">'
+        '<meta name="theme-color" content="#1a73e8">'
+        '<meta property="og:site_name" content="Acme Tools">'
+        '<link rel="apple-touch-icon" href="/img/logo.png">'
+        '</head><body></body></html>')
+    b = we.extract_brand(html, "https://acme.example/")
+    assert b["name"] == "Acme Tools"
+    assert b["description"].startswith("We sell")
+    assert b["theme_color"] == "#1a73e8"
+    assert b["logo_url"] == "https://acme.example/img/logo.png"
+
+
+def test_enrich_refuses_private_url(monkeypatch):
+    # enrich() must return {} for a blocked target without fetching.
+    monkeypatch.setattr(we.socket, "getaddrinfo",
+                        lambda h, p: [(2, 1, 6, "", ("127.0.0.1", 0))])
+    assert we.enrich("http://internal.local/") == {}

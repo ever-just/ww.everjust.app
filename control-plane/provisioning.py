@@ -129,6 +129,7 @@ def provision_tenant(subdomain: str, admin_login: str, admin_password: str,
     _configure_dms(subdomain)
     _record_personalization(subdomain, personalization or {})
     _install_personalized_apps(subdomain, personalization or {})
+    _apply_website_branding(subdomain, (personalization or {}).get("website", ""))
     ensure_dns(subdomain)
 
     return {
@@ -136,6 +137,57 @@ def provision_tenant(subdomain: str, admin_login: str, admin_password: str,
         "url": f"https://{subdomain}.{BASE_DOMAIN}",
         "status": "active",
     }
+
+
+def _apply_website_branding(subdomain: str, website: str) -> None:
+    """Brand the tenant from its website (name, website, logo, theme color).
+
+    SSRF-guarded fetch via website_enrichment; everything is best-effort and
+    wrapped so a failure never affects the provisioned workspace."""
+    if not website:
+        return
+    try:
+        import base64
+        import website_enrichment
+
+        brand = website_enrichment.enrich(website)
+        if not brand:
+            return
+
+        logo_b64 = ""
+        logo_url = brand.get("logo_url")
+        if logo_url:
+            got = website_enrichment.safe_get(logo_url)
+            if got:
+                _url, data = got
+                # Only accept real raster/vector image bytes, capped in size.
+                magic = data[:12]
+                is_img = (magic.startswith(b"\x89PNG") or magic.startswith(b"\xff\xd8")
+                          or magic.startswith(b"GIF8") or magic[:4] == b"RIFF"
+                          or b"<svg" in data[:200].lower())
+                if is_img and len(data) <= 512 * 1024:
+                    logo_b64 = base64.b64encode(data).decode()
+
+        color = brand.get("theme_color", "")
+        py = (
+            "company = env['res.company'].browse(1)\n"
+            "vals = {}\n"
+            "if %(web)r: vals['website'] = %(web)r\n"
+            "if %(logo)r: vals['logo'] = %(logo)r\n"
+            "if vals: company.write(vals)\n"
+            "if %(color)r: env['ir.config_parameter'].sudo()"
+            ".set_param('everjust.brand.color', %(color)r)\n"
+            "env.cr.commit()\n"
+            % {"web": website, "logo": logo_b64, "color": color}
+        )
+        subprocess.run(
+            ["docker", "exec", "-i", ODOO_CONTAINER, "odoo", "shell",
+             "-d", subdomain, "--db_user", DB_USER,
+             "--db_password", DB_PASSWORD, "--no-http"],
+            input=py, text=True, check=False, timeout=120,
+        )
+    except Exception:
+        pass
 
 
 def _install_personalized_apps(subdomain: str, data: dict) -> None:

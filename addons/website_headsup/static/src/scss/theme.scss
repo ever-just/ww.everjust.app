@@ -1,0 +1,254 @@
+// HeadsUp Website Theme
+// All custom classes prefixed with x_ to avoid Odoo conflicts
+
+$hu-green: #166A0B;
+$hu-green-dark: #0E4507;
+$hu-green-light: #1E8F0F;
+$hu-green-muted: #8EA58D;
+$hu-cream: #f5f7f5;
+
+// ── Navbar ──────────────────────────────────────────────────
+
+header .navbar {
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+header.o_header_affixed .navbar {
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+}
+
+// ── Hero ────────────────────────────────────────────────────
+
+.x_hero {
+    position: relative;
+    padding: 6rem 0 5rem;
+    background: linear-gradient(135deg, $hu-green 0%, $hu-green-dark 100%);
+    color: #fff;
+    overflow: hidden;
+
+    &::after {
+        content: "";
+        position: absolute;
+        bottom: -2px;
+        left: 0;
+        right: 0;
+        height: 80px;
+        background: #fff;
+        clip-path: ellipse(55% 100% at 50% 100%);
+    }
+
+    h1 {
+        font-size: clamp(2.2rem, 5vw, 3.5rem);
+        font-weight: 800;
+        line-height: 1.15;
+        margin-bottom: 1.25rem;
+    }
+
+    p.lead {
+        font-size: clamp(1.05rem, 2vw, 1.25rem);
+        opacity: 0.9;
+        max-width: 540px;
+    }
+}
+
+// ── Section spacing ─────────────────────────────────────────
+
+.x_section {
+    padding: 5rem 0;
+}
+
+.x_section_alt {
+    padding: 5rem 0;
+    background: $hu-cream;
+}
+
+.x_section_title {
+    font-weight: 800;
+    font-size: clamp(1.6rem, 3.5vw, 2.4rem);
+    margin-bottom: 0.5rem;
+}
+
+.x_section_subtitle {
+    color: #666;
+    font-size: 1.1rem;
+    max-width: 600px;
+    margin: 0 auto 3rem;
+}
+
+// ── Service cards ───────────────────────────────────────────
+
+.x_service_card {
+    border: 1px solid #e8e8e8;
+    border-radius: 12px;
+    padding: 2rem 1.5rem;
+    text-align: center;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    background: #fff;
+    height: 100%;
+
+    &:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+    }
+
+    .x_service_icon {
+        width: 56px;
+        height: 56px;
+        border-radius: 12px;
+        background: rgba($hu-green, 0.1);
+        color: $hu-green;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 1.25rem;
+        font-size: 1.5rem;
+    }
+
+    h3 {
+        font-size: 1.15rem;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+    }
+
+    p {
+        color: #666;
+        font-size: 0.95rem;
+        margin: 0;
+    }
+}
+
+// ── Stats band ──────────────────────────────────────────────
+
+.x_stats {
+    background: $hu-green;
+    color: #fff;
+    padding: 3rem 0;
+
+    .x_stat_number {
+        font-size: 2.5rem;
+        font-weight: 800;
+        line-height: 1;
+    }
+
+    .x_stat_label {
+        font-size: 0.9rem;
+        opacity: 0.85;
+        margin-top: 0.25rem;
+    }
+}
+
+// ── Testimonial ─────────────────────────────────────────────
+
+.x_testimonial_card {
+    border: 1px solid #e8e8e8;
+    border-radius: 12px;
+    padding: 2rem;
+    background: #fff;
+    height: 100%;
+
+    .x_quote {
+        font-size: 1.05rem;
+        font-style: italic;
+        color: #333;
+        margin-bottom: 1.25rem;
+        line-height: 1.7;
+    }
+
+    .x_author {
+        font-weight: 600;
+        color: $hu-green-dark;
+    }
+
+    .x_role {
+        font-size: 0.85rem;
+        color: #999;
+    }
+}
+
+// ── CTA banner ──────────────────────────────────────────────
+
+.x_cta {
+    background: linear-gradient(135deg, $hu-green-dark 0%, $hu-green 100%);
+    color: #fff;
+    padding: 5rem 0;
+    text-align: center;
+
+    h2 {
+        font-size: clamp(1.8rem, 4vw, 2.8rem);
+        font-weight: 800;
+        margin-bottom: 1rem;
+    }
+
+    p {
+        font-size: 1.15rem;
+        opacity: 0.9;
+        max-width: 560px;
+        margin: 0 auto 2rem;
+    }
+
+    .btn-light {
+        padding: 0.75rem 2.5rem;
+        font-weight: 700;
+        border-radius: 8px;
+        font-size: 1.05rem;
+        color: $hu-green;
+    }
+}
+
+// ── Footer ──────────────────────────────────────────────────
+
+footer {
+    a {
+        opacity: 0.85;
+        transition: opacity 0.15s;
+        &:hover { opacity: 1; }
+    }
+}
+
+// ── Buttons ─────────────────────────────────────────────────
+
+.x_btn_primary {
+    background: $hu-green;
+    color: #fff;
+    border: none;
+    padding: 0.75rem 2rem;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 1rem;
+    transition: background 0.2s, transform 0.15s;
+
+    &:hover {
+        background: $hu-green-light;
+        color: #fff;
+        transform: translateY(-1px);
+    }
+}
+
+.x_btn_outline {
+    background: transparent;
+    color: #fff;
+    border: 2px solid rgba(255, 255, 255, 0.5);
+    padding: 0.75rem 2rem;
+    border-radius: 8px;
+    font-weight: 600;
+    transition: border-color 0.2s, background 0.2s;
+
+    &:hover {
+        border-color: #fff;
+        background: rgba(255, 255, 255, 0.1);
+        color: #fff;
+    }
+}
+
+// ── Scroll reveal ───────────────────────────────────────────
+
+.x_reveal {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+
+    &.x_visible {
+        opacity: 1;
+        transform: none;
+    }
+}

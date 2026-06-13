@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="hu_homepage" inherit_id="website.homepage" name="HeadsUp Homepage">
+        <xpath expr="//div[@id='wrap']" position="replace">
+            <div id="wrap" class="oe_structure oe_empty">
+
+                <!-- ── Hero ──────────────────────────────────── -->
+                <section class="x_hero" data-snippet="s_hu_hero" data-name="Hero">
+                    <div class="container">
+                        <div class="row align-items-center">
+                            <div class="col-lg-7">
+                                <h1>Professional Lawn Care &amp; Landscaping</h1>
+                                <p class="lead">
+                                    Reliable outdoor services for homes and businesses
+                                    in Shakopee and the Twin Cities metro.
+                                </p>
+                                <div class="d-flex gap-3 flex-wrap mt-4">
+                                    <a href="/contactus" class="x_btn_primary">Get a Free Quote</a>
+                                    <a href="/services" class="x_btn_outline">Our Services</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ── Services ──────────────────────────────── -->
+                <section class="x_section" data-snippet="s_hu_services" data-name="Services">
+                    <div class="container text-center">
+                        <h2 class="x_section_title x_reveal">What We Do</h2>
+                        <p class="x_section_subtitle x_reveal">
+                            From weekly mowing to full landscape design — we keep your property looking its best year-round.
+                        </p>
+                        <div class="row g-4">
+                            <div class="col-md-4 x_reveal">
+                                <div class="x_service_card">
+                                    <div class="x_service_icon"><i class="fa fa-leaf"/></div>
+                                    <h3>Lawn Mowing</h3>
+                                    <p>Weekly and bi-weekly mowing, trimming, edging, and blowing for a consistently clean look.</p>
+                                </div>
+                            </div>
+                            <div class="col-md-4 x_reveal">
+                                <div class="x_service_card">
+                                    <div class="x_service_icon"><i class="fa fa-tree"/></div>
+                                    <h3>Landscaping</h3>
+                                    <p>Design, installation, and maintenance of gardens, beds, shrubs, and hardscape features.</p>
+                                </div>
+                            </div>
+                            <div class="col-md-4 x_reveal">
+                                <div class="x_service_card">
+                                    <div class="x_service_icon"><i class="fa fa-snowflake-o"/></div>
+                                    <h3>Snow Removal</h3>
+                                    <p>Commercial and residential plowing, salting, and sidewalk clearing all winter long.</p>
+                                </div>
+                            </div>
+                            <div class="col-md-4 x_reveal">
+                                <div class="x_service_card">
+                                    <div class="x_service_icon"><i class="fa fa-sun-o"/></div>
+                                    <h3>Spring Cleanup</h3>
+                                    <p>Debris removal, bed prep, mulching, and turf renovation to kick off the growing season.</p>
+                                </div>
+                            </div>
+                            <div class="col-md-4 x_reveal">
+                                <div class="x_service_card">
+                                    <div class="x_service_icon"><i class="fa fa-pagelines"/></div>
+                                    <h3>Fall Cleanup</h3>
+                                    <p>Leaf removal, gutter cleaning, and winterization to protect your property through the cold months.</p>
+                                </div>
+                            </div>
+                            <div class="col-md-4 x_reveal">
+                                <div class="x_service_card">
+                                    <div class="x_service_icon"><i class="fa fa-tint"/></div>
+                                    <h3>Irrigation</h3>
+                                    <p>Sprinkler system installation, repair, and seasonal startup/blowout services.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ── Stats ─────────────────────────────────── -->
+                <section class="x_stats" data-snippet="s_hu_stats" data-name="Stats">
+                    <div class="container">
+                        <div class="row text-center g-4">
+                            <div class="col-6 col-md-3 x_reveal">
+                                <div class="x_stat_number">150+</div>
+                                <div class="x_stat_label">Properties Served</div>
+                            </div>
+                            <div class="col-6 col-md-3 x_reveal">
+                                <div class="x_stat_number">5+</div>
+                                <div class="x_stat_label">Years in Business</div>
+                            </div>
+                            <div class="col-6 col-md-3 x_reveal">
+                                <div class="x_stat_number">4.9</div>
+                                <div class="x_stat_label">Google Rating</div>
+                            </div>
+                            <div class="col-6 col-md-3 x_reveal">
+                                <div class="x_stat_number">100%</div>
+                                <div class="x_stat_label">Satisfaction Guarantee</div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ── Why HeadsUp ───────────────────────────── -->
+                <section class="x_section" data-snippet="s_hu_why" data-name="Why Us">
+                    <div class="container">
+                        <div class="row align-items-center g-5">
+                            <div class="col-lg-6 x_reveal">
+                                <h2 class="x_section_title">Why Choose Heads Up?</h2>
+                                <ul class="list-unstyled mt-4" style="font-size: 1.05rem;">
+                                    <li class="mb-3 d-flex align-items-start">
+                                        <i class="fa fa-check-circle text-success me-3 mt-1"/>
+                                        <span><strong>Reliable scheduling</strong> — we show up when we say we will, every time.</span>
+                                    </li>
+                                    <li class="mb-3 d-flex align-items-start">
+                                        <i class="fa fa-check-circle text-success me-3 mt-1"/>
+                                        <span><strong>Licensed &amp; insured</strong> — full coverage for your peace of mind.</span>
+                                    </li>
+                                    <li class="mb-3 d-flex align-items-start">
+                                        <i class="fa fa-check-circle text-success me-3 mt-1"/>
+                                        <span><strong>Local team</strong> — we live and work in the Twin Cities community.</span>
+                                    </li>
+                                    <li class="mb-3 d-flex align-items-start">
+                                        <i class="fa fa-check-circle text-success me-3 mt-1"/>
+                                        <span><strong>Transparent pricing</strong> — no hidden fees, free estimates on every job.</span>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="col-lg-6 x_reveal">
+                                <div class="x_testimonial_card">
+                                    <div class="x_quote">
+                                        "Heads Up has been maintaining our commercial property for three
+                                        years now. They're consistent, professional, and always go the
+                                        extra mile. Highly recommend."
+                                    </div>
+                                    <div class="x_author">Local Business Owner</div>
+                                    <div class="x_role">Shakopee, MN</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ── CTA ───────────────────────────────────── -->
+                <section class="x_cta" data-snippet="s_hu_cta" data-name="CTA">
+                    <div class="container x_reveal">
+                        <h2>Ready to get started?</h2>
+                        <p>Request a free, no-obligation quote today. We typically respond within 24 hours.</p>
+                        <a href="/contactus" class="btn btn-light btn-lg">Get Your Free Quote</a>
+                    </div>
+                </section>
+
+            </div>
+        </xpath>
+    </template>
+
+</odoo>

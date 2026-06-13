@@ -445,13 +445,25 @@ def test_landing_layout_rhythm(client):
     assert "cta-band" in body and "btn-inverse" in body  # inverted closer
 
 
-def test_landing_has_more_depth_and_reveals(client):
+def test_landing_redesign_structure(client):
     body = client.get("/").text
-    assert 'id="why"' in body                      # added value section
-    assert "One workspace, not ten tabs" in body
-    assert "data-reveal" in body                   # scroll-reveal hooks
-    assert "reveal-ready" in body                  # armed only when motion ok
+    assert "hero-kicker" in body                   # redesigned hero
+    assert "app-marquee" in body                   # breadth marquee (not a card)
+    assert body.count('class="pillar') >= 3        # alternating feature pillars
+    assert "replaces-strip" in body                # "replaces your stack"
+    assert "cat-teaser" in body                    # category teaser (not cards)
+    assert "data-reveal" in body and "reveal-ready" in body
     assert client.get("/static/js/nav.js").status_code == 200
+
+
+def test_intentional_fonts_loaded(client):
+    body = client.get("/").text
+    assert "/static/fonts/space-grotesk.woff2" in body   # display face preloaded
+    assert "/static/fonts/geist.woff2" in body           # body face preloaded
+    css = client.get("/static/css/site.css").text
+    assert "Space Grotesk" in css and "Geist" in css
+    assert "Arial, sans-serif" not in css.split("--ej-body")[0]  # not the default stack
+    assert client.get("/static/fonts/space-grotesk.woff2").status_code == 200
 
 
 def test_zoom_and_overflow_css(client):

@@ -13,7 +13,7 @@
       <li class="breadcrumb-item active" aria-current="page">{{ app_data.name }}</li>
     </ol>
   </nav>
-  <span class="icon-tile icon-tile-lg">{{ icon(app_data.icon, 30) }}</span>
+  <span class="app-kicker">{{ icon(app_data.icon, 16) }} {{ app_data.name }}</span>
   <h1>{{ app_data.tagline }}</h1>
   <p class="lede">{{ app_data.summary }}</p>
   <div class="hero-cta d-flex flex-wrap gap-2 justify-content-center mb-2">
@@ -41,8 +41,7 @@
       {% for ficon, ftitle, fdesc in app_data.features %}
       <div class="col-12 col-sm-6">
         <div class="feature-card" data-reveal>
-          <span class="icon-tile">{{ icon(ficon, 20) }}</span>
-          <h3>{{ ftitle }}</h3>
+          <h3>{{ icon(ficon, 18) }} {{ ftitle }}</h3>
           <p>{{ fdesc }}</p>
         </div>
       </div>

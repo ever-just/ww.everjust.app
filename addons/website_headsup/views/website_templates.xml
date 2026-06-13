@@ -1,11 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <!-- ─── Google Fonts preconnect ───────────────────────────── -->
-    <template id="hu_fonts_preconnect" inherit_id="web.layout" name="HeadsUp Fonts">
+    <!-- ─── Google Fonts (full stylesheet, not just preconnect) ── -->
+    <template id="hu_fonts" inherit_id="web.layout" name="HeadsUp Fonts">
         <xpath expr="//head/meta[@charset]" position="after">
             <link rel="preconnect" href="https://fonts.googleapis.com"/>
             <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin=""/>
+            <link rel="stylesheet"
+                  href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap"/>
+        </xpath>
+    </template>
+
+    <!-- ─── LocalBusiness JSON-LD schema ─────────────────────── -->
+    <template id="hu_schema" inherit_id="web.layout" name="HeadsUp Schema">
+        <xpath expr="//head" position="inside">
+            <script type="application/ld+json">
+            {
+                "@context": "https://schema.org",
+                "@type": "LocalBusiness",
+                "name": "Heads Up Outdoor Services",
+                "description": "Professional lawn care and landscaping in Shakopee, MN",
+                "address": {
+                    "@type": "PostalAddress",
+                    "addressLocality": "Shakopee",
+                    "addressRegion": "MN",
+                    "addressCountry": "US"
+                },
+                "areaServed": "Twin Cities Metro",
+                "url": "https://headsup.everjust.app",
+                "priceRange": "$$"
+            }
+            </script>
+        </xpath>
+    </template>
+
+    <!-- ─── Sticky CTA button ────────────────────────────────── -->
+    <template id="hu_sticky_cta" inherit_id="website.layout" name="HeadsUp Sticky CTA">
+        <xpath expr="//div[@id='wrapwrap']" position="inside">
+            <a href="/contactus"
+               class="hu-sticky-cta btn btn-primary btn-lg">
+                <i class="fa fa-phone me-2"/>Get a Quote
+            </a>
         </xpath>
     </template>
 

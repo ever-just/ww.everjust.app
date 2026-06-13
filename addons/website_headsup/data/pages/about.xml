@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_about" model="ir.ui.view">
+        <field name="name">HeadsUp About</field>
+        <field name="type">qweb</field>
+        <field name="key">website_headsup.about</field>
+        <field name="arch" type="xml">
+            <t t-name="website_headsup.about">
+                <t t-call="website.layout">
+                    <div id="wrap" class="oe_structure oe_empty">
+
+                        <section class="hu-hero" style="padding: 4rem 0 3rem;">
+                            <div class="container text-center">
+                                <h1>About Heads Up</h1>
+                                <p class="lead mx-auto">Family-owned outdoor services proudly serving Shakopee and the Twin Cities since 2021.</p>
+                            </div>
+                        </section>
+
+                        <section class="hu-section">
+                            <div class="container">
+                                <div class="row g-5 align-items-center">
+                                    <div class="col-lg-6 hu-reveal">
+                                        <h2 class="hu-section-title">Our Story</h2>
+                                        <p style="font-size: 1.05rem; line-height: 1.8;">
+                                            Heads Up Outdoor Services started with a simple idea: deliver
+                                            reliable, high-quality lawn care and landscaping without the
+                                            hassle. What began as a one-person operation has grown into a
+                                            trusted team serving over 150 residential and commercial
+                                            properties across the Twin Cities metro.
+                                        </p>
+                                        <p style="font-size: 1.05rem; line-height: 1.8;">
+                                            We're licensed, insured, and committed to treating every
+                                            property like our own. Whether it's a weekly mow or a full
+                                            landscape redesign, we bring the same level of care and
+                                            attention to detail.
+                                        </p>
+                                    </div>
+                                    <div class="col-lg-6 hu-reveal">
+                                        <div class="hu-stats" style="border-radius: 12px; padding: 2.5rem;">
+                                            <div class="row text-center g-4">
+                                                <div class="col-6"><div class="hu-stat-number">150+</div><div class="hu-stat-label">Properties</div></div>
+                                                <div class="col-6"><div class="hu-stat-number">5+</div><div class="hu-stat-label">Years</div></div>
+                                                <div class="col-6"><div class="hu-stat-number">4.9</div><div class="hu-stat-label">Rating</div></div>
+                                                <div class="col-6"><div class="hu-stat-number">100%</div><div class="hu-stat-label">Guaranteed</div></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+
+                        <section class="hu-section-alt">
+                            <div class="container text-center">
+                                <h2 class="hu-section-title hu-reveal">Service Area</h2>
+                                <p class="hu-section-subtitle hu-reveal">
+                                    Based in Shakopee, we serve the greater Twin Cities metro including
+                                    Prior Lake, Savage, Burnsville, Eden Prairie, Chanhassen, and
+                                    surrounding communities.
+                                </p>
+                                <div class="hu-reveal">
+                                    <a href="/contactus" class="btn btn-primary btn-lg">Check If We Serve Your Area</a>
+                                </div>
+                            </div>
+                        </section>
+
+                        <section class="hu-cta">
+                            <div class="container hu-reveal">
+                                <h2>Let's work together</h2>
+                                <p>Get a free, no-obligation estimate for your property.</p>
+                                <a href="/contactus" class="btn btn-light btn-lg">Get Your Free Quote</a>
+                            </div>
+                        </section>
+
+                    </div>
+                </t>
+            </t>
+        </field>
+    </record>
+    <record id="page_about" model="website.page">
+        <field name="name">About</field>
+        <field name="url">/about</field>
+        <field name="is_published">True</field>
+        <field name="website_indexed">True</field>
+        <field name="view_id" ref="view_about"/>
+    </record>
+</odoo>

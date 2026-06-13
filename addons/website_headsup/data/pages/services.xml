@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_services" model="ir.ui.view">
+        <field name="name">HeadsUp Services</field>
+        <field name="type">qweb</field>
+        <field name="key">website_headsup.services</field>
+        <field name="arch" type="xml">
+            <t t-name="website_headsup.services">
+                <t t-call="website.layout">
+                    <div id="wrap" class="oe_structure oe_empty">
+
+                        <section class="hu-hero" style="padding: 4rem 0 3rem;">
+                            <div class="container text-center">
+                                <h1>Our Services</h1>
+                                <p class="lead mx-auto">Complete outdoor care for residential and commercial properties in the Twin Cities.</p>
+                            </div>
+                        </section>
+
+                        <section class="hu-section">
+                            <div class="container">
+                                <div class="row g-5 mb-5 align-items-center">
+                                    <div class="col-lg-6"><div class="hu-card-icon mx-auto mb-3" style="width:80px;height:80px;font-size:2rem;"><i class="fa fa-leaf"/></div></div>
+                                    <div class="col-lg-6">
+                                        <h2>Lawn Mowing &amp; Maintenance</h2>
+                                        <p>Weekly and bi-weekly mowing, trimming, edging, and blowing for a consistently clean look. We adjust mowing height seasonally and handle clipping removal so your lawn stays healthy year-round.</p>
+                                        <a href="/contactus" class="btn btn-primary">Request a Quote</a>
+                                    </div>
+                                </div>
+                                <hr/>
+                                <div class="row g-5 my-5 align-items-center flex-row-reverse">
+                                    <div class="col-lg-6"><div class="hu-card-icon mx-auto mb-3" style="width:80px;height:80px;font-size:2rem;"><i class="fa fa-tree"/></div></div>
+                                    <div class="col-lg-6">
+                                        <h2>Landscaping &amp; Design</h2>
+                                        <p>Full-service landscape design, installation, and ongoing maintenance. From garden beds and retaining walls to patios and walkways — we bring your outdoor vision to life.</p>
+                                        <a href="/contactus" class="btn btn-primary">Request a Quote</a>
+                                    </div>
+                                </div>
+                                <hr/>
+                                <div class="row g-5 my-5 align-items-center">
+                                    <div class="col-lg-6"><div class="hu-card-icon mx-auto mb-3" style="width:80px;height:80px;font-size:2rem;"><i class="fa fa-snowflake-o"/></div></div>
+                                    <div class="col-lg-6">
+                                        <h2>Snow Removal</h2>
+                                        <p>Commercial and residential plowing, salting, and sidewalk clearing all winter long. We offer per-event and seasonal contracts to fit your budget.</p>
+                                        <a href="/contactus" class="btn btn-primary">Request a Quote</a>
+                                    </div>
+                                </div>
+                                <hr/>
+                                <div class="row g-5 my-5 align-items-center flex-row-reverse">
+                                    <div class="col-lg-6"><div class="hu-card-icon mx-auto mb-3" style="width:80px;height:80px;font-size:2rem;"><i class="fa fa-sun-o"/></div></div>
+                                    <div class="col-lg-6">
+                                        <h2>Spring &amp; Fall Cleanup</h2>
+                                        <p>Seasonal transitions done right. Spring: debris removal, bed prep, mulching, turf renovation. Fall: leaf removal, gutter cleaning, winterization to protect your property.</p>
+                                        <a href="/contactus" class="btn btn-primary">Request a Quote</a>
+                                    </div>
+                                </div>
+                                <hr/>
+                                <div class="row g-5 my-5 align-items-center">
+                                    <div class="col-lg-6"><div class="hu-card-icon mx-auto mb-3" style="width:80px;height:80px;font-size:2rem;"><i class="fa fa-tint"/></div></div>
+                                    <div class="col-lg-6">
+                                        <h2>Irrigation</h2>
+                                        <p>Sprinkler system installation, repair, and seasonal startup/blowout services. We ensure your irrigation system runs efficiently and keeps your lawn hydrated.</p>
+                                        <a href="/contactus" class="btn btn-primary">Request a Quote</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+
+                        <section class="hu-cta">
+                            <div class="container">
+                                <h2>Need a custom service?</h2>
+                                <p>We handle projects of all sizes. Tell us what you need and we'll put together a plan.</p>
+                                <a href="/contactus" class="btn btn-light btn-lg">Contact Us</a>
+                            </div>
+                        </section>
+
+                    </div>
+                </t>
+            </t>
+        </field>
+    </record>
+    <record id="page_services" model="website.page">
+        <field name="name">Services</field>
+        <field name="url">/services</field>
+        <field name="is_published">True</field>
+        <field name="website_indexed">True</field>
+        <field name="view_id" ref="view_services"/>
+    </record>
+</odoo>

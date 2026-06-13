@@ -1,4 +1,4 @@
-// HeadsUp Website Theme — all custom classes prefixed with hu-
+// HeadsUp Website Theme — comprehensive green brand override
 
 $hu-green: #166A0B;
 $hu-green-dark: #0E4507;
@@ -6,111 +6,91 @@ $hu-green-light: #1E8F0F;
 $hu-muted: #8EA58D;
 $hu-cream: #f5f7f5;
 
-// ── Native button overrides (works with website builder) ────
+// ── GLOBAL COLOR OVERRIDES ─────────────────────────────────
+// Override Odoo's color combination system so ALL o_cc sections use green
+.o_cc3 { background-color: $hu-green !important; color: #fff !important; }
+.o_cc3 a:not(.btn) { color: #fff !important; }
+.o_cc5 { background-color: $hu-green-dark !important; color: #fff !important; }
+.bg-o-color-3 { background-color: $hu-green !important; }
+.bg-o-color-4 { background-color: $hu-green-dark !important; }
+.bg-o-color-5 { background-color: $hu-muted !important; }
+.text-o-color-3 { color: $hu-green !important; }
+
+// Links
+a { color: $hu-green; }
+a:hover { color: $hu-green-dark; }
+
+// Headings
+h1, h2, h3, h4, h5, h6 { color: #1a1a1a; }
+.o_cc3 h1, .o_cc3 h2, .o_cc3 h3, .o_cc5 h1, .o_cc5 h2, .o_cc5 h3 { color: #fff !important; }
+
+// ── NAVBAR ─────────────────────────────────────────────────
+header .navbar {
+    background-color: #fff !important;
+    border-bottom: 1px solid #eee;
+    transition: background .3s, box-shadow .3s;
+}
+header .navbar .nav-link { color: $hu-green !important; font-weight: 500; }
+header .navbar .nav-link:hover { color: $hu-green-dark !important; }
+header .navbar .navbar-brand { color: $hu-green !important; }
+header.o_header_affixed .navbar {
+    box-shadow: 0 2px 12px rgba(0,0,0,.1) !important;
+}
+// Phone number in header
+header .navbar .btn_cta,
+header .navbar .btn-primary {
+    background-color: $hu-green !important;
+    border-color: $hu-green !important;
+}
+
+// ── BUTTONS ────────────────────────────────────────────────
 .btn-primary, .o_website_btn_primary {
-    background-color: $hu-green;
-    border-color: $hu-green;
+    background-color: $hu-green !important;
+    border-color: $hu-green !important;
     font-weight: 600;
     border-radius: 8px;
-    transition: background .2s, box-shadow .2s, transform .15s;
     &:hover, &:focus {
-        background-color: $hu-green-light;
-        border-color: $hu-green-light;
+        background-color: $hu-green-light !important;
+        border-color: $hu-green-light !important;
         transform: translateY(-1px);
         box-shadow: 0 4px 18px rgba($hu-green, .3);
     }
 }
 .btn-outline-primary {
-    border-color: $hu-green;
-    color: $hu-green;
+    border-color: $hu-green !important;
+    color: $hu-green !important;
     font-weight: 600;
     border-radius: 8px;
-    &:hover { background: $hu-green; color: #fff; transform: translateY(-1px); }
-}
-
-// ── Color utilities for website builder ─────────────────────
-.bg-hu-green  { background-color: $hu-green !important; }
-.bg-hu-dark   { background-color: $hu-green-dark !important; }
-.bg-hu-cream  { background-color: $hu-cream !important; }
-.bg-hu-muted  { background-color: $hu-muted !important; }
-.text-hu-green { color: $hu-green !important; }
-.text-hu-dark  { color: $hu-green-dark !important; }
-.text-hu-muted { color: $hu-muted !important; }
-
-// ── Navbar: transparent over hero, solid on scroll ──────────
-header .navbar { transition: background .3s, box-shadow .3s; }
-.o_header_overlay #top .navbar { background: transparent !important; box-shadow: none !important; }
-.o_header_overlay #top:not(.o_header_affixed) .navbar .nav-link,
-.o_header_overlay #top:not(.o_header_affixed) .navbar-toggler { color: #fff !important; }
-#top.o_header_affixed .navbar {
-    background: rgba($hu-green-dark, .97) !important;
-    backdrop-filter: blur(12px);
-    box-shadow: 0 1px 16px rgba(0,0,0,.18) !important;
-}
-
-// ── Hero ────────────────────────────────────────────────────
-.hu-hero {
-    position: relative;
-    padding: 6rem 0 5rem;
-    background: linear-gradient(135deg, $hu-green 0%, $hu-green-dark 100%);
-    color: #fff;
-    overflow: hidden;
-    &::after {
-        content: ""; position: absolute; bottom: -2px; left: 0; right: 0;
-        height: 80px; background: #fff;
-        clip-path: ellipse(55% 100% at 50% 100%);
+    &:hover {
+        background: $hu-green !important;
+        color: #fff !important;
     }
-    h1 { font-size: clamp(2.2rem, 5vw, 3.5rem); font-weight: 800; line-height: 1.15; margin-bottom: 1.25rem; }
-    p.lead { font-size: clamp(1.05rem, 2vw, 1.25rem); opacity: .9; max-width: 540px; }
 }
 
-// ── Sections ────────────────────────────────────────────────
-.hu-section { padding: 5rem 0; }
-.hu-section-alt { padding: 5rem 0; background: $hu-cream; }
-.hu-section-title { font-weight: 800; font-size: clamp(1.6rem, 3.5vw, 2.4rem); margin-bottom: .5rem; }
-.hu-section-subtitle { color: #666; font-size: 1.1rem; max-width: 600px; margin: 0 auto 3rem; }
-
-// ── Service cards ───────────────────────────────────────────
-.hu-card {
-    border: 1px solid #e8e8e8; border-radius: 12px; padding: 2rem 1.5rem;
-    text-align: center; background: #fff; height: 100%;
-    transition: transform .2s, box-shadow .2s;
-    &:hover { transform: translateY(-4px); box-shadow: 0 8px 24px rgba(0,0,0,.08); }
-    .hu-card-icon {
-        width: 56px; height: 56px; border-radius: 12px;
-        background: rgba($hu-green, .1); color: $hu-green;
-        display: flex; align-items: center; justify-content: center;
-        margin: 0 auto 1.25rem; font-size: 1.5rem;
-    }
-    h3 { font-size: 1.15rem; font-weight: 700; margin-bottom: .5rem; }
-    p { color: #666; font-size: .95rem; margin: 0; }
+// ── SNIPPET-SPECIFIC OVERRIDES ─────────────────────────────
+// Feature icons
+.s_features_icon {
+    background-color: $hu-green !important;
+    color: #fff !important;
 }
 
-// ── Stats ───────────────────────────────────────────────────
-.hu-stats {
-    background: $hu-green; color: #fff; padding: 3rem 0;
-    .hu-stat-number { font-size: 2.5rem; font-weight: 800; line-height: 1; }
-    .hu-stat-label { font-size: .9rem; opacity: .85; margin-top: .25rem; }
+// Numbers
+.s_number { color: $hu-green; }
+
+// ── FOOTER ─────────────────────────────────────────────────
+#footer, .o_footer {
+    background-color: $hu-green-dark !important;
+    color: #fff !important;
+}
+.o_footer a { color: rgba(255,255,255,.85) !important; }
+.o_footer a:hover { color: #fff !important; }
+.o_footer h5, .o_footer h6, .o_footer .h5, .o_footer .h6 { color: #fff !important; }
+.o_footer_copyright {
+    background-color: darken($hu-green-dark, 3%) !important;
+    color: rgba(255,255,255,.7) !important;
 }
 
-// ── Testimonial ─────────────────────────────────────────────
-.hu-testimonial {
-    border: 1px solid #e8e8e8; border-radius: 12px; padding: 2rem; background: #fff; height: 100%;
-    .hu-quote { font-size: 1.05rem; font-style: italic; color: #333; margin-bottom: 1.25rem; line-height: 1.7; }
-    .hu-author { font-weight: 600; color: $hu-green-dark; }
-    .hu-role { font-size: .85rem; color: #999; }
-}
-
-// ── CTA banner ──────────────────────────────────────────────
-.hu-cta {
-    background: linear-gradient(135deg, $hu-green-dark, $hu-green); color: #fff;
-    padding: 5rem 0; text-align: center;
-    h2 { font-size: clamp(1.8rem, 4vw, 2.8rem); font-weight: 800; margin-bottom: 1rem; }
-    p { font-size: 1.15rem; opacity: .9; max-width: 560px; margin: 0 auto 2rem; }
-    .btn-light { padding: .75rem 2.5rem; font-weight: 700; border-radius: 8px; font-size: 1.05rem; color: $hu-green; }
-}
-
-// ── Sticky CTA ──────────────────────────────────────────────
+// ── STICKY CTA ─────────────────────────────────────────────
 .hu-sticky-cta {
     position: fixed; bottom: 1.5rem; right: 1.5rem; z-index: 1050;
     box-shadow: 0 4px 24px rgba(0,0,0,.22); border-radius: 50rem;
@@ -118,12 +98,12 @@ header .navbar { transition: background .3s, box-shadow .3s; }
     display: none;
     &.hu-visible { display: inline-block; }
 }
-@keyframes hu-slide-up { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
+@keyframes hu-slide-up {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
 
-// ── Footer ──────────────────────────────────────────────────
-footer a { opacity: .85; transition: opacity .15s; &:hover { opacity: 1; } }
-
-// ── Scroll reveal ───────────────────────────────────────────
+// ── SCROLL REVEAL ──────────────────────────────────────────
 .hu-reveal {
     opacity: 0; transform: translateY(24px);
     transition: opacity .6s ease, transform .6s ease;

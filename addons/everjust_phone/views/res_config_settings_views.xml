@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form_phone" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.phone</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="base_setup.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//setting[@id='sms']" position="after">
+                <setting string="Twilio Phone System"
+                         help="Embedded calls and SMS powered by Twilio">
+                    <div class="content-group">
+                        <div class="row mt16">
+                            <label for="twilio_account_sid" class="col-3 o_light_label"/>
+                            <field name="twilio_account_sid" class="oe_inline" placeholder="ACxxxxxxxxxx"/>
+                        </div>
+                        <div class="row">
+                            <label for="twilio_auth_token" class="col-3 o_light_label"/>
+                            <field name="twilio_auth_token" class="oe_inline" password="True"/>
+                        </div>
+                        <div class="row">
+                            <label for="twilio_api_key" class="col-3 o_light_label"/>
+                            <field name="twilio_api_key" class="oe_inline" placeholder="SKxxxxxxxxxx"/>
+                        </div>
+                        <div class="row">
+                            <label for="twilio_api_secret" class="col-3 o_light_label"/>
+                            <field name="twilio_api_secret" class="oe_inline" password="True"/>
+                        </div>
+                        <div class="row">
+                            <label for="twilio_twiml_app_sid" class="col-3 o_light_label"/>
+                            <field name="twilio_twiml_app_sid" class="oe_inline" placeholder="APxxxxxxxxxx"/>
+                        </div>
+                        <div class="row">
+                            <label for="twilio_phone_number" class="col-3 o_light_label"/>
+                            <field name="twilio_phone_number" class="oe_inline" placeholder="+19525551234"/>
+                        </div>
+                        <div class="mt8 text-muted">
+                            Calls and SMS happen directly in the browser. No extension needed.
+                            Configure webhook URLs in your Twilio TwiML App to point to
+                            <code>https://YOUR-DOMAIN/phone/twiml/outbound</code>
+                            and set your Twilio number's voice URL to
+                            <code>https://YOUR-DOMAIN/phone/twiml/inbound</code>.
+                        </div>
+                    </div>
+                </setting>
+            </xpath>
+        </field>
+    </record>
+</odoo>

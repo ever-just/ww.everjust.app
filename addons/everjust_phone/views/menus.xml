@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="phone_menu_root" name="Phone"
+              web_icon="everjust_phone,static/description/icon.png"
+              sequence="42"/>
+
+    <menuitem id="phone_menu_calls" name="Call History"
+              parent="phone_menu_root"
+              action="phone_call_action"
+              sequence="10"/>
+
+    <menuitem id="phone_menu_sms" name="SMS Messages"
+              parent="phone_menu_root"
+              action="phone_sms_action"
+              sequence="20"/>
+
+    <menuitem id="phone_menu_config" name="Configuration"
+              parent="phone_menu_root"
+              sequence="90"/>
+</odoo>

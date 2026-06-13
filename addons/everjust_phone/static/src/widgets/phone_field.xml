@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates xml:space="preserve">
+    <!-- Add a call button to the phone field -->
+    <t t-name="everjust_phone.PhoneFieldCall" t-inherit="web.PhoneField" t-inherit-mode="extension">
+        <xpath expr="//a[hasclass('o_field_phone_sms')]" position="before">
+            <button class="btn btn-sm btn-link text-success p-0 ms-1"
+                    title="Call with Phone"
+                    t-on-click="onClickCall">
+                <i class="fa fa-phone"/>
+            </button>
+        </xpath>
+    </t>
+</templates>

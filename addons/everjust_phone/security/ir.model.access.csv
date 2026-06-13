@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_phone_call_user,everjust.phone.call.user,model_everjust_phone_call,group_phone_user,1,0,0,0
+access_phone_call_admin,everjust.phone.call.admin,model_everjust_phone_call,group_phone_admin,1,1,1,1
+access_phone_sms_user,everjust.phone.sms.user,model_everjust_phone_sms,group_phone_user,1,0,0,0
+access_phone_sms_admin,everjust.phone.sms.admin,model_everjust_phone_sms,group_phone_admin,1,1,1,1

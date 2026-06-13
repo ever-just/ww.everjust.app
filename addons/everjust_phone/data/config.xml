@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="param_account_sid" model="ir.config_parameter">
+            <field name="key">everjust_phone.account_sid</field>
+            <field name="value"></field>
+        </record>
+        <record id="param_auth_token" model="ir.config_parameter">
+            <field name="key">everjust_phone.auth_token</field>
+            <field name="value"></field>
+        </record>
+        <record id="param_api_key" model="ir.config_parameter">
+            <field name="key">everjust_phone.api_key</field>
+            <field name="value"></field>
+        </record>
+        <record id="param_api_secret" model="ir.config_parameter">
+            <field name="key">everjust_phone.api_secret</field>
+            <field name="value"></field>
+        </record>
+        <record id="param_twiml_app_sid" model="ir.config_parameter">
+            <field name="key">everjust_phone.twiml_app_sid</field>
+            <field name="value"></field>
+        </record>
+        <record id="param_phone_number" model="ir.config_parameter">
+            <field name="key">everjust_phone.phone_number</field>
+            <field name="value"></field>
+        </record>
+    </data>
+</odoo>

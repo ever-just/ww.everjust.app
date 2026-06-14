@@ -78,7 +78,7 @@
       m.position.set(x, y, z);
       m.scale.setScalar(s);
       m.rotation.set(Math.random() * Math.PI, Math.random() * Math.PI, 0);
-      m.userData = { sx: 0.0010 + i * 0.0004, sy: 0.0014 - i * 0.0002, phase: i, baseY: y };
+      m.userData = { sx: 0.004 + i * 0.0012, sy: 0.006 - i * 0.0006, phase: i, baseY: y };
       group.add(m);
       return m;
     });
@@ -106,34 +106,27 @@
       });
     }
 
-    let onScreen = true, running = false, raf = 0;
-    if ("IntersectionObserver" in window) {
-      new IntersectionObserver((entries) => {
-        onScreen = entries[0].isIntersecting;
-        onScreen ? start() : stop();
-      }, { threshold: 0.01 }).observe(host);
-    }
-    document.addEventListener("visibilitychange", () => {
-      document.hidden ? stop() : (onScreen && start());
-    });
-
+    // Single always-on loop (paused only when the tab is hidden). Kept simple
+    // and unconditional so the cubes are always visibly tumbling + floating.
     const clock = new THREE.Clock();
+    let raf = 0, paused = false;
     function frame() {
-      if (!running) return;
+      if (paused) return;
       const t = clock.getElapsedTime();
       cubes.forEach((m) => {
         m.rotation.x += m.userData.sx;
         m.rotation.y += m.userData.sy;
-        m.position.y = m.userData.baseY + Math.sin(t * 0.6 + m.userData.phase) * 0.26;
+        m.position.y = m.userData.baseY + Math.sin(t * 0.9 + m.userData.phase) * 0.5;
       });
       group.rotation.y += (targetX - group.rotation.y) * 0.05;
       group.rotation.x += (targetY - group.rotation.x) * 0.05;
       renderer.render(scene, camera);
       raf = requestAnimationFrame(frame);
     }
-    function start() { if (!running) { running = true; clock.start(); raf = requestAnimationFrame(frame); } }
-    function stop() { running = false; cancelAnimationFrame(raf); }
-
-    start();
+    document.addEventListener("visibilitychange", () => {
+      if (document.hidden) { paused = true; cancelAnimationFrame(raf); }
+      else if (paused) { paused = false; raf = requestAnimationFrame(frame); }
+    });
+    frame();
   }
 })();

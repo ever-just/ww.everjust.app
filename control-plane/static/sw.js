@@ -3,7 +3,7 @@
  * network-first for pages with an offline fallback. */
 "use strict";
 
-const CACHE = "everjust-v5";
+const CACHE = "everjust-v6";
 const OFFLINE_URL = "/offline";
 
 const PRECACHE = [
@@ -16,6 +16,7 @@ const PRECACHE = [
   "/static/js/consent.js",
   "/static/js/docs.js",
   "/static/js/pwa.js",
+  "/static/js/analytics.js",
   "/static/img/icon-192x192.png",
   "/static/img/icon-512x512.png",
   "/static/img/apple-touch-icon.png",

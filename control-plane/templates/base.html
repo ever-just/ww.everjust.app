@@ -85,7 +85,7 @@
           <a class="nav-link-plain d-none d-lg-inline-block" href="/pricing">Pricing</a>
           <a class="nav-link-plain d-none d-lg-inline-block" href="/docs">Docs</a>
           <a class="btn btn-outline-dark d-none d-sm-inline-flex" href="/signin">Sign in</a>
-          <a class="btn btn-primary" href="/signup">Get started</a>
+          <a class="btn btn-primary" href="/signup" data-track="signup_cta" data-track-from="nav">Get started</a>
           {% endblock %}
         </div>
       </nav>
@@ -191,11 +191,20 @@
     </button>
   </nav>
 
+  {# Cookieless, privacy-first analytics (Plausible-compatible). Only emitted
+     when ANALYTICS_DOMAIN is configured; sets no cookies, so the "no tracking
+     cookies" promise holds. The stub queues events fired before the script loads. #}
+  {% if analytics_domain %}
+  <script defer data-domain="{{ analytics_domain }}" src="{{ analytics_src }}"></script>
+  <script>window.plausible=window.plausible||function(){(window.plausible.q=window.plausible.q||[]).push(arguments)}</script>
+  {% endif %}
+
   <script src="/static/vendor/bootstrap/bootstrap.bundle.min.js?v={{ asset_v }}" defer></script>
   <script src="/static/vendor/cookieconsent/cookieconsent.umd.js?v={{ asset_v }}" defer></script>
   <script src="/static/js/consent.js?v={{ asset_v }}" defer></script>
   <script src="/static/js/nav.js?v={{ asset_v }}" defer></script>
   <script src="/static/js/pwa.js?v={{ asset_v }}" defer></script>
+  <script src="/static/js/analytics.js?v={{ asset_v }}" defer></script>
   {% block scripts %}{% endblock %}
 </body>
 </html>

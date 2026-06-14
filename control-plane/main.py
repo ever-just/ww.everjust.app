@@ -6,6 +6,7 @@ provisioning. Runs at everjust.app (root); tenant workspaces live at
 <org>.everjust.app.
 """
 import datetime
+import logging
 import os
 import pathlib
 import time
@@ -21,10 +22,22 @@ import content
 import provisioning
 import signup_store
 
+logging.basicConfig(
+    level=os.environ.get("LOG_LEVEL", "INFO"),
+    format="%(asctime)s %(levelname)s %(name)s %(message)s",
+)
+log = logging.getLogger("everjust.control_plane")
+
 stripe.api_key = os.environ["STRIPE_SECRET_KEY"]
 STRIPE_PRICE_ID = os.environ.get("STRIPE_PRICE_ID", "price_1TflJNKL0p3ve1jHbCLlDNWS")
 WEBHOOK_SECRET = os.environ.get("STRIPE_WEBHOOK_SECRET", "")
 BASE_DOMAIN = os.environ.get("BASE_DOMAIN", "everjust.app")
+
+# Cookieless, privacy-first analytics. Set ANALYTICS_DOMAIN to the site's
+# domain registered in a (hosted or self-hosted) Plausible-compatible instance
+# to switch it on; unset = no analytics script is emitted at all.
+ANALYTICS_DOMAIN = os.environ.get("ANALYTICS_DOMAIN", "")
+ANALYTICS_SRC = os.environ.get("ANALYTICS_SRC", "https://plausible.io/js/script.js")
 
 BASE_DIR = pathlib.Path(__file__).resolve().parent
 STATIC_DIR = BASE_DIR / "static"
@@ -98,6 +111,8 @@ def render(request: Request, name: str, status_code: int = 200, **ctx) -> HTMLRe
     ctx.setdefault("apps_by_category", content.apps_by_category())
     ctx.setdefault("calculator_tools", content.CALCULATOR_TOOLS)
     ctx.setdefault("asset_v", ASSET_VERSION)
+    ctx.setdefault("analytics_domain", ANALYTICS_DOMAIN)
+    ctx.setdefault("analytics_src", ANALYTICS_SRC)
     return templates.TemplateResponse(
         request=request, name=name, context=ctx, status_code=status_code
     )
@@ -355,10 +370,15 @@ async def stripe_webhook(request: Request):
                 "admin_password": meta.get("admin_password"),
             }
         if not pending:
+            # Paid but we can't resolve who for — must be investigated by hand.
+            log.critical("PAID BUT UNPROVISIONABLE: checkout %s completed with no "
+                         "resolvable signup token/metadata", s.get("id"))
             return JSONResponse(
                 {"provisioned": False, "error": "Unknown or expired signup token"},
                 status_code=500,
             )
+        log.info("provisioning from checkout %s: subdomain=%s",
+                 s.get("id"), pending.get("subdomain"))
         try:
             provisioning.provision_tenant(
                 subdomain=pending["subdomain"],
@@ -372,7 +392,11 @@ async def stripe_webhook(request: Request):
                 },
             )
         except Exception as e:
+            # A paying customer just failed to get a workspace — loudest signal.
+            log.critical("PROVISION FAILED for paid customer: subdomain=%s checkout=%s: %s",
+                         pending.get("subdomain"), s.get("id"), e, exc_info=True)
             return JSONResponse({"provisioned": False, "error": str(e)}, status_code=500)
+        log.info("provisioned subdomain=%s", pending.get("subdomain"))
         return {"provisioned": True}
 
     if event["type"] in ("invoice.payment_failed", "customer.subscription.deleted"):

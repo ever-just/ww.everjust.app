@@ -199,6 +199,66 @@ def test_webhook_checkout_completed_provisions_from_token(client, monkeypatch):
     assert token not in client.pending_signups  # consumed
 
 
+def test_webhook_forwards_personalization_and_logs(client, monkeypatch, caplog):
+    seen = {}
+
+    def fake_provision(subdomain, admin_login, admin_password, personalization=None, **extra):
+        seen["personalization"] = personalization
+        return {"subdomain": subdomain}
+
+    monkeypatch.setattr(provisioning, "provision_tenant", fake_provision)
+    token = "tok_p"
+    client.pending_signups[token] = {
+        "subdomain": "acme", "admin_email": "o@acme.com", "admin_password": "hunter2hunter2",
+        "industry": "retail", "website": "acme.com", "team_size": "10", "goals": "sell,invoice",
+    }
+    event = _event("checkout.session.completed", {"id": "cs_1", "metadata": {"signup_token": token}})
+    with caplog.at_level("INFO"), mock.patch.object(stripe.Webhook, "construct_event", return_value=event):
+        r = client.post("/stripe/webhook", content=b"{}", headers={"stripe-signature": "x"})
+    assert r.json() == {"provisioned": True}
+    # The captured onboarding context reaches provisioning intact.
+    assert seen["personalization"]["industry"] == "retail"
+    assert seen["personalization"]["website"] == "acme.com"
+    assert any("provisioned subdomain=acme" in m for m in caplog.messages)
+
+
+def test_webhook_logs_critical_when_paid_customer_provision_fails(client, monkeypatch, caplog):
+    def boom(*a, **k):
+        raise RuntimeError("odoo init exploded")
+
+    monkeypatch.setattr(provisioning, "provision_tenant", boom)
+    token = "tok_boom"
+    client.pending_signups[token] = {
+        "subdomain": "doomed", "admin_email": "o@x.com", "admin_password": "hunter2hunter2",
+    }
+    event = _event("checkout.session.completed", {"id": "cs_2", "metadata": {"signup_token": token}})
+    with caplog.at_level("CRITICAL"), mock.patch.object(stripe.Webhook, "construct_event", return_value=event):
+        r = client.post("/stripe/webhook", content=b"{}", headers={"stripe-signature": "x"})
+    assert r.status_code == 500
+    # A paid-but-unprovisioned customer must produce a CRITICAL alert.
+    assert any(rec.levelname == "CRITICAL" and "PROVISION FAILED" in rec.message
+               for rec in caplog.records)
+
+
+def test_best_effort_branding_never_raises_and_logs(monkeypatch, caplog):
+    # A branding failure must NOT break provisioning (the customer paid) but
+    # must be visible in logs, not silently swallowed.
+    import website_enrichment
+    monkeypatch.setattr(website_enrichment, "enrich",
+                        lambda url: (_ for _ in ()).throw(RuntimeError("dns boom")))
+    with caplog.at_level("ERROR"):
+        provisioning._apply_website_branding("acme", "acme.com")   # must not raise
+    assert any("website branding failed" in m for m in caplog.messages)
+
+
+def test_best_effort_app_install_never_raises_and_logs(monkeypatch, caplog):
+    monkeypatch.setattr(provisioning.subprocess, "run",
+                        lambda *a, **k: (_ for _ in ()).throw(RuntimeError("docker gone")))
+    with caplog.at_level("ERROR"):
+        provisioning._install_personalized_apps("acme", {"industry": "retail", "goals": ""})
+    assert any("personalized app install failed" in m for m in caplog.messages)
+
+
 def test_webhook_checkout_completed_legacy_metadata(client, monkeypatch):
     """Sessions created before the token store carry credentials in metadata."""
     seen = {}
@@ -758,4 +818,33 @@ def test_docs_is_help_center_not_app_catalog(client):
 def test_pwa_auto_reload_on_new_version(client):
     js = client.get("/static/js/pwa.js").text
     assert "controllerchange" in js                  # deploys auto-refresh
-    assert "everjust-v5" in client.get("/sw.js").text
+    assert "everjust-v6" in client.get("/sw.js").text
+
+
+def test_analytics_is_cookieless_and_gated(client, monkeypatch):
+    # The shim always loads; the provider script only when ANALYTICS_DOMAIN is set.
+    home = client.get("/").text
+    assert "/static/js/analytics.js" in home
+    js = client.get("/static/js/analytics.js").text
+    assert "ejTrack" in js and "doNotTrack" in js     # cookieless + DNT-aware
+    assert "document.cookie" not in js                # never sets/reads cookies
+
+    # Unset by default -> no third-party analytics script emitted.
+    assert "data-domain=" not in home
+    assert "plausible" not in home.lower()
+
+    # Configured -> the cookieless provider script appears.
+    monkeypatch.setattr(main, "ANALYTICS_DOMAIN", "everjust.app")
+    on = client.get("/").text
+    assert 'data-domain="everjust.app"' in on
+    assert "plausible" in on.lower()
+
+
+def test_signup_funnel_is_instrumented(client):
+    signup = client.get("/signup").text
+    for ev in ("signup_started", "signup_details", "signup_submitted"):
+        assert f'data-track="{ev}"' in signup
+    # Persistent CTA + completion view event.
+    assert 'data-track="signup_cta"' in client.get("/").text
+    welcome = client.get("/welcome?subdomain=acme").text
+    assert 'data-track-view="signup_completed"' in welcome

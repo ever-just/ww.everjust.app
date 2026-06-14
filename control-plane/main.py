@@ -26,6 +26,12 @@ STRIPE_PRICE_ID = os.environ.get("STRIPE_PRICE_ID", "price_1TflJNKL0p3ve1jHbCLlD
 WEBHOOK_SECRET = os.environ.get("STRIPE_WEBHOOK_SECRET", "")
 BASE_DOMAIN = os.environ.get("BASE_DOMAIN", "everjust.app")
 
+# Cookieless, privacy-first analytics. Set ANALYTICS_DOMAIN to the site's
+# domain registered in a (hosted or self-hosted) Plausible-compatible instance
+# to switch it on; unset = no analytics script is emitted at all.
+ANALYTICS_DOMAIN = os.environ.get("ANALYTICS_DOMAIN", "")
+ANALYTICS_SRC = os.environ.get("ANALYTICS_SRC", "https://plausible.io/js/script.js")
+
 BASE_DIR = pathlib.Path(__file__).resolve().parent
 STATIC_DIR = BASE_DIR / "static"
 
@@ -98,6 +104,8 @@ def render(request: Request, name: str, status_code: int = 200, **ctx) -> HTMLRe
     ctx.setdefault("apps_by_category", content.apps_by_category())
     ctx.setdefault("calculator_tools", content.CALCULATOR_TOOLS)
     ctx.setdefault("asset_v", ASSET_VERSION)
+    ctx.setdefault("analytics_domain", ANALYTICS_DOMAIN)
+    ctx.setdefault("analytics_src", ANALYTICS_SRC)
     return templates.TemplateResponse(
         request=request, name=name, context=ctx, status_code=status_code
     )

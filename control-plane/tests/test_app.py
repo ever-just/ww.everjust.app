@@ -758,4 +758,33 @@ def test_docs_is_help_center_not_app_catalog(client):
 def test_pwa_auto_reload_on_new_version(client):
     js = client.get("/static/js/pwa.js").text
     assert "controllerchange" in js                  # deploys auto-refresh
-    assert "everjust-v5" in client.get("/sw.js").text
+    assert "everjust-v6" in client.get("/sw.js").text
+
+
+def test_analytics_is_cookieless_and_gated(client, monkeypatch):
+    # The shim always loads; the provider script only when ANALYTICS_DOMAIN is set.
+    home = client.get("/").text
+    assert "/static/js/analytics.js" in home
+    js = client.get("/static/js/analytics.js").text
+    assert "ejTrack" in js and "doNotTrack" in js     # cookieless + DNT-aware
+    assert "document.cookie" not in js                # never sets/reads cookies
+
+    # Unset by default -> no third-party analytics script emitted.
+    assert "data-domain=" not in home
+    assert "plausible" not in home.lower()
+
+    # Configured -> the cookieless provider script appears.
+    monkeypatch.setattr(main, "ANALYTICS_DOMAIN", "everjust.app")
+    on = client.get("/").text
+    assert 'data-domain="everjust.app"' in on
+    assert "plausible" in on.lower()
+
+
+def test_signup_funnel_is_instrumented(client):
+    signup = client.get("/signup").text
+    for ev in ("signup_started", "signup_details", "signup_submitted"):
+        assert f'data-track="{ev}"' in signup
+    # Persistent CTA + completion view event.
+    assert 'data-track="signup_cta"' in client.get("/").text
+    welcome = client.get("/welcome?subdomain=acme").text
+    assert 'data-track-view="signup_completed"' in welcome

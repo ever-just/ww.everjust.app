@@ -61,13 +61,22 @@
     setSavings(Math.max(0, current - o) * 12);
   }
 
+  // Fire one "calculator_used" analytics event on first real interaction.
+  var tracked = false;
+  function trackUse() {
+    if (tracked) return;
+    tracked = true;
+    if (window.ejTrack) window.ejTrack("calculator_used", { path: location.pathname });
+  }
+
   tools.forEach(function (t) {
     t.addEventListener("click", function () {
       var on = t.classList.toggle("is-active");
       t.setAttribute("aria-pressed", String(on));
+      trackUse();
       recompute();
     });
   });
-  usersInput.addEventListener("input", recompute);
+  usersInput.addEventListener("input", function () { trackUse(); recompute(); });
   recompute();
 })();

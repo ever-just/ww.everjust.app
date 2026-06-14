@@ -512,6 +512,19 @@ def test_docs_mobile_nav_collapsed(client):
     assert 'class="docs-nav-list"' in body
 
 
+def test_landing_3d_hero(client):
+    body = client.get("/").text
+    # The interactive 3D hero is wired (canvas + the deferred enhancement script).
+    assert 'id="hero3d-canvas"' in body
+    assert "/static/js/hero3d.js" in body
+    # Three.js is vendored locally and served; hero3d.js loads it via dynamic
+    # import (no static top-level import, so mobile/reduced-motion skip it).
+    assert client.get("/static/vendor/three/three.module.min.js").status_code == 200
+    js = client.get("/static/js/hero3d.js").text
+    assert "import(" in js and "import *" not in js   # dynamic, not eager
+    assert "prefers-reduced-motion" in js and "max-width: 767" in js  # guards
+
+
 def test_mobile_tabbar(client):
     body = client.get("/").text
     assert 'class="mobile-tabbar d-lg-none"' in body

@@ -40,6 +40,8 @@
 
 {% block content %}
 <section class="hero container">
+  <div class="hero-3d" aria-hidden="true"><canvas id="hero3d-canvas"></canvas></div>
+  <div class="hero-inner">
   <span class="hero-kicker"><span class="dotpulse"></span> All-in-one workspace</span>
   <h1>Run your entire business in one place.</h1>
   <p class="lede">
@@ -63,11 +65,12 @@
       {% for _ in range(2) %}
         <span class="marq-set">
         {% for slug, a in apps.items() %}
-        <span class="app-chip">{{ icon(a.icon, 16) }} {{ a.name }}</span>
+        <span class="app-chip"><img src="/static/img/apps/{{ slug }}.webp?v={{ asset_v }}" alt="" width="22" height="22" loading="lazy"> {{ a.name }}</span>
         {% endfor %}
         </span>
       {% endfor %}
     </div>
+  </div>
   </div>
 </section>
 
@@ -296,4 +299,5 @@
 
 {% block scripts %}
 <script src="/static/js/calc.js?v={{ asset_v }}" defer></script>
+<script src="/static/js/hero3d.js?v={{ asset_v }}" defer></script>
 {% endblock %}

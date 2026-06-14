@@ -365,11 +365,20 @@ a:focus-visible {
 
 /* ── Hero (the typographic signature) ─────────────────── */
 
-.hero { padding: 4.5rem 0 3rem; text-align: center; }
+.hero { padding: 4.5rem 0 3rem; text-align: center; position: relative; }
 
 @media (max-width: 575.98px) {
   .hero { padding: 2rem 0 1.75rem; }
 }
+
+/* Landing 3D hero backdrop: floating frosted cubes behind the headline.
+   Enhancement only — empty/invisible until hero3d.js mounts a canvas. */
+.hero-3d {
+  position: absolute; inset: -3rem -8vw 0; z-index: 0;
+  pointer-events: none; overflow: hidden;
+}
+.hero-3d canvas { width: 100%; height: 100%; display: block; }
+.hero-inner { position: relative; z-index: 1; }
 
 /* Comfortable side gutters on phones; roomier on larger screens. */
 @media (max-width: 575.98px) {
@@ -1563,6 +1572,7 @@ kbd {
 }
 
 .app-chip .lucide { color: var(--ej-muted); }
+.app-chip img { width: 22px; height: 22px; object-fit: contain; }
 
 .marq-set { display: flex; gap: .6rem; }
 

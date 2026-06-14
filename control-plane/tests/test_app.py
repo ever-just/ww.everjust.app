@@ -866,7 +866,7 @@ def test_docs_is_help_center_not_app_catalog(client):
 def test_pwa_auto_reload_on_new_version(client):
     js = client.get("/static/js/pwa.js").text
     assert "controllerchange" in js                  # deploys auto-refresh
-    assert "everjust-v9" in client.get("/sw.js").text
+    assert "everjust-v10" in client.get("/sw.js").text
 
 
 def test_footer_uses_real_logo_mark(client):

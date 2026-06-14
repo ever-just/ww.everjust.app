@@ -41,27 +41,35 @@
 {% block content %}
 <section class="hero container app-hero">
   <nav aria-label="breadcrumb">
-    <ol class="breadcrumb small justify-content-center">
+    <ol class="breadcrumb small">
       <li class="breadcrumb-item"><a href="/">Home</a></li>
       <li class="breadcrumb-item"><a href="/apps">Apps</a></li>
       <li class="breadcrumb-item active" aria-current="page">{{ app_data.name }}</li>
     </ol>
   </nav>
-  <span class="app-kicker">{{ icon(app_data.icon, 16) }} {{ app_data.name }}</span>
-  <h1>{{ app_data.tagline }}</h1>
-  <p class="lede">{{ app_data.summary }}</p>
-  <div class="hero-cta d-flex flex-wrap gap-2 justify-content-center mb-2">
-    <a class="btn btn-primary btn-lg" href="/signup">Get {{ app_data.name }} — included {{ icon("arrow-right", 18) }}</a>
-    {% if app_data.guide %}<a class="btn btn-outline-dark btn-lg" href="/docs/{{ app_data.guide }}">Read the guide</a>{% endif %}
-  </div>
-  <p class="small text-secondary mb-0">Included with every workspace &middot; no per-app pricing</p>
+  <div class="row align-items-center app-hero-row g-4 g-lg-5">
+    <div class="col-12 col-lg-7 app-hero-copy">
+      <span class="app-kicker">{{ icon(app_data.icon, 16) }} {{ app_data.name }}</span>
+      <h1>{{ app_data.tagline }}</h1>
+      <p class="lede">{{ app_data.summary }}</p>
+      <div class="hero-cta d-flex flex-wrap gap-2 mb-2">
+        <a class="btn btn-primary btn-lg" href="/signup">Get {{ app_data.name }} — included {{ icon("arrow-right", 18) }}</a>
+        {% if app_data.guide %}<a class="btn btn-outline-dark btn-lg" href="/docs/{{ app_data.guide }}">Read the guide</a>{% endif %}
+      </div>
+      <p class="small text-secondary mb-0">Included with every workspace &middot; no per-app pricing</p>
 
-  <ul class="app-specs" aria-label="At a glance">
-    <li class="app-spec">{{ icon("circle-check", 16) }} Included in every plan</li>
-    {% if app_data.replaces %}<li class="app-spec">{{ icon("layers", 16) }} Replaces {{ app_data.replaces|length }}+ separate tools</li>{% endif %}
-    <li class="app-spec">{{ icon("database", 16) }} Shares one workspace &amp; database</li>
+      <ul class="app-specs" aria-label="At a glance">
+        <li class="app-spec">{{ icon("circle-check", 16) }} Included in every plan</li>
+        {% if app_data.replaces %}<li class="app-spec">{{ icon("layers", 16) }} Replaces {{ app_data.replaces|length }}+ separate tools</li>{% endif %}
+        <li class="app-spec">{{ icon("database", 16) }} Shares one workspace &amp; database</li>
     {% if app_data.guide %}<li class="app-spec">{{ icon("book-open", 16) }} Step-by-step guide included</li>{% endif %}
-  </ul>
+      </ul>
+    </div>
+    <div class="col-12 col-lg-5 app-hero-visual">
+      <img src="/static/img/apps/{{ slug }}.webp?v={{ asset_v }}" alt="{{ app_data.name }} — EVERJUST.APP"
+           width="440" height="440" loading="eager" decoding="async">
+    </div>
+  </div>
 </section>
 
 {% if app_data.replaces %}

@@ -364,14 +364,17 @@ def test_apps_index(client):
 
 
 def test_app_detail_pages(client):
-    og_dir = pathlib.Path(__file__).resolve().parents[1] / "static" / "img" / "og"
+    base = pathlib.Path(__file__).resolve().parents[1] / "static" / "img"
     for slug, a in main.content.APPS.items():
         r = client.get(f"/apps/{slug}")
         assert r.status_code == 200, slug
         assert html.escape(a["name"], quote=False) in r.text
         # Every app gets its own social card, and the file must exist on disk.
         assert f"/static/img/og/{slug}.jpg" in r.text, slug
-        assert (og_dir / f"{slug}.jpg").exists(), slug
+        assert (base / "og" / f"{slug}.jpg").exists(), slug
+        # Every app has an on-page 3D hero visual rendered in the hero.
+        assert f"/static/img/apps/{slug}.webp" in r.text, slug
+        assert (base / "apps" / f"{slug}.webp").exists(), slug
         # Every page carries the at-a-glance spec strip and the "one connected
         # workspace" diagram so no app page reads as thin/text-only.
         assert "app-specs" in r.text, slug

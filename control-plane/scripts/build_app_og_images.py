@@ -32,6 +32,18 @@ W, H = 1200, 630
 MARGIN = 80
 
 
+_LOGO_CACHE = None
+
+
+def _logo(size: int = 50) -> Image.Image:
+    """The white-on-transparent mark, resized once and reused per card."""
+    global _LOGO_CACHE
+    if _LOGO_CACHE is None or _LOGO_CACHE.size != (size, size):
+        path = ROOT / "static" / "img" / "logo-white.png"
+        _LOGO_CACHE = Image.open(path).convert("RGBA").resize((size, size), Image.LANCZOS)
+    return _LOGO_CACHE
+
+
 def _texture() -> Image.Image:
     if TEXTURE.exists():
         return Image.open(TEXTURE).convert("RGB")
@@ -94,10 +106,11 @@ def _card(base: Image.Image, app_name: str, category: str, tagline: str) -> Imag
     grey = (200, 201, 208)
     faint = (150, 151, 160)
 
-    # Wordmark (top-left) + hairline rule.
+    # Logo mark + wordmark lockup (top-left).
+    mark = _logo()
+    img.paste(mark, (MARGIN, MARGIN - 2), mark)
     wm = _font(34, 600)
-    draw.text((MARGIN, MARGIN), "EVERJUST.APP", font=wm, fill=white)
-    draw.line([(MARGIN, MARGIN + 56), (MARGIN + 150, MARGIN + 56)], fill=white, width=3)
+    draw.text((MARGIN + 62, MARGIN + 8), "EVERJUST.APP", font=wm, fill=white)
 
     # Category eyebrow (top-right, upper-cased), spaced for an editorial feel.
     eye = _font(26, 600)

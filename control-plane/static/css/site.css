@@ -727,15 +727,22 @@ a:focus-visible {
 
 .site-footer a:hover { color: #fff; }
 
+.footer-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: .6rem;
+  text-decoration: none;
+  margin-bottom: 1rem;
+}
+.footer-mark { display: block; flex-shrink: 0; }
+
 .footer-wordmark {
-  display: inline-block;
   font-family: var(--ej-display, "Space Grotesk"), system-ui, sans-serif;
   font-weight: 700;
   font-size: 1.5rem;
   letter-spacing: -.01em;
   color: #fff !important;
   text-decoration: none;
-  margin-bottom: 1rem;
   min-height: 0;
 }
 .footer-wordmark span { color: rgba(255, 255, 255, .45); }

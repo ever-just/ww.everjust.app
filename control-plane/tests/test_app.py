@@ -829,7 +829,16 @@ def test_docs_is_help_center_not_app_catalog(client):
 def test_pwa_auto_reload_on_new_version(client):
     js = client.get("/static/js/pwa.js").text
     assert "controllerchange" in js                  # deploys auto-refresh
-    assert "everjust-v6" in client.get("/sw.js").text
+    assert "everjust-v7" in client.get("/sw.js").text
+
+
+def test_footer_uses_real_logo_mark(client):
+    # The actual EVERJUST mark (white variant) appears on the dark footer,
+    # not just a text wordmark, and the asset is served.
+    body = client.get("/").text
+    assert "/static/img/logo-white.png" in body
+    assert "footer-brand" in body
+    assert client.get("/static/img/logo-white.png").status_code == 200
 
 
 def test_analytics_is_cookieless_and_gated(client, monkeypatch):

@@ -84,10 +84,11 @@ def main():
     white = (255, 255, 255)
     grey = (200, 201, 208)
 
-    # Wordmark (top-left) + hairline rule.
+    # Logo mark + wordmark lockup (top-left).
+    mark = Image.open(ROOT / "static" / "img" / "logo-white.png").convert("RGBA").resize((50, 50), Image.LANCZOS)
+    img.paste(mark, (MARGIN, MARGIN - 2), mark)
     wm = _font(34, 600)
-    draw.text((MARGIN, MARGIN), "EVERJUST.APP", font=wm, fill=white)
-    draw.line([(MARGIN, MARGIN + 56), (MARGIN + 150, MARGIN + 56)], fill=white, width=3)
+    draw.text((MARGIN + 62, MARGIN + 8), "EVERJUST.APP", font=wm, fill=white)
 
     # Headline.
     head = _font(78, 700)

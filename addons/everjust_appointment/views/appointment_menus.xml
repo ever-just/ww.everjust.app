@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Top-level app menu -->
+    <menuitem id="menu_appointment_root"
+              name="Appointments"
+              web_icon="everjust_appointment,static/description/icon.png"
+              sequence="45"/>
+
+    <!-- Sub-menus -->
+    <menuitem id="menu_appointment_bookings"
+              name="Bookings"
+              parent="menu_appointment_root"
+              action="action_appointment_booking"
+              sequence="10"/>
+
+    <menuitem id="menu_appointment_config"
+              name="Configuration"
+              parent="menu_appointment_root"
+              groups="everjust_appointment.group_appointment_manager"
+              sequence="90"/>
+
+    <menuitem id="menu_appointment_types"
+              name="Appointment Types"
+              parent="menu_appointment_config"
+              action="action_appointment_type"
+              sequence="10"/>
+
+</odoo>

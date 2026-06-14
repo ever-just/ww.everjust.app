@@ -1,0 +1,250 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ============================================================ -->
+    <!-- STEP 1: List of published appointment types                  -->
+    <!-- ============================================================ -->
+    <template id="appointment_list_page" name="Appointment Types List">
+        <t t-call="website.layout">
+            <div id="wrap" class="ej-appt-wrap">
+                <div class="ej-appt-container">
+                    <div class="ej-appt-header">
+                        <h1>Book an Appointment</h1>
+                        <p>Choose the type of appointment that fits your needs.</p>
+                    </div>
+
+                    <div class="ej-appt-grid">
+                        <t t-foreach="appointment_types" t-as="appt">
+                            <a t-attf-href="/appointment/#{appt.id}" class="ej-appt-card">
+                                <div class="ej-appt-card-body">
+                                    <h3 class="ej-appt-card-title" t-out="appt.name"/>
+                                    <div class="ej-appt-card-meta">
+                                        <span class="ej-appt-card-duration">
+                                            <t t-if="appt.duration == 0.5">30 min</t>
+                                            <t t-elif="appt.duration == 1.0">1 hour</t>
+                                            <t t-elif="appt.duration == 1.5">1.5 hours</t>
+                                            <t t-elif="appt.duration == 2.0">2 hours</t>
+                                            <t t-else=""><t t-out="appt.duration"/> hours</t>
+                                        </span>
+                                        <t t-if="appt.location">
+                                            <span class="ej-appt-card-location" t-out="appt.location"/>
+                                        </t>
+                                    </div>
+                                    <div t-if="appt.description" class="ej-appt-card-desc" t-out="appt.description"/>
+                                </div>
+                                <div class="ej-appt-card-arrow">&#8594;</div>
+                            </a>
+                        </t>
+                    </div>
+
+                    <t t-if="not appointment_types">
+                        <div class="ej-appt-empty">
+                            <p>No appointment types are currently available.</p>
+                        </div>
+                    </t>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <!-- ============================================================ -->
+    <!-- STEPS 2-4: Booking page (date, time, contact form)           -->
+    <!-- ============================================================ -->
+    <template id="appointment_booking_page" name="Book Appointment">
+        <t t-call="website.layout">
+            <div id="wrap" class="ej-appt-wrap">
+                <div class="ej-appt-container ej-appt-booking">
+
+                    <!-- Back link -->
+                    <a href="/appointment" class="ej-appt-back">&larr; All appointment types</a>
+
+                    <div class="ej-appt-header">
+                        <h1 t-out="appt_type.name"/>
+                        <div class="ej-appt-card-meta">
+                            <span class="ej-appt-card-duration">
+                                <t t-if="appt_type.duration == 0.5">30 min</t>
+                                <t t-elif="appt_type.duration == 1.0">1 hour</t>
+                                <t t-elif="appt_type.duration == 1.5">1.5 hours</t>
+                                <t t-elif="appt_type.duration == 2.0">2 hours</t>
+                                <t t-else=""><t t-out="appt_type.duration"/> hours</t>
+                            </span>
+                            <t t-if="appt_type.location">
+                                <span class="ej-appt-card-location" t-out="appt_type.location"/>
+                            </t>
+                        </div>
+                    </div>
+
+                    <!-- Steps indicator -->
+                    <div class="ej-appt-steps">
+                        <div class="ej-appt-step active" data-step="1">
+                            <span class="ej-appt-step-num">1</span>
+                            <span class="ej-appt-step-label">Date</span>
+                        </div>
+                        <div class="ej-appt-step-line"></div>
+                        <div class="ej-appt-step" data-step="2">
+                            <span class="ej-appt-step-num">2</span>
+                            <span class="ej-appt-step-label">Time</span>
+                        </div>
+                        <div class="ej-appt-step-line"></div>
+                        <div class="ej-appt-step" data-step="3">
+                            <span class="ej-appt-step-num">3</span>
+                            <span class="ej-appt-step-label">Details</span>
+                        </div>
+                    </div>
+
+                    <!-- Step 1: Date picker -->
+                    <div id="step-date" class="ej-appt-section">
+                        <h2>Select a Date</h2>
+                        <div class="ej-calendar"
+                             data-type-id=""
+                             t-att-data-type-id="appt_type.id"
+                             t-att-data-available-weekdays="available_weekdays"
+                             t-att-data-min-date="min_date"
+                             t-att-data-max-date="max_date">
+                            <div class="ej-calendar-nav">
+                                <button type="button" class="ej-calendar-prev" aria-label="Previous month">&lsaquo;</button>
+                                <span class="ej-calendar-month-label"></span>
+                                <button type="button" class="ej-calendar-next" aria-label="Next month">&rsaquo;</button>
+                            </div>
+                            <div class="ej-calendar-weekdays">
+                                <span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span>
+                            </div>
+                            <div class="ej-calendar-days"></div>
+                        </div>
+                    </div>
+
+                    <!-- Step 2: Time slots -->
+                    <div id="step-time" class="ej-appt-section" style="display:none;">
+                        <h2>Select a Time</h2>
+                        <p class="ej-selected-date-label"></p>
+                        <div class="ej-slots-grid"></div>
+                        <div class="ej-slots-empty" style="display:none;">
+                            No available times for this date. Please select another date.
+                        </div>
+                        <div class="ej-slots-loading" style="display:none;">
+                            Loading available times...
+                        </div>
+                        <button type="button" class="ej-btn ej-btn-outline ej-btn-back-date">
+                            &larr; Change date
+                        </button>
+                    </div>
+
+                    <!-- Step 3: Contact form -->
+                    <div id="step-form" class="ej-appt-section" style="display:none;">
+                        <h2>Your Details</h2>
+                        <p class="ej-selected-summary"></p>
+                        <form t-attf-action="/appointment/#{appt_type.id}/book"
+                              method="post"
+                              class="ej-appt-form"
+                              id="booking-form">
+                            <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                            <input type="hidden" name="slot_datetime" id="slot_datetime" value=""/>
+
+                            <div class="ej-form-group">
+                                <label for="name">Full Name *</label>
+                                <input type="text" id="name" name="name" required=""
+                                       placeholder="Your full name" autocomplete="name"/>
+                            </div>
+                            <div class="ej-form-group">
+                                <label for="email">Email *</label>
+                                <input type="email" id="email" name="email" required=""
+                                       placeholder="you@example.com" autocomplete="email"/>
+                            </div>
+                            <div class="ej-form-group">
+                                <label for="phone">Phone</label>
+                                <input type="tel" id="phone" name="phone"
+                                       placeholder="(555) 123-4567" autocomplete="tel"/>
+                            </div>
+                            <div class="ej-form-group">
+                                <label for="notes">Notes</label>
+                                <textarea id="notes" name="notes" rows="3"
+                                          placeholder="Anything you'd like us to know..."></textarea>
+                            </div>
+
+                            <div class="ej-form-actions">
+                                <button type="button" class="ej-btn ej-btn-outline ej-btn-back-time">
+                                    &larr; Change time
+                                </button>
+                                <button type="submit" class="ej-btn ej-btn-primary" id="btn-submit">
+                                    Confirm Booking
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <!-- ============================================================ -->
+    <!-- Confirmation page                                             -->
+    <!-- ============================================================ -->
+    <template id="appointment_confirmation_page" name="Appointment Confirmation">
+        <t t-call="website.layout">
+            <div id="wrap" class="ej-appt-wrap">
+                <div class="ej-appt-container ej-appt-confirm">
+                    <t t-if="booking">
+                        <div class="ej-confirm-icon">&#10003;</div>
+                        <h1>Appointment Confirmed</h1>
+                        <p class="ej-confirm-sub">
+                            You're all set. A confirmation email has been sent to
+                            <strong t-out="booking.email or booking.partner_id.email or ''"/>.
+                        </p>
+
+                        <div class="ej-confirm-details">
+                            <div class="ej-confirm-row">
+                                <span class="ej-confirm-label">Type</span>
+                                <span t-out="booking.appointment_type_id.name"/>
+                            </div>
+                            <div class="ej-confirm-row">
+                                <span class="ej-confirm-label">Date &amp; Time</span>
+                                <span t-out="booking.start_datetime"
+                                      t-options="{'widget': 'datetime', 'format': 'EEEE, MMMM d, yyyy h:mm a'}"/>
+                            </div>
+                            <div class="ej-confirm-row">
+                                <span class="ej-confirm-label">Duration</span>
+                                <span>
+                                    <t t-if="booking.duration == 0.5">30 minutes</t>
+                                    <t t-elif="booking.duration == 1.0">1 hour</t>
+                                    <t t-else=""><t t-out="booking.duration"/> hours</t>
+                                </span>
+                            </div>
+                            <t t-if="booking.location">
+                                <div class="ej-confirm-row">
+                                    <span class="ej-confirm-label">Location</span>
+                                    <span t-out="booking.location"/>
+                                </div>
+                            </t>
+                            <t t-if="booking.staff_user_id">
+                                <div class="ej-confirm-row">
+                                    <span class="ej-confirm-label">With</span>
+                                    <span t-out="booking.staff_user_id.name"/>
+                                </div>
+                            </t>
+                            <t t-if="booking.notes">
+                                <div class="ej-confirm-row">
+                                    <span class="ej-confirm-label">Notes</span>
+                                    <span t-out="booking.notes"/>
+                                </div>
+                            </t>
+                        </div>
+
+                        <a href="/appointment" class="ej-btn ej-btn-outline" style="margin-top:24px;">
+                            Book another appointment
+                        </a>
+                    </t>
+
+                    <t t-else="">
+                        <h1>Booking Not Found</h1>
+                        <p>We couldn't find that booking. Please try again.</p>
+                        <a href="/appointment" class="ej-btn ej-btn-primary">
+                            Book an Appointment
+                        </a>
+                    </t>
+                </div>
+            </div>
+        </t>
+    </template>
+
+</odoo>

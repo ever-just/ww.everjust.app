@@ -1,0 +1,628 @@
+/* ============================================================
+   EverJust Appointments — Public Booking Pages
+   ============================================================ */
+
+:root {
+    --ej-accent: #166A0B;
+    --ej-accent-hover: #125508;
+    --ej-accent-light: #e8f5e6;
+    --ej-text: #1a1a1a;
+    --ej-text-muted: #666;
+    --ej-border: #e0e0e0;
+    --ej-bg: #fafafa;
+    --ej-white: #fff;
+    --ej-radius: 8px;
+    --ej-radius-lg: 12px;
+    --ej-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+    --ej-shadow-hover: 0 4px 12px rgba(0, 0, 0, 0.12);
+    --ej-transition: 0.2s ease;
+}
+
+/* Layout */
+.ej-appt-wrap {
+    background: var(--ej-bg);
+    min-height: 70vh;
+    padding: 48px 16px 80px;
+}
+
+.ej-appt-container {
+    max-width: 720px;
+    margin: 0 auto;
+}
+
+/* Header */
+.ej-appt-header {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.ej-appt-header h1 {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--ej-text);
+    margin: 0 0 8px;
+}
+
+.ej-appt-header p {
+    font-size: 15px;
+    color: var(--ej-text-muted);
+    margin: 0;
+}
+
+/* Back link */
+.ej-appt-back {
+    display: inline-block;
+    margin-bottom: 24px;
+    font-size: 14px;
+    color: var(--ej-text-muted);
+    text-decoration: none;
+}
+
+.ej-appt-back:hover {
+    color: var(--ej-accent);
+}
+
+/* ============================================================
+   Card grid (step 1 — appointment type list)
+   ============================================================ */
+
+.ej-appt-grid {
+    display: grid;
+    gap: 16px;
+}
+
+.ej-appt-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--ej-white);
+    border: 1px solid var(--ej-border);
+    border-radius: var(--ej-radius-lg);
+    padding: 24px;
+    text-decoration: none;
+    color: var(--ej-text);
+    transition: box-shadow var(--ej-transition), border-color var(--ej-transition);
+}
+
+.ej-appt-card:hover {
+    border-color: var(--ej-accent);
+    box-shadow: var(--ej-shadow-hover);
+    text-decoration: none;
+    color: var(--ej-text);
+}
+
+.ej-appt-card-body {
+    flex: 1;
+    min-width: 0;
+}
+
+.ej-appt-card-title {
+    font-size: 18px;
+    font-weight: 600;
+    margin: 0 0 6px;
+}
+
+.ej-appt-card-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    font-size: 13px;
+    color: var(--ej-text-muted);
+    margin-bottom: 4px;
+}
+
+.ej-appt-card-duration::before {
+    content: "\1F552 ";
+}
+
+.ej-appt-card-location::before {
+    content: "\1F4CD ";
+}
+
+.ej-appt-card-desc {
+    font-size: 14px;
+    color: var(--ej-text-muted);
+    margin-top: 8px;
+    line-height: 1.5;
+}
+
+.ej-appt-card-desc p {
+    margin: 0;
+}
+
+.ej-appt-card-arrow {
+    font-size: 22px;
+    color: var(--ej-border);
+    margin-left: 16px;
+    transition: color var(--ej-transition), transform var(--ej-transition);
+}
+
+.ej-appt-card:hover .ej-appt-card-arrow {
+    color: var(--ej-accent);
+    transform: translateX(4px);
+}
+
+.ej-appt-empty {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--ej-text-muted);
+    font-size: 15px;
+}
+
+/* ============================================================
+   Steps indicator
+   ============================================================ */
+
+.ej-appt-steps {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+    margin-bottom: 32px;
+}
+
+.ej-appt-step {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    opacity: 0.4;
+    transition: opacity var(--ej-transition);
+}
+
+.ej-appt-step.active {
+    opacity: 1;
+}
+
+.ej-appt-step.completed {
+    opacity: 0.7;
+}
+
+.ej-appt-step-num {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--ej-border);
+    color: var(--ej-text);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.ej-appt-step.active .ej-appt-step-num {
+    background: var(--ej-accent);
+    color: var(--ej-white);
+}
+
+.ej-appt-step.completed .ej-appt-step-num {
+    background: var(--ej-accent-light);
+    color: var(--ej-accent);
+}
+
+.ej-appt-step-label {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--ej-text);
+}
+
+.ej-appt-step-line {
+    width: 40px;
+    height: 2px;
+    background: var(--ej-border);
+    margin: 0 8px;
+}
+
+/* ============================================================
+   Calendar (step 2 — date picker)
+   ============================================================ */
+
+.ej-calendar {
+    background: var(--ej-white);
+    border: 1px solid var(--ej-border);
+    border-radius: var(--ej-radius-lg);
+    padding: 20px;
+    max-width: 400px;
+    margin: 0 auto 24px;
+}
+
+.ej-calendar-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+}
+
+.ej-calendar-nav button {
+    background: none;
+    border: 1px solid var(--ej-border);
+    border-radius: var(--ej-radius);
+    width: 36px;
+    height: 36px;
+    font-size: 18px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--ej-text);
+    transition: background var(--ej-transition);
+}
+
+.ej-calendar-nav button:hover {
+    background: var(--ej-bg);
+}
+
+.ej-calendar-month-label {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--ej-text);
+}
+
+.ej-calendar-weekdays {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 4px;
+    margin-bottom: 8px;
+}
+
+.ej-calendar-weekdays span {
+    text-align: center;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--ej-text-muted);
+    padding: 4px 0;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.ej-calendar-days {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 4px;
+}
+
+.ej-calendar-day {
+    aspect-ratio: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    border-radius: var(--ej-radius);
+    border: none;
+    background: none;
+    cursor: default;
+    color: var(--ej-text-muted);
+    padding: 0;
+    transition: background var(--ej-transition), color var(--ej-transition);
+}
+
+.ej-calendar-day.available {
+    cursor: pointer;
+    color: var(--ej-text);
+    font-weight: 500;
+}
+
+.ej-calendar-day.available:hover {
+    background: var(--ej-accent-light);
+    color: var(--ej-accent);
+}
+
+.ej-calendar-day.selected {
+    background: var(--ej-accent);
+    color: var(--ej-white);
+}
+
+.ej-calendar-day.today {
+    box-shadow: inset 0 0 0 2px var(--ej-accent-light);
+}
+
+.ej-calendar-day.disabled {
+    opacity: 0.3;
+}
+
+.ej-calendar-day.empty {
+    visibility: hidden;
+}
+
+/* ============================================================
+   Time slots (step 2 — time grid)
+   ============================================================ */
+
+.ej-selected-date-label {
+    text-align: center;
+    font-size: 14px;
+    color: var(--ej-text-muted);
+    margin-bottom: 16px;
+}
+
+.ej-slots-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+    gap: 10px;
+    margin-bottom: 24px;
+}
+
+.ej-slot-btn {
+    background: var(--ej-white);
+    border: 1px solid var(--ej-border);
+    border-radius: var(--ej-radius);
+    padding: 12px 8px;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--ej-text);
+    cursor: pointer;
+    text-align: center;
+    transition: border-color var(--ej-transition), background var(--ej-transition), color var(--ej-transition);
+}
+
+.ej-slot-btn:hover {
+    border-color: var(--ej-accent);
+    color: var(--ej-accent);
+}
+
+.ej-slot-btn.selected {
+    background: var(--ej-accent);
+    border-color: var(--ej-accent);
+    color: var(--ej-white);
+}
+
+.ej-slots-empty,
+.ej-slots-loading {
+    text-align: center;
+    padding: 32px 16px;
+    color: var(--ej-text-muted);
+    font-size: 14px;
+}
+
+.ej-slots-loading::after {
+    content: "";
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    border: 2px solid var(--ej-border);
+    border-top-color: var(--ej-accent);
+    border-radius: 50%;
+    margin-left: 8px;
+    animation: ej-spin 0.8s linear infinite;
+    vertical-align: middle;
+}
+
+@keyframes ej-spin {
+    to { transform: rotate(360deg); }
+}
+
+/* ============================================================
+   Contact form (step 3)
+   ============================================================ */
+
+.ej-selected-summary {
+    text-align: center;
+    font-size: 14px;
+    color: var(--ej-text-muted);
+    margin-bottom: 24px;
+}
+
+.ej-appt-form {
+    background: var(--ej-white);
+    border: 1px solid var(--ej-border);
+    border-radius: var(--ej-radius-lg);
+    padding: 24px;
+}
+
+.ej-form-group {
+    margin-bottom: 16px;
+}
+
+.ej-form-group label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--ej-text);
+    margin-bottom: 6px;
+}
+
+.ej-form-group input,
+.ej-form-group textarea {
+    width: 100%;
+    padding: 10px 12px;
+    font-size: 14px;
+    border: 1px solid var(--ej-border);
+    border-radius: var(--ej-radius);
+    color: var(--ej-text);
+    background: var(--ej-white);
+    transition: border-color var(--ej-transition);
+    box-sizing: border-box;
+    font-family: inherit;
+}
+
+.ej-form-group input:focus,
+.ej-form-group textarea:focus {
+    outline: none;
+    border-color: var(--ej-accent);
+    box-shadow: 0 0 0 3px rgba(22, 106, 11, 0.1);
+}
+
+.ej-form-group input::placeholder,
+.ej-form-group textarea::placeholder {
+    color: #aaa;
+}
+
+.ej-form-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 24px;
+    gap: 12px;
+}
+
+/* ============================================================
+   Buttons
+   ============================================================ */
+
+.ej-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 24px;
+    font-size: 14px;
+    font-weight: 600;
+    border-radius: var(--ej-radius);
+    border: 1px solid transparent;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background var(--ej-transition), color var(--ej-transition), border-color var(--ej-transition);
+    font-family: inherit;
+    line-height: 1.4;
+}
+
+.ej-btn-primary {
+    background: var(--ej-accent);
+    color: var(--ej-white);
+    border-color: var(--ej-accent);
+}
+
+.ej-btn-primary:hover {
+    background: var(--ej-accent-hover);
+    border-color: var(--ej-accent-hover);
+    color: var(--ej-white);
+    text-decoration: none;
+}
+
+.ej-btn-primary:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.ej-btn-outline {
+    background: var(--ej-white);
+    color: var(--ej-text);
+    border-color: var(--ej-border);
+}
+
+.ej-btn-outline:hover {
+    border-color: var(--ej-accent);
+    color: var(--ej-accent);
+    text-decoration: none;
+}
+
+/* ============================================================
+   Confirmation page
+   ============================================================ */
+
+.ej-appt-confirm {
+    text-align: center;
+    padding-top: 60px;
+}
+
+.ej-confirm-icon {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: var(--ej-accent);
+    color: var(--ej-white);
+    font-size: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 20px;
+}
+
+.ej-appt-confirm h1 {
+    font-size: 26px;
+    font-weight: 700;
+    margin: 0 0 8px;
+}
+
+.ej-confirm-sub {
+    font-size: 15px;
+    color: var(--ej-text-muted);
+    margin: 0 0 32px;
+}
+
+.ej-confirm-details {
+    background: var(--ej-white);
+    border: 1px solid var(--ej-border);
+    border-radius: var(--ej-radius-lg);
+    padding: 20px 24px;
+    max-width: 420px;
+    margin: 0 auto;
+    text-align: left;
+}
+
+.ej-confirm-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--ej-bg);
+    font-size: 14px;
+}
+
+.ej-confirm-row:last-child {
+    border-bottom: none;
+}
+
+.ej-confirm-label {
+    font-weight: 600;
+    color: var(--ej-text);
+    min-width: 100px;
+}
+
+/* ============================================================
+   Responsive
+   ============================================================ */
+
+@media (max-width: 600px) {
+    .ej-appt-wrap {
+        padding: 24px 12px 60px;
+    }
+
+    .ej-appt-header h1 {
+        font-size: 22px;
+    }
+
+    .ej-appt-card {
+        padding: 16px;
+    }
+
+    .ej-appt-card-title {
+        font-size: 16px;
+    }
+
+    .ej-calendar {
+        padding: 14px;
+    }
+
+    .ej-slots-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    .ej-form-actions {
+        flex-direction: column-reverse;
+    }
+
+    .ej-form-actions .ej-btn {
+        width: 100%;
+    }
+
+    .ej-appt-steps {
+        gap: 0;
+    }
+
+    .ej-appt-step-label {
+        display: none;
+    }
+
+    .ej-appt-step-line {
+        width: 28px;
+    }
+
+    .ej-confirm-details {
+        padding: 14px 16px;
+    }
+
+    .ej-confirm-row {
+        flex-direction: column;
+        gap: 2px;
+    }
+}

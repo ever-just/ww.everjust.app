@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Privilege group (Odoo 19: replaces ir.module.category for group hierarchy) -->
+    <record id="privilege_appointment" model="res.groups.privilege">
+        <field name="name">Appointments</field>
+    </record>
+
+    <!-- User group — can read bookings and create bookings -->
+    <record id="group_appointment_user" model="res.groups">
+        <field name="name">User</field>
+        <field name="privilege_id" ref="privilege_appointment"/>
+        <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+    </record>
+
+    <!-- Manager group — full CRUD on types, slots, bookings -->
+    <record id="group_appointment_manager" model="res.groups">
+        <field name="name">Manager</field>
+        <field name="privilege_id" ref="privilege_appointment"/>
+        <field name="implied_ids" eval="[(4, ref('group_appointment_user'))]"/>
+        <field name="user_ids" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"/>
+    </record>
+
+    <!-- Record rules -->
+
+    <!-- Portal users can see their own bookings -->
+    <record id="rule_booking_portal" model="ir.rule">
+        <field name="name">Portal: own bookings only</field>
+        <field name="model_id" ref="model_appointment_booking"/>
+        <field name="domain_force">[('partner_id', '=', user.partner_id.id)]</field>
+        <field name="groups" eval="[(4, ref('base.group_portal'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+    </record>
+
+    <!-- Appointment users see all bookings (read) -->
+    <record id="rule_booking_user" model="ir.rule">
+        <field name="name">Appointment User: read all bookings</field>
+        <field name="model_id" ref="model_appointment_booking"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('group_appointment_user'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="False"/>
+    </record>
+
+    <!-- Appointment managers have full access -->
+    <record id="rule_booking_manager" model="ir.rule">
+        <field name="name">Appointment Manager: full access</field>
+        <field name="model_id" ref="model_appointment_booking"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('group_appointment_manager'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="True"/>
+    </record>
+
+</odoo>

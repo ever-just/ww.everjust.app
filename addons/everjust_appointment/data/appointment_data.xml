@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+    <!-- Default Appointment Types -->
+
+    <record id="appointment_type_consultation" model="appointment.type">
+        <field name="name">Free Consultation</field>
+        <field name="duration">0.5</field>
+        <field name="location">Phone</field>
+        <field name="is_published" eval="True"/>
+        <field name="sequence">10</field>
+        <field name="min_schedule_hours">24.0</field>
+        <field name="max_schedule_days">30</field>
+        <field name="create_lead" eval="True"/>
+        <field name="description"><![CDATA[
+<p>A free 30-minute phone consultation to discuss your needs and how we can help.</p>
+]]></field>
+    </record>
+
+    <record id="appointment_type_estimate" model="appointment.type">
+        <field name="name">On-Site Estimate</field>
+        <field name="duration">1.0</field>
+        <field name="location">On-site</field>
+        <field name="is_published" eval="True"/>
+        <field name="sequence">20</field>
+        <field name="min_schedule_hours">48.0</field>
+        <field name="max_schedule_days">30</field>
+        <field name="create_lead" eval="True"/>
+        <field name="description"><![CDATA[
+<p>A one-hour on-site visit to assess your project and provide an accurate estimate.</p>
+]]></field>
+    </record>
+
+    <record id="appointment_type_followup" model="appointment.type">
+        <field name="name">Follow-Up Meeting</field>
+        <field name="duration">0.5</field>
+        <field name="location">Phone / Video Call</field>
+        <field name="is_published" eval="True"/>
+        <field name="sequence">30</field>
+        <field name="min_schedule_hours">24.0</field>
+        <field name="max_schedule_days">30</field>
+        <field name="create_lead" eval="False"/>
+        <field name="description"><![CDATA[
+<p>A 30-minute follow-up meeting to review progress, answer questions, or discuss next steps.</p>
+]]></field>
+    </record>
+
+    <!-- Default Slots: Monday-Friday 9am-5pm for each type -->
+
+    <!-- Free Consultation slots -->
+    <record id="slot_consultation_mon" model="appointment.slot">
+        <field name="appointment_type_id" ref="appointment_type_consultation"/>
+        <field name="weekday">0</field>
+        <field name="start_hour">9.0</field>
+        <field name="end_hour">17.0</field>
+    </record>
+    <record id="slot_consultation_tue" model="appointment.slot">
+        <field name="appointment_type_id" ref="appointment_type_consultation"/>
+        <field name="weekday">1</field>
+        <field name="start_hour">9.0</field>
+        <field name="end_hour">17.0</field>
+    </record>
+    <record id="slot_consultation_wed" model="appointment.slot">
+        <field name="appointment_type_id" ref="appointment_type_consultation"/>
+        <field name="weekday">2</field>
+        <field name="start_hour">9.0</field>
+        <field name="end_hour">17.0</field>
+    </record>
+    <record id="slot_consultation_thu" model="appointment.slot">
+        <field name="appointment_type_id" ref="appointment_type_consultation"/>
+        <field name="weekday">3</field>
+        <field name="start_hour">9.0</field>
+        <field name="end_hour">17.0</field>
+    </record>
+    <record id="slot_consultation_fri" model="appointment.slot">
+        <field name="appointment_type_id" ref="appointment_type_consultation"/>
+        <field name="weekday">4</field>
+        <field name="start_hour">9.0</field>
+        <field name="end_hour">17.0</field>
+    </record>
+
+    <!-- On-Site Estimate slots -->
+    <record id="slot_estimate_mon" model="appointment.slot">
+        <field name="appointment_type_id" ref="appointment_type_estimate"/>
+        <field name="weekday">0</field>
+        <field name="start_hour">9.0</field>
+        <field name="end_hour">17.0</field>
+    </record>
+    <record id="slot_estimate_tue" model="appointment.slot">
+        <field name="appointment_type_id" ref="appointment_type_estimate"/>
+        <field name="weekday">1</field>
+        <field name="start_hour">9.0</field>
+        <field name="end_hour">17.0</field>
+    </record>
+    <record id="slot_estimate_wed" model="appointment.slot">
+        <field name="appointment_type_id" ref="appointment_type_estimate"/>
+        <field name="weekday">2</field>
+        <field name="start_hour">9.0</field>
+        <field name="end_hour">17.0</field>
+    </record>
+    <record id="slot_estimate_thu" model="appointment.slot">
+        <field name="appointment_type_id" ref="appointment_type_estimate"/>
+        <field name="weekday">3</field>
+        <field name="start_hour">9.0</field>
+        <field name="end_hour">17.0</field>
+    </record>
+    <record id="slot_estimate_fri" model="appointment.slot">
+        <field name="appointment_type_id" ref="appointment_type_estimate"/>
+        <field name="weekday">4</field>
+        <field name="start_hour">9.0</field>
+        <field name="end_hour">17.0</field>
+    </record>
+
+    <!-- Follow-Up Meeting slots -->
+    <record id="slot_followup_mon" model="appointment.slot">
+        <field name="appointment_type_id" ref="appointment_type_followup"/>
+        <field name="weekday">0</field>
+        <field name="start_hour">9.0</field>
+        <field name="end_hour">17.0</field>
+    </record>
+    <record id="slot_followup_tue" model="appointment.slot">
+        <field name="appointment_type_id" ref="appointment_type_followup"/>
+        <field name="weekday">1</field>
+        <field name="start_hour">9.0</field>
+        <field name="end_hour">17.0</field>
+    </record>
+    <record id="slot_followup_wed" model="appointment.slot">
+        <field name="appointment_type_id" ref="appointment_type_followup"/>
+        <field name="weekday">2</field>
+        <field name="start_hour">9.0</field>
+        <field name="end_hour">17.0</field>
+    </record>
+    <record id="slot_followup_thu" model="appointment.slot">
+        <field name="appointment_type_id" ref="appointment_type_followup"/>
+        <field name="weekday">3</field>
+        <field name="start_hour">9.0</field>
+        <field name="end_hour">17.0</field>
+    </record>
+    <record id="slot_followup_fri" model="appointment.slot">
+        <field name="appointment_type_id" ref="appointment_type_followup"/>
+        <field name="weekday">4</field>
+        <field name="start_hour">9.0</field>
+        <field name="end_hour">17.0</field>
+    </record>
+
+</odoo>

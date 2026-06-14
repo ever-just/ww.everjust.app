@@ -8,8 +8,12 @@ handled by Nginx + Odoo's dbfilter, so no per-tenant Nginx change is needed.
 import os
 import re
 import subprocess
+import time
 import httpx
 import psycopg2
+import logging
+
+logger = logging.getLogger("everjust.provisioning")
 
 ODOO_CONTAINER = os.environ.get("ODOO_CONTAINER", "deployment-odoo-1")
 BASE_DOMAIN = os.environ.get("BASE_DOMAIN", "everjust.app")
@@ -111,6 +115,10 @@ def provision_tenant(subdomain: str, admin_login: str, admin_password: str,
     if database_exists(subdomain):
         raise ValueError(f"Tenant already exists: {subdomain}")
 
+    started = time.monotonic()
+    logger.info("provision start: subdomain=%s industry=%s",
+                subdomain, (personalization or {}).get("industry", ""))
+
     # Initialize the database with EVERJUST modules via the Odoo CLI.
     subprocess.run(
         ["docker", "exec", ODOO_CONTAINER, "odoo",
@@ -124,14 +132,21 @@ def provision_tenant(subdomain: str, admin_login: str, admin_password: str,
         check=True,
     )
 
+    # Essential stages — a failure here is a real provisioning failure.
     _set_admin_credentials(subdomain, admin_login, admin_password)
     _configure_mail(subdomain)
     _configure_dms(subdomain)
+    logger.info("provision base ready: subdomain=%s (%.1fs)", subdomain, time.monotonic() - started)
+
+    # Best-effort personalization — each stage logs but never blocks the
+    # already-usable base workspace (the customer has paid; they get a tenant).
     _record_personalization(subdomain, personalization or {})
     _install_personalized_apps(subdomain, personalization or {})
     _apply_website_branding(subdomain, (personalization or {}).get("website", ""))
     ensure_dns(subdomain)
 
+    logger.info("provision complete: subdomain=%s (%.1fs total)",
+                subdomain, time.monotonic() - started)
     return {
         "subdomain": subdomain,
         "url": f"https://{subdomain}.{BASE_DOMAIN}",
@@ -187,7 +202,7 @@ def _apply_website_branding(subdomain: str, website: str) -> None:
             input=py, text=True, check=False, timeout=120,
         )
     except Exception:
-        pass
+        logger.exception("website branding failed (non-fatal): subdomain=%s", subdomain)
 
 
 def _install_personalized_apps(subdomain: str, data: dict) -> None:
@@ -208,8 +223,9 @@ def _install_personalized_apps(subdomain: str, data: dict) -> None:
              "--no-http"],
             check=False, timeout=900,
         )
+        logger.info("personalized apps installed: subdomain=%s modules=%s", subdomain, ",".join(modules))
     except Exception:
-        pass
+        logger.exception("personalized app install failed (non-fatal): subdomain=%s", subdomain)
 
 
 def _record_personalization(subdomain: str, data: dict) -> None:
@@ -236,7 +252,7 @@ def _record_personalization(subdomain: str, data: dict) -> None:
             input=py, text=True, check=False, timeout=120,
         )
     except Exception:
-        pass
+        logger.exception("recording personalization failed (non-fatal): subdomain=%s", subdomain)
 
 
 def _set_admin_credentials(db: str, login: str, password: str) -> None:

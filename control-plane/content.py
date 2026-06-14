@@ -98,10 +98,10 @@ APPS = {
             "Upload, tag, and let search do the remembering.",
         ],
         "guide": "guide-documents",
-        "related": ["esign", "knowledge", "projects"],
+        "related": ["signatures", "wiki", "projects"],
     },
-    "esign": {
-        "name": "eSign",
+    "signatures": {
+        "name": "Signatures",
         "icon": "signature",
         "tagline": "Signatures in minutes, not mail rooms.",
         "summary": (
@@ -128,11 +128,11 @@ APPS = {
             "Send — each signer gets a secure link and signs from any device.",
             "Track progress and find the completed, audit-trailed PDF in Documents.",
         ],
-        "guide": "guide-esign",
+        "guide": "guide-signatures",
         "related": ["documents", "crm-sales", "hr-time-off"],
     },
-    "knowledge": {
-        "name": "Knowledge",
+    "wiki": {
+        "name": "Wiki",
         "icon": "book-open",
         "tagline": "Write it once. Stop re-explaining it.",
         "summary": (
@@ -158,7 +158,7 @@ APPS = {
             "Write pages from templates; link related pages instead of repeating.",
             "Let version history and approvals keep the truth trustworthy.",
         ],
-        "guide": "guide-knowledge",
+        "guide": "guide-wiki",
         "related": ["documents", "projects", "hr-time-off"],
     },
     "hr-time-off": {
@@ -325,14 +325,14 @@ APP_GUIDES = {
 <p>Select multiple files and download them as one ZIP — handy for audits, handoffs, and your own peace of mind that nothing is locked in.</p>"""),
         ],
     },
-    "guide-esign": {
-        "title": "eSign",
+    "guide-signatures": {
+        "title": "Signatures",
         "icon": "signature",
         "blurb": "Prepare a PDF, route signers, track to completion.",
         "intro": "From PDF to signed-and-archived in four steps.",
         "sections": [
             ("Prepare the document", """
-<p>Open <b>eSign</b> and upload your PDF. Drag fields onto the page — signature, initials, date, free text — and assign each field to a <b>role</b> (Customer, Manager). Save frequently-used documents as templates.</p>"""),
+<p>Open <b>Signatures</b> and upload your PDF. Drag fields onto the page — signature, initials, date, free text — and assign each field to a <b>role</b> (Customer, Manager). Save frequently-used documents as templates.</p>"""),
             ("Send for signature", """
 <p>Click <b>Send</b>, map each role to a real person (name + email), and choose simultaneous or sequential signing. Signers receive a secure link and sign from any device — they don't need an account.</p>"""),
             ("Track and remind", """
@@ -341,14 +341,14 @@ APP_GUIDES = {
 <p>Everyone gets the final PDF; the signed copy carries an audit trail (who, when, from where) and is archived in <a href="/docs/guide-documents">Documents</a> with the record it relates to.</p>"""),
         ],
     },
-    "guide-knowledge": {
-        "title": "Knowledge",
+    "guide-wiki": {
+        "title": "Wiki",
         "icon": "book-open",
         "blurb": "Pages, categories, templates, history, and approvals.",
         "intro": "Build an internal wiki your team will actually read — and trust.",
         "sections": [
             ("Organize with categories", """
-<p>Open <b>Knowledge</b> and create categories that mirror how people search: <i>Onboarding</i>, <i>How we work</i>, <i>Policies</i>, <i>Tools</i>. A page belongs to one category; cross-link related pages rather than duplicating.</p>"""),
+<p>Open <b>Wiki</b> and create categories that mirror how people search: <i>Onboarding</i>, <i>How we work</i>, <i>Policies</i>, <i>Tools</i>. A page belongs to one category; cross-link related pages rather than duplicating.</p>"""),
             ("Write pages from templates", """
 <p>Give each category a <b>template</b> (Summary → Details → Conclusion → Resources) so new pages start consistent. Keep pages short: one question, answered well, beats a novel nobody finishes.</p>"""),
             ("Use history and approvals", """
@@ -426,7 +426,7 @@ CATEGORIES = {
     "hr":            {"name": "Human Resources", "icon": "users",        "blurb": "Hire, manage, and pay your team."},
     "marketing":     {"name": "Marketing",       "icon": "sparkles",     "blurb": "Reach your audience and measure what works."},
     "website":       {"name": "Website",         "icon": "globe",        "blurb": "Build a site, sell online, and publish content."},
-    "productivity":  {"name": "Productivity",    "icon": "layout-grid",  "blurb": "Documents, signatures, knowledge, and chat."},
+    "productivity":  {"name": "Productivity",    "icon": "layout-grid",  "blurb": "Documents, signatures, wiki, and chat."},
     "communication": {"name": "Communication",   "icon": "phone",        "blurb": "Calls, SMS, and a shared address book."},
 }
 
@@ -437,8 +437,8 @@ _APP_META = {
     "crm-sales":   {"category": "sales",         "replaces": ["Salesforce", "HubSpot CRM", "Pipedrive"]},
     "projects":    {"category": "operations",    "replaces": ["Asana", "Monday.com", "Trello", "Jira"]},
     "documents":   {"category": "productivity",  "replaces": ["Dropbox", "Google Drive", "SharePoint"]},
-    "esign":       {"category": "productivity",  "replaces": ["DocuSign", "Dropbox Sign", "Adobe Acrobat Sign"]},
-    "knowledge":   {"category": "productivity",  "replaces": ["Notion", "Confluence"]},
+    "signatures":       {"category": "productivity",  "replaces": ["DocuSign", "Dropbox Sign", "Adobe Acrobat Sign"]},
+    "wiki":   {"category": "productivity",  "replaces": ["Notion", "Confluence"]},
     "hr-time-off": {"category": "hr",            "replaces": ["BambooHR", "Rippling"]},
     "payroll":     {"category": "hr",            "replaces": ["Gusto", "ADP"]},
     "calls-sms":   {"category": "communication", "replaces": ["RingCentral", "Aircall", "Twilio"]},
@@ -545,8 +545,8 @@ _MORE_APPS = {
         "summary": "Write and publish posts with SEO controls and your brand's look, right alongside your website.",
         "replaces": ["Medium", "Ghost"],
     },
-    "elearning": {
-        "name": "eLearning", "icon": "graduation-cap", "category": "website",
+    "courses": {
+        "name": "Courses", "icon": "graduation-cap", "category": "website",
         "tagline": "Courses for customers or staff.",
         "summary": "Build courses with videos, quizzes, and certificates — for customer education or internal training.",
         "replaces": ["Teachable", "Thinkific"],
@@ -563,8 +563,8 @@ _MORE_APPS = {
         "summary": "Shared calendars, meeting scheduling, and reminders that connect to CRM activities, projects, and time off.",
         "replaces": ["Google Calendar", "Calendly"],
     },
-    "discuss": {
-        "name": "Discuss", "icon": "message-square", "category": "productivity",
+    "chat": {
+        "name": "Chat", "icon": "message-square", "category": "productivity",
         "tagline": "Team chat where the work is.",
         "summary": "Channels and direct messages built into the workspace, so conversations sit next to the records they're about.",
         "replaces": ["Slack", "Microsoft Teams"],
@@ -598,7 +598,7 @@ CALCULATOR_TOOLS = [
     {"id": "projects", "label": "Projects (Asana, Monday)",         "price": 12, "type": "user"},
     {"id": "chat",     "label": "Team chat (Slack)",                "price": 8,  "type": "user"},
     {"id": "files",    "label": "File storage (Dropbox)",           "price": 15, "type": "user"},
-    {"id": "esign",    "label": "eSignatures (DocuSign)",           "price": 25, "type": "user"},
+    {"id": "signatures",    "label": "eSignatures (DocuSign)",           "price": 25, "type": "user"},
     {"id": "email",    "label": "Email marketing (Mailchimp)",      "price": 20, "type": "flat"},
     {"id": "store",    "label": "Online store (Shopify)",           "price": 39, "type": "flat"},
     {"id": "hr",       "label": "HR (BambooHR)",                    "price": 8,  "type": "user"},
@@ -802,7 +802,7 @@ APP_DEPTH = {
             "Readers subscribe, comment, and share.",
         ],
     },
-    "elearning": {
+    "courses": {
         "features": [
             ("graduation-cap", "Courses that teach", "Build courses from videos, documents, and quizzes."),
             ("badge-check", "Certificates and progress", "Track who completed what and issue certificates automatically."),
@@ -838,7 +838,7 @@ APP_DEPTH = {
             "Everything links back to the related record.",
         ],
     },
-    "discuss": {
+    "chat": {
         "features": [
             ("message-square", "Channels and DMs", "Team chat built into the workspace, organized by channel."),
             ("layers", "Next to the work", "Conversations sit beside the records they're about, not in a separate app."),
@@ -847,7 +847,7 @@ APP_DEPTH = {
         "workflow": [
             "Create channels for teams and topics.",
             "Chat, share files, and mention teammates.",
-            "Discussions stay linked to the records they touch.",
+            "Conversations stay linked to the records they touch.",
         ],
     },
     "contacts": {

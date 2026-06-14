@@ -224,6 +224,15 @@ def _install_personalized_apps(subdomain: str, data: dict) -> None:
             check=False, timeout=900,
         )
         logger.info("personalized apps installed: subdomain=%s modules=%s", subdomain, ",".join(modules))
+        # Newly-installed apps (Knowledge/Sign/eLearning) carry Odoo-coined
+        # names; re-run the rename so they match the marketing site.
+        subprocess.run(
+            ["docker", "exec", "-i", ODOO_CONTAINER, "odoo", "shell",
+             "-d", subdomain, "--db_user", DB_USER,
+             "--db_password", DB_PASSWORD, "--no-http"],
+            input="env['res.company']._everjust_rename_apps()\nenv.cr.commit()\n",
+            text=True, check=False, timeout=120,
+        )
     except Exception:
         logger.exception("personalized app install failed (non-fatal): subdomain=%s", subdomain)
 

@@ -17,6 +17,11 @@
         <!-- Apply branded company report footers on install -->
         <function model="res.company" name="_everjust_apply_defaults"/>
 
+        <!-- Rename apps with Odoo-coined names to match the marketing site
+             (Discuss→Chat, Knowledge→Wiki, Sign→Signatures, eLearning→Courses).
+             Defensive: modules not installed are skipped. -->
+        <function model="res.company" name="_everjust_rename_apps"/>
+
         <!--
             Clear the default home action so users land on the app grid
             (home menu) instead of being dumped into Discuss. The mail

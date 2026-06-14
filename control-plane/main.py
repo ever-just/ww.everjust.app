@@ -172,6 +172,15 @@ def sitemap_page(request: Request):
     return render(request, "sitemap.html")
 
 
+# Apps renamed away from Odoo-coined names — 301 the old slugs to the new ones.
+APP_SLUG_REDIRECTS = {
+    "esign": "signatures", "knowledge": "wiki", "elearning": "courses", "discuss": "chat",
+}
+DOCS_SLUG_REDIRECTS = {
+    "guide-esign": "guide-signatures", "guide-knowledge": "guide-wiki",
+}
+
+
 @app.get("/apps", response_class=HTMLResponse)
 def apps_index(request: Request):
     return render(request, "apps/index.html")
@@ -184,6 +193,8 @@ def pricing(request: Request):
 
 @app.get("/apps/{slug}", response_class=HTMLResponse)
 def app_page(request: Request, slug: str):
+    if slug in APP_SLUG_REDIRECTS:               # renamed apps keep old links working
+        return RedirectResponse(f"/apps/{APP_SLUG_REDIRECTS[slug]}", status_code=301)
     if slug not in content.APPS:
         return render(
             request, "error.html", status_code=404,
@@ -220,6 +231,8 @@ def docs_search_index():
 def docs_page(request: Request, slug: str):
     if slug == "apps":  # pre-restructure URL; content now lives at /apps
         return RedirectResponse("/apps", status_code=301)
+    if slug in DOCS_SLUG_REDIRECTS:              # renamed guides keep old links working
+        return RedirectResponse(f"/docs/{DOCS_SLUG_REDIRECTS[slug]}", status_code=301)
     if slug in content.APP_GUIDES:
         return render(request, "docs/_guide.html", active=slug,
                       guide=content.APP_GUIDES[slug])

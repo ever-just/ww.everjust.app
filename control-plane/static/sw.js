@@ -3,7 +3,7 @@
  * network-first for pages with an offline fallback. */
 "use strict";
 
-const CACHE = "everjust-v8";
+const CACHE = "everjust-v9";
 const OFFLINE_URL = "/offline";
 
 const PRECACHE = [

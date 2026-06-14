@@ -109,6 +109,7 @@ def render(request: Request, name: str, status_code: int = 200, **ctx) -> HTMLRe
     ctx.setdefault("apps", content.APPS)
     ctx.setdefault("categories", content.CATEGORIES)
     ctx.setdefault("apps_by_category", content.apps_by_category())
+    ctx.setdefault("category_audiences", content.CATEGORY_AUDIENCES)
     ctx.setdefault("calculator_tools", content.CALCULATOR_TOOLS)
     ctx.setdefault("asset_v", ASSET_VERSION)
     ctx.setdefault("analytics_domain", ANALYTICS_DOMAIN)

@@ -587,6 +587,53 @@ def apps_by_category():
     return grouped
 
 
+# Audiences per category, used for the "Who it's for" band on every app page.
+# (icon, audience, one-line reason) — keeps the subpages concrete without
+# bespoke copy for all 29 apps.
+CATEGORY_AUDIENCES = {
+    "sales": [
+        ("users", "Sales teams", "One pipeline, every deal followed up, nothing lost in a spreadsheet."),
+        ("rocket", "Founders selling", "Quote, close, and hand off without buying a separate CRM."),
+        ("contact", "Account managers", "Every call, email, and document on the customer’s record."),
+    ],
+    "finance": [
+        ("wallet", "Finance & bookkeeping", "Invoice, reconcile, and track costs without a second tool."),
+        ("rocket", "Founders watching cash", "See what’s owed and what’s spent in one place."),
+        ("badge-check", "Accountants", "Clean books that tie back to the work that created them."),
+    ],
+    "operations": [
+        ("settings", "Ops managers", "Projects, stock, and purchasing share one source of truth."),
+        ("package", "Warehouse & logistics", "Real-time quantities across every location."),
+        ("factory", "Production planners", "From order to build to ship without re-keying."),
+    ],
+    "hr": [
+        ("users", "HR & People teams", "Hire, manage, and pay from one record per employee."),
+        ("user-plus", "Office managers", "Time off, expenses, and documents without the back-and-forth."),
+        ("rocket", "Founders hiring", "Run recruitment and payroll without a stack of HR apps."),
+    ],
+    "marketing": [
+        ("mail", "Marketing teams", "Campaigns and events that write back to the same contacts."),
+        ("chart-column", "Growth & demand gen", "Measure what works without stitching tools together."),
+        ("rocket", "Founders doing their own", "Email, events, and surveys without a marketing suite."),
+    ],
+    "website": [
+        ("globe", "Marketing & web teams", "Site, store, and content on one platform."),
+        ("shopping-bag", "Online sellers", "Sell products and courses next to your CRM and stock."),
+        ("rocket", "Founders launching", "Publish a site and start selling in an afternoon."),
+    ],
+    "productivity": [
+        ("layout-grid", "Every team", "Documents, signing, and chat where the work already lives."),
+        ("folder-open", "Operations & admin", "Files and approvals attached to the records they belong to."),
+        ("book-open", "Knowledge workers", "Write, sign, and find things without app-switching."),
+    ],
+    "communication": [
+        ("phone", "Sales & support", "Calls and texts logged on the customer’s timeline."),
+        ("message-square", "Front-desk & dispatch", "One shared address book and history for the whole team."),
+        ("contact", "Anyone on the phone", "Click to call; every conversation saved automatically."),
+    ],
+}
+
+
 # ── "Cut your software bill" calculator ─────────────────────────────────
 # Typical list prices for the point tools EVERJUST replaces, so visitors can
 # estimate what their current stack costs vs one flat plan. Figures are

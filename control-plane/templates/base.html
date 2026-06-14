@@ -11,9 +11,9 @@
   <meta name="theme-color" content="#000000">
   <meta name="color-scheme" content="light">
 
-  <link rel="icon" href="/static/img/favicon.ico" sizes="any">
-  <link rel="icon" href="/static/img/favicon.svg" type="image/svg+xml">
-  <link rel="apple-touch-icon" href="/static/img/apple-touch-icon.png">
+  <link rel="icon" href="/static/img/favicon.ico?v={{ asset_v }}" sizes="any">
+  <link rel="icon" type="image/png" sizes="192x192" href="/static/img/icon-192x192.png?v={{ asset_v }}">
+  <link rel="apple-touch-icon" href="/static/img/apple-touch-icon.png?v={{ asset_v }}">
   <link rel="manifest" href="/manifest.webmanifest">
 
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -84,7 +84,7 @@
     <div class="container">
       <nav class="navbar px-0" aria-label="Main">
         <a class="brand-logo" href="/" aria-label="EVERJUST.APP home">
-          <img src="/static/img/icon-192x192.png" alt="EVERJUST.APP" width="34" height="34">
+          <img src="/static/img/wordmark.png?v={{ asset_v }}" alt="EVERJUST" width="74" height="27">
         </a>
         <div class="site-actions">
           {% block nav %}
@@ -134,8 +134,7 @@
       <div class="row gy-4 align-items-start">
         <div class="col-12 col-lg-4 pe-lg-5">
           <a class="footer-brand" href="/" aria-label="EVERJUST.APP home">
-            <img src="/static/img/logo-white.png?v={{ asset_v }}" alt="" width="38" height="38" class="footer-mark">
-            <span class="footer-wordmark">EVERJUST<span>.APP</span></span>
+            <img src="/static/img/wordmark-white.png?v={{ asset_v }}" alt="EVERJUST" width="150" height="55" class="footer-mark">
           </a>
           <p class="footer-tagline">Run your entire business in one private, fully-branded workspace.</p>
           <a class="footer-cta" href="/signup">Create your workspace {{ icon("arrow-right", 14) }}</a>

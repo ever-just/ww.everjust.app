@@ -465,7 +465,7 @@ def test_header_logo_and_mobile_menu(client):
     body = client.get("/").text
     header = body.split("</header>")[0]
     assert 'class="brand-logo"' in header
-    assert "icon-192x192.png" in header           # brand logo image restored
+    assert "wordmark.png" in header                # horizontal EVERJUST wordmark
     assert 'id="siteMenu"' in body                # bottom-sheet menu exists
     assert "offcanvas-bottom menu-sheet" in body  # ...as a bottom sheet
     assert "sheet-handle" in body                 # with a drag handle
@@ -829,16 +829,19 @@ def test_docs_is_help_center_not_app_catalog(client):
 def test_pwa_auto_reload_on_new_version(client):
     js = client.get("/static/js/pwa.js").text
     assert "controllerchange" in js                  # deploys auto-refresh
-    assert "everjust-v7" in client.get("/sw.js").text
+    assert "everjust-v8" in client.get("/sw.js").text
 
 
 def test_footer_uses_real_logo_mark(client):
-    # The actual EVERJUST mark (white variant) appears on the dark footer,
-    # not just a text wordmark, and the asset is served.
+    # The real EVERJUST wordmark (white variant) appears on the dark footer,
+    # and the asset is served.
     body = client.get("/").text
-    assert "/static/img/logo-white.png" in body
+    assert "/static/img/wordmark-white.png" in body
     assert "footer-brand" in body
-    assert client.get("/static/img/logo-white.png").status_code == 200
+    assert client.get("/static/img/wordmark-white.png").status_code == 200
+    # Favicon/app icons are the brand cube (PNG/ICO, not the old mono SVG).
+    assert "/static/img/favicon.svg" not in body
+    assert client.get("/static/img/wordmark.png").status_code == 200
 
 
 def test_analytics_is_cookieless_and_gated(client, monkeypatch):

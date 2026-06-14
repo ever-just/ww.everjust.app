@@ -3,7 +3,7 @@
  * network-first for pages with an offline fallback. */
 "use strict";
 
-const CACHE = "everjust-v7";
+const CACHE = "everjust-v8";
 const OFFLINE_URL = "/offline";
 
 const PRECACHE = [
@@ -18,10 +18,9 @@ const PRECACHE = [
   "/static/js/pwa.js",
   "/static/js/analytics.js",
   "/static/img/icon-192x192.png",
-  "/static/img/icon-512x512.png",
   "/static/img/apple-touch-icon.png",
-  "/static/img/favicon.svg",
-  "/static/img/logo-white.png",
+  "/static/img/wordmark.png",
+  "/static/img/wordmark-white.png",
 ];
 
 self.addEventListener("install", (event) => {

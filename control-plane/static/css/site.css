@@ -1650,10 +1650,28 @@ kbd {
 }
 .app-hero .app-kicker .lucide { color: var(--ej-ink); }
 
+/* Two-column app hero: copy + 3D product visual. Left-aligned and side-by-side
+   on desktop; centered and stacked (visual first) on phones. */
+.app-hero { text-align: left; }
+.app-hero .breadcrumb { justify-content: flex-start; }
+.app-hero-visual { text-align: center; }
+.app-hero-visual img {
+  width: 100%; max-width: 360px; height: auto; aspect-ratio: 1 / 1;
+  object-fit: contain;
+  filter: drop-shadow(0 24px 40px rgba(110, 90, 200, .18));
+}
+@media (max-width: 991.98px) {
+  .app-hero { text-align: center; }
+  .app-hero .breadcrumb { justify-content: center; }
+  .app-hero .app-specs, .app-hero .hero-cta { justify-content: center; }
+  .app-hero-row { flex-direction: column-reverse; }   /* visual on top on mobile */
+  .app-hero-visual img { max-width: 240px; }
+}
+
 /* "At a glance" spec strip under the app hero. */
 .app-specs {
   list-style: none; margin: 1.75rem 0 0; padding: 0;
-  display: flex; flex-wrap: wrap; justify-content: center; gap: .5rem .6rem;
+  display: flex; flex-wrap: wrap; gap: .5rem .6rem;
 }
 .app-spec {
   display: inline-flex; align-items: center; gap: .45rem;

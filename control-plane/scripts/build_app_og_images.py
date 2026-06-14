@@ -35,12 +35,13 @@ MARGIN = 80
 _LOGO_CACHE = None
 
 
-def _logo(size: int = 50) -> Image.Image:
-    """The white-on-transparent mark, resized once and reused per card."""
+def _logo(size: int = 58) -> Image.Image:
+    """The purple cube brand mark, trimmed + resized once and reused per card."""
     global _LOGO_CACHE
     if _LOGO_CACHE is None or _LOGO_CACHE.size != (size, size):
-        path = ROOT / "static" / "img" / "logo-white.png"
-        _LOGO_CACHE = Image.open(path).convert("RGBA").resize((size, size), Image.LANCZOS)
+        cube = Image.open(ROOT / "static" / "img" / "brand" / "cube.webp").convert("RGBA")
+        cube = cube.crop(cube.getbbox())
+        _LOGO_CACHE = cube.resize((size, size), Image.LANCZOS)
     return _LOGO_CACHE
 
 
@@ -108,9 +109,9 @@ def _card(base: Image.Image, app_name: str, category: str, tagline: str) -> Imag
 
     # Logo mark + wordmark lockup (top-left).
     mark = _logo()
-    img.paste(mark, (MARGIN, MARGIN - 2), mark)
+    img.paste(mark, (MARGIN, MARGIN - 4), mark)
     wm = _font(34, 600)
-    draw.text((MARGIN + 62, MARGIN + 8), "EVERJUST.APP", font=wm, fill=white)
+    draw.text((MARGIN + 72, MARGIN + 12), "EVERJUST.APP", font=wm, fill=white)
 
     # Category eyebrow (top-right, upper-cased), spaced for an editorial feel.
     eye = _font(26, 600)

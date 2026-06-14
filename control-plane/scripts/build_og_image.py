@@ -84,11 +84,13 @@ def main():
     white = (255, 255, 255)
     grey = (200, 201, 208)
 
-    # Logo mark + wordmark lockup (top-left).
-    mark = Image.open(ROOT / "static" / "img" / "logo-white.png").convert("RGBA").resize((50, 50), Image.LANCZOS)
-    img.paste(mark, (MARGIN, MARGIN - 2), mark)
+    # Cube brand mark + wordmark lockup (top-left).
+    cube = Image.open(ROOT / "static" / "img" / "brand" / "cube.webp").convert("RGBA")
+    cube = cube.crop(cube.getbbox())
+    mark = cube.resize((58, 58), Image.LANCZOS)
+    img.paste(mark, (MARGIN, MARGIN - 4), mark)
     wm = _font(34, 600)
-    draw.text((MARGIN + 62, MARGIN + 8), "EVERJUST.APP", font=wm, fill=white)
+    draw.text((MARGIN + 72, MARGIN + 12), "EVERJUST.APP", font=wm, fill=white)
 
     # Headline.
     head = _font(78, 700)

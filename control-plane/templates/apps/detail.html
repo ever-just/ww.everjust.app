@@ -127,7 +127,28 @@
 </section>
 {% endif %}
 
+{% set audiences = category_audiences.get(app_data.category) %}
+{% if audiences %}
 <section class="section">
+  <div class="container">
+    <p class="eyebrow">Who it&rsquo;s for</p>
+    <h2>Built for the people who run {{ categories[app_data.category].name|lower }}</h2>
+    <p class="section-lede">{{ app_data.name }} fits however your team works — on its own or alongside the rest of your suite.</p>
+    <div class="row g-3">
+      {% for aicon, who, why in audiences %}
+      <div class="col-12 col-md-4">
+        <div class="feature-card" data-reveal>
+          <h3>{{ icon(aicon, 18) }} {{ who }}</h3>
+          <p>{{ why }}</p>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+
+<section class="section section-alt">
   <div class="container">
     <p class="eyebrow">One workspace</p>
     <h2>{{ app_data.name }} doesn&rsquo;t work alone</h2>
@@ -148,6 +169,37 @@
         <span class="ws-node-name">{{ app_data.name }}</span>
       </div>
       <p class="ws-caption">One login, one database, one source of truth — for {{ app_data.name }} and every other app in your suite.</p>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <p class="eyebrow">Questions</p>
+    <h2>{{ app_data.name }}, answered</h2>
+    <div class="faq">
+      <details data-reveal>
+        <summary>Is {{ app_data.name }} included, or does it cost extra?</summary>
+        <p>Included. Every app is part of the one flat plan — $100/month for 5 users, then $15/user. There’s no per-app pricing and nothing to unlock. See <a href="/pricing">pricing</a>.</p>
+      </details>
+      {% if app_data.replaces %}
+      <details data-reveal>
+        <summary>What does {{ app_data.name }} replace?</summary>
+        <p>The job you’d otherwise pay tools like {{ app_data.replaces|join(", ") }} for — except it lives inside the same workspace as the rest of your apps, sharing one set of contacts, files, and history instead of {{ app_data.replaces|length }}+ separate subscriptions.</p>
+      </details>
+      {% endif %}
+      <details data-reveal>
+        <summary>Is my data mine?</summary>
+        <p>Yes. Your workspace runs on its own isolated database — not shared tenancy — and you can export your data at any time. More in <a href="/docs/security">Security &amp; data</a>.</p>
+      </details>
+      <details data-reveal>
+        <summary>Does {{ app_data.name }} work on mobile?</summary>
+        <p>Yes. The whole workspace is responsive and installs to your home screen as an app on iPhone and Android. See <a href="/docs/mobile-app">Use it on your phone</a>.</p>
+      </details>
+      <details data-reveal>
+        <summary>How quickly can we start using it?</summary>
+        <p>Your workspace is live about two minutes after checkout, with the apps that match your signup already switched on.{% if app_data.guide %} There’s a <a href="/docs/{{ app_data.guide }}">step-by-step {{ app_data.name }} guide</a> to get going.{% endif %}</p>
+      </details>
     </div>
   </div>
 </section>

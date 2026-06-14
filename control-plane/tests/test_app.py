@@ -375,6 +375,10 @@ def test_app_detail_pages(client):
         # Every app has an on-page 3D hero visual rendered in the hero.
         assert f"/static/img/apps/{slug}.webp" in r.text, slug
         assert (base / "apps" / f"{slug}.webp").exists(), slug
+        # Density: a "who it's for" audience band and a per-app FAQ.
+        assert "Who it&rsquo;s for" in r.text, slug
+        assert f"{html.escape(a['name'], quote=False)}, answered" in r.text, slug
+        assert "Is my data mine?" in r.text, slug
         # Every page carries the at-a-glance spec strip and the "one connected
         # workspace" diagram so no app page reads as thin/text-only.
         assert "app-specs" in r.text, slug

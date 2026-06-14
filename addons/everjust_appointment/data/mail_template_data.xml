@@ -5,7 +5,7 @@
         <field name="name">Appointment: Booking Confirmation</field>
         <field name="model_id" ref="everjust_appointment.model_appointment_booking"/>
         <field name="subject">Your appointment is confirmed — {{ object.appointment_type_id.name }}</field>
-        <field name="email_from">{{ (object.staff_user_id.email_formatted or object.company_id.email_formatted or '') }}</field>
+        <field name="email_from">{{ (object.staff_user_id.email_formatted or object.staff_user_id.company_id.email_formatted or '') }}</field>
         <field name="email_to">{{ object.email or (object.partner_id.email or '') }}</field>
         <field name="body_html"><![CDATA[
 <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 600px; margin: 0 auto; padding: 24px; color: #1a1a1a;">

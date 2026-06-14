@@ -46,9 +46,11 @@ def _cube_icon(size, pad_ratio=0.10, bg=(255, 255, 255, 255)):
     return canvas
 
 
-def _mark_icon(size, pad_ratio=0.06, bg=(255, 255, 255, 255)):
-    """Favicon / app icon from the monochrome EVERJUST mark on white."""
-    mark = Image.open(BRAND / "mark-square.png").convert("RGBA")
+def _mark_icon(size, pad_ratio=0.04, bg=(255, 255, 255, 255)):
+    """Favicon / app icon from the EVERJUST favicon the owner supplied
+    (brand/favicon-source.png), composited on white so it's opaque for iOS /
+    PWA home-screen contexts."""
+    mark = Image.open(BRAND / "favicon-source.png").convert("RGBA")
     mark = mark.crop(mark.getbbox())
     canvas = Image.new("RGBA", (size, size), bg)
     inner = int(size * (1 - 2 * pad_ratio))

@@ -66,8 +66,10 @@
       </ul>
     </div>
     <div class="col-12 col-lg-5 app-hero-visual">
-      <img src="/static/img/apps/{{ slug }}.webp?v={{ asset_v }}" alt="{{ app_data.name }} — EVERJUST.APP"
-           width="440" height="440" loading="eager" decoding="async">
+      <span class="app-hero-figure">
+        <img src="/static/img/apps/{{ slug }}.webp?v={{ asset_v }}" alt="{{ app_data.name }} — EVERJUST.APP"
+             width="440" height="440" loading="eager" decoding="async">
+      </span>
     </div>
   </div>
 </section>
@@ -167,7 +169,7 @@
       {% for rslug, r in siblings %}
       <div class="col-12 col-sm-6 col-lg-4 d-flex catalog-item">
         <a class="catalog-card" data-reveal href="/apps/{{ rslug }}">
-          <span class="icon-tile">{{ icon(r.icon, 20) }}</span>
+          <span class="app-tile-img"><img src="/static/img/apps/{{ rslug }}.webp?v={{ asset_v }}" alt="" width="48" height="48" loading="lazy"></span>
           <span class="catalog-card-text">
             <span class="catalog-card-title">{{ r.name }}</span>
             <span class="catalog-card-desc">{{ r.tagline }}</span>

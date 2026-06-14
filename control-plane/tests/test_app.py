@@ -386,6 +386,23 @@ def test_app_detail_pages(client):
     assert client.get("/apps/not-an-app").status_code == 404
 
 
+def test_renamed_apps_and_redirects(client):
+    # Odoo-coined names were renamed to original ones; old URLs 301 to the new.
+    for slug, name in [("chat", "Chat"), ("wiki", "Wiki"),
+                       ("courses", "Courses"), ("signatures", "Signatures")]:
+        r = client.get(f"/apps/{slug}")
+        assert r.status_code == 200 and name in r.text, slug
+    for old, new in [("discuss", "chat"), ("esign", "signatures"),
+                     ("knowledge", "wiki"), ("elearning", "courses")]:
+        r = client.get(f"/apps/{old}", follow_redirects=False)
+        assert r.status_code == 301 and r.headers["location"] == f"/apps/{new}", old
+        assert old not in main.content.APPS                  # old slug retired
+    # Renamed docs guides keep their old URLs working too.
+    for old, new in [("guide-esign", "guide-signatures"), ("guide-knowledge", "guide-wiki")]:
+        r = client.get(f"/docs/{old}", follow_redirects=False)
+        assert r.status_code == 301 and r.headers["location"] == f"/docs/{new}", old
+
+
 def test_app_catalog_breadth_and_filter(client):
     body = client.get("/apps").text
     # The catalog must surface the full suite, not just 8 apps.

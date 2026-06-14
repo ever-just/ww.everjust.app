@@ -1,6 +1,22 @@
 {% extends "base.html" %}
 {% from "_icons.html" import icon %}
 
+{% block og_type %}article{% endblock %}
+
+{% block head %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {"@type": "ListItem", "position": 1, "name": "Home", "item": "https://{{ domain }}/"},
+    {"@type": "ListItem", "position": 2, "name": "Docs", "item": "https://{{ domain }}/docs"}{% if active != 'index' %},
+    {"@type": "ListItem", "position": 3, "name": "{{ docs_pages[active].title }}", "item": "https://{{ domain }}/docs/{{ active }}"}{% endif %}
+  ]
+}
+</script>
+{% endblock %}
+
 {% block content %}
 <div class="docs-layout container">
   <div class="row g-4 g-lg-5">

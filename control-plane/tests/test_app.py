@@ -587,8 +587,19 @@ def test_canonical_and_structured_data(client):
     body = client.get("/").text
     assert '<link rel="canonical" href="https://everjust.app/">' in body
     assert "application/ld+json" in body
+    assert 'property="og:locale" content="en_US"' in body
+    assert '"contactPoint"' in body                       # Organization contact
     docs = client.get("/docs/billing").text
     assert '<link rel="canonical" href="https://everjust.app/docs/billing">' in docs
+
+
+def test_breadcrumbs_and_og_type(client):
+    # Breadcrumb structured data on the key page types (helps rich results).
+    for path in ("/apps", "/pricing", "/apps/inventory", "/docs/billing"):
+        assert '"@type": "BreadcrumbList"' in client.get(path).text, path
+    # Docs are typed as articles, marketing pages as websites.
+    assert 'property="og:type" content="article"' in client.get("/docs/billing").text
+    assert 'property="og:type" content="website"' in client.get("/").text
 
 
 def test_welcome_not_indexable(client):

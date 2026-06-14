@@ -56,7 +56,7 @@
                 <div class="ej-appt-container ej-appt-booking">
 
                     <!-- Back link -->
-                    <a href="/appointment" class="ej-appt-back">&larr; All appointment types</a>
+                    <a href="/appointment" class="ej-appt-back">&#8592; All appointment types</a>
 
                     <div class="ej-appt-header">
                         <h1 t-out="appt_type.name"/>
@@ -102,9 +102,9 @@
                              t-att-data-min-date="min_date"
                              t-att-data-max-date="max_date">
                             <div class="ej-calendar-nav">
-                                <button type="button" class="ej-calendar-prev" aria-label="Previous month">&lsaquo;</button>
+                                <button type="button" class="ej-calendar-prev" aria-label="Previous month">&#8249;</button>
                                 <span class="ej-calendar-month-label"></span>
-                                <button type="button" class="ej-calendar-next" aria-label="Next month">&rsaquo;</button>
+                                <button type="button" class="ej-calendar-next" aria-label="Next month">&#8250;</button>
                             </div>
                             <div class="ej-calendar-weekdays">
                                 <span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span>
@@ -125,7 +125,7 @@
                             Loading available times...
                         </div>
                         <button type="button" class="ej-btn ej-btn-outline ej-btn-back-date">
-                            &larr; Change date
+                            &#8592; Change date
                         </button>
                     </div>
 
@@ -163,7 +163,7 @@
 
                             <div class="ej-form-actions">
                                 <button type="button" class="ej-btn ej-btn-outline ej-btn-back-time">
-                                    &larr; Change time
+                                    &#8592; Change time
                                 </button>
                                 <button type="submit" class="ej-btn ej-btn-primary" id="btn-submit">
                                     Confirm Booking

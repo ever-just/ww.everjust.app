@@ -1572,7 +1572,7 @@ kbd {
 }
 
 .app-chip .lucide { color: var(--ej-muted); }
-.app-chip img { width: 22px; height: 22px; object-fit: contain; }
+.app-chip img { width: 22px; height: 22px; object-fit: contain; border-radius: 6px; }
 
 .marq-set { display: flex; gap: .6rem; }
 

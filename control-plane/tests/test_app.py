@@ -866,7 +866,7 @@ def test_docs_is_help_center_not_app_catalog(client):
 def test_pwa_auto_reload_on_new_version(client):
     js = client.get("/static/js/pwa.js").text
     assert "controllerchange" in js                  # deploys auto-refresh
-    assert "everjust-v8" in client.get("/sw.js").text
+    assert "everjust-v9" in client.get("/sw.js").text
 
 
 def test_footer_uses_real_logo_mark(client):
@@ -876,8 +876,9 @@ def test_footer_uses_real_logo_mark(client):
     assert "/static/img/wordmark-white.png" in body
     assert "footer-brand" in body
     assert client.get("/static/img/wordmark-white.png").status_code == 200
-    # Favicon/app icons are the brand cube (PNG/ICO, not the old mono SVG).
-    assert "/static/img/favicon.svg" not in body
+    # Favicon is the crisp monochrome EVERJUST mark (SVG + ICO both wired).
+    assert "/static/img/favicon.svg" in body
+    assert client.get("/static/img/favicon.svg").status_code == 200
     assert client.get("/static/img/wordmark.png").status_code == 200
 
 

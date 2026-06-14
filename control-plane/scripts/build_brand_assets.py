@@ -46,15 +46,29 @@ def _cube_icon(size, pad_ratio=0.10, bg=(255, 255, 255, 255)):
     return canvas
 
 
+def _mark_icon(size, pad_ratio=0.06, bg=(255, 255, 255, 255)):
+    """Favicon / app icon from the monochrome EVERJUST mark on white."""
+    mark = Image.open(BRAND / "mark-square.png").convert("RGBA")
+    mark = mark.crop(mark.getbbox())
+    canvas = Image.new("RGBA", (size, size), bg)
+    inner = int(size * (1 - 2 * pad_ratio))
+    w, h = mark.size
+    s = inner / max(w, h)
+    r = mark.resize((int(w * s), int(h * s)), Image.LANCZOS)
+    canvas.alpha_composite(r, ((size - r.size[0]) // 2, (size - r.size[1]) // 2))
+    return canvas
+
+
 def main():
     _wordmark((17, 17, 19)).save(IMG / "wordmark.png")
     _wordmark((255, 255, 255)).save(IMG / "wordmark-white.png")
 
-    _cube_icon(192).convert("RGB").save(IMG / "icon-192x192.png")
-    _cube_icon(512).convert("RGB").save(IMG / "icon-512x512.png")
-    _cube_icon(180).convert("RGB").save(IMG / "apple-touch-icon.png")
-    ico = _cube_icon(48).convert("RGB")
-    ico.save(IMG / "favicon.ico", sizes=[(16, 16), (32, 32), (48, 48)])
+    # Favicon + app icons use the monochrome mark (crisper at small sizes than
+    # the cube). The cube stays on social cards and the app hero images.
+    _mark_icon(192).convert("RGB").save(IMG / "icon-192x192.png")
+    _mark_icon(512).convert("RGB").save(IMG / "icon-512x512.png")
+    _mark_icon(180).convert("RGB").save(IMG / "apple-touch-icon.png")
+    _mark_icon(48).convert("RGB").save(IMG / "favicon.ico", sizes=[(16, 16), (32, 32), (48, 48)])
 
     print("brand assets written to", IMG.relative_to(ROOT))
 

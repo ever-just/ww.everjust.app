@@ -1049,6 +1049,20 @@ a:focus-visible {
   flex-shrink: 0;
 }
 
+/* The app's 3D render used as its icon (catalog tiles, related cards) so the
+   identity is uniform with the hero image. */
+.app-tile-img {
+  flex: 0 0 48px;
+  width: 48px;
+  height: 48px;
+  border-radius: .7rem;
+  overflow: hidden;
+  display: inline-flex;
+  background: radial-gradient(120% 120% at 50% 20%, #faf9ff 0%, #efeafc 100%);
+  border: 1px solid rgba(120, 100, 210, .12);
+}
+.app-tile-img img { width: 100%; height: 100%; object-fit: contain; }
+
 
 .app-hero { padding-top: 2.5rem; }
 
@@ -1654,18 +1668,44 @@ kbd {
    on desktop; centered and stacked (visual first) on phones. */
 .app-hero { text-align: left; }
 .app-hero .breadcrumb { justify-content: flex-start; }
+
+/* The 3D image sits in a rounded panel with a soft brand-purple glow so it
+   reads as a deliberate visual, not a pasted-on square. */
 .app-hero-visual { text-align: center; }
-.app-hero-visual img {
-  width: 100%; max-width: 360px; height: auto; aspect-ratio: 1 / 1;
+.app-hero-figure {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  max-width: 380px;
+  border-radius: 1.75rem;
+  background: radial-gradient(120% 120% at 50% 18%, #fbfaff 0%, #f1eefc 60%, #e9e4fb 100%);
+  border: 1px solid rgba(120, 100, 210, .14);
+  box-shadow: 0 24px 60px -18px rgba(110, 90, 200, .45),
+              0 8px 24px -12px rgba(110, 90, 200, .30);
+}
+/* Diffuse glow bloom behind the panel. */
+.app-hero-figure::before {
+  content: "";
+  position: absolute;
+  inset: -14%;
+  background: radial-gradient(closest-side, rgba(139, 109, 246, .45), rgba(139, 109, 246, 0) 72%);
+  filter: blur(18px);
+  z-index: -1;
+}
+.app-hero-figure img {
+  width: 100%; height: auto; aspect-ratio: 1 / 1;
   object-fit: contain;
-  filter: drop-shadow(0 24px 40px rgba(110, 90, 200, .18));
+  border-radius: 1.5rem;
+  padding: 6%;
 }
 @media (max-width: 991.98px) {
   .app-hero { text-align: center; }
   .app-hero .breadcrumb { justify-content: center; }
   .app-hero .app-specs, .app-hero .hero-cta { justify-content: center; }
   .app-hero-row { flex-direction: column-reverse; }   /* visual on top on mobile */
-  .app-hero-visual img { max-width: 240px; }
+  .app-hero-figure { max-width: 230px; border-radius: 1.4rem; }
 }
 
 /* "At a glance" spec strip under the app hero. */

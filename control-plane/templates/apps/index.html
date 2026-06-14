@@ -55,7 +55,7 @@
         <div class="col-12 col-sm-6 col-lg-4 d-flex catalog-item"
              data-name="{{ a.name|lower }}" data-replaces="{{ (a.replaces|join(' '))|lower if a.replaces else '' }}">
           <a class="catalog-card" href="/apps/{{ slug }}">
-            <span class="icon-tile">{{ icon(a.icon, 20) }}</span>
+            <span class="app-tile-img"><img src="/static/img/apps/{{ slug }}.webp?v={{ asset_v }}" alt="" width="48" height="48" loading="lazy"></span>
             <span class="catalog-card-text">
               <span class="catalog-card-title">{{ a.name }}</span>
               <span class="catalog-card-desc">{{ a.tagline }}</span>

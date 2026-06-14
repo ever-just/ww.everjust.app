@@ -186,6 +186,7 @@ class AppointmentController(http.Controller):
         name = kwargs.get("name", "").strip()
         email = kwargs.get("email", "").strip()
         phone = kwargs.get("phone", "").strip()
+        address = kwargs.get("address", "").strip()
         notes = kwargs.get("notes", "").strip()
         slot_datetime_str = kwargs.get("slot_datetime", "").strip()
 
@@ -262,6 +263,7 @@ class AppointmentController(http.Controller):
                     "start_datetime": fields.Datetime.to_string(slot_datetime),
                     "phone": phone,
                     "email": email,
+                    "address": address,
                     "notes": notes,
                 }
             )

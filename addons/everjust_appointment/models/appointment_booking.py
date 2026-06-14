@@ -54,6 +54,7 @@ class AppointmentBooking(models.Model):
     notes = fields.Text(string="Customer Notes")
     phone = fields.Char(string="Phone")
     email = fields.Char(string="Email")
+    address = fields.Char(string="Service Address")
     location = fields.Char(
         string="Location", related="appointment_type_id.location", readonly=True
     )
@@ -123,7 +124,7 @@ class AppointmentBooking(models.Model):
             "user_id": self.staff_user_id.id if self.staff_user_id else self.env.uid,
             "partner_ids": [(6, 0, attendee_partner_ids)],
             "description": self.notes or "",
-            "location": self.location or "",
+            "location": self.address or self.location or "",
         }
         event = self.env["calendar.event"].sudo().create(event_vals)
         self.calendar_event_id = event
@@ -137,9 +138,11 @@ class AppointmentBooking(models.Model):
             "user_id": self.staff_user_id.id if self.staff_user_id else False,
             "phone": self.phone,
             "email_from": self.email,
+            "street": self.address or False,
             "description": (
                 f"Appointment: {self.appointment_type_id.name}\n"
                 f"Date: {self.start_datetime}\n"
+                f"Address: {self.address or 'N/A'}\n"
                 f"Notes: {self.notes or ''}"
             ),
         }

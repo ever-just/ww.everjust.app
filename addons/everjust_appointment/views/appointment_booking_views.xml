@@ -66,6 +66,7 @@
                         <group>
                             <field name="email"/>
                             <field name="phone"/>
+                            <field name="address"/>
                         </group>
                         <group>
                             <field name="calendar_event_id" invisible="not calendar_event_id"/>

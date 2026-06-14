@@ -4,6 +4,19 @@
 {% block title %}Apps — every tool your business runs on | EVERJUST.APP{% endblock %}
 {% block description %}{{ apps|length }} apps in one workspace: CRM, sales, invoicing, inventory, projects, HR, payroll, marketing, website, eCommerce, documents, eSign and more — all included.{% endblock %}
 
+{% block head %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {"@type": "ListItem", "position": 1, "name": "Home", "item": "https://{{ domain }}/"},
+    {"@type": "ListItem", "position": 2, "name": "Apps", "item": "https://{{ domain }}/apps"}
+  ]
+}
+</script>
+{% endblock %}
+
 {% block content %}
 <section class="hero container app-catalog-hero">
   <p class="eyebrow">The suite</p>
